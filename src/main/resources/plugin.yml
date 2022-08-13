@@ -12,4 +12,4 @@ commands:
   protectadmin:
     description: "Commande admin permettant de gérer les terrains."
     permission: protectadmin.use
-    usage: "/protect <sous-commande> <joueur ?>"
+    usage: "/protectadmin <sous-commande> <joueur ?>"
