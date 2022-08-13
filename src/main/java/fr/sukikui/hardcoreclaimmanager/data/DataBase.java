@@ -11,7 +11,7 @@ import org.bukkit.World;
 
 public class DataBase
 {
-    static private String path = "jdbc:sqlite:PMC_Protection_DB.db";
+    static private final String path = "jdbc:sqlite:PMC_Protection_DB.db";
     private Connection con = null;
 
     /**
