@@ -1,0 +1,15 @@
+name: HardcoreClaimManager
+version: '${project.version}'
+main: fr.sukikui.hardcoreclaimmanager.Main
+api-version: 1.19
+authors: [ Sukikui ]
+description: Plugin spigot permettant aux joueurs de protéger leurs terrains, créé à l'occasion de l'évènement Hardcore de PMC.
+commands:
+  protect:
+    description: "Commande joueur permettant de gérer ses terrains."
+    permission: protect.use
+    usage: "/protect <sous-commande> <joueur ?>"
+  protectadmin:
+    description: "Commande admin permettant de gérer les terrains."
+    permission: protectadmin.use
+    usage: "/protect <sous-commande> <joueur ?>"
