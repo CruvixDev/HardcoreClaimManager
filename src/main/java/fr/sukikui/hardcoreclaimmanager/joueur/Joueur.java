@@ -11,8 +11,8 @@ import java.util.UUID;
  * un nom de joueur pour un UUID donné même lorsque le joueur est déconnecté.
  *
  * Cette classe a donc pour but d'être enregistrée dans une base de données et
- * permet de stocker les données des joueurs connectés et déconnectés : nombres
- * de blocks à disposition pour protéger ses terrains et dernier nom connu du joueur.
+ * permet de stocker les données des joueurs connectés et déconnectés : nombres de
+ * blocks à disposition pour protéger ses terrains et dernier nom connu du joueur.
  */
 public class Joueur
 {
