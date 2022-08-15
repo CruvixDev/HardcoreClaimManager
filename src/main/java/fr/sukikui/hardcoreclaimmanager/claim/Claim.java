@@ -8,15 +8,16 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class Claim {
-    private Long claimID;
+    private long claimID;
     private UUID ownerUUID;
+    private boolean isAdmin;
     private ArrayList<String> trustedPlayers;
     private Location corner1;
     private Location corner2;
 
-    public Claim(Location corner1, Location corner2, UUID ownerUUID, Long claimID) {
-        this.claimID = claimID;
+    public Claim(Location corner1, Location corner2, UUID ownerUUID, boolean isAdmin) {
         this.ownerUUID = ownerUUID;
+        this.isAdmin = isAdmin;
         this.corner1 = corner1;
         this.corner2 = corner2;
         this.trustedPlayers = new ArrayList<>();
@@ -65,6 +66,14 @@ public class Claim {
 
     public int getClaimSurface() {
         return Math.abs(this.corner2.getBlockX() - this.corner1.getBlockX()) * Math.abs(this.corner2.getBlockZ() - this.corner1.getBlockZ());
+    }
+
+    public long getClaimID() {
+        return this.claimID;
+    }
+
+    public boolean isAdmin() {
+        return this.isAdmin;
     }
 
     public static boolean isInSurface(Location point, Location point1, Location point2) {

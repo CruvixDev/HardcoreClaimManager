@@ -13,6 +13,7 @@ public final class HardcoreClaimManager extends JavaPlugin {
     @Override
     public void onEnable() {
         try {
+            //TODO create the properties file in the plugin folder and read into it
             properties.load(stream);
             if (properties.getProperty("database-path").equals("")) {
                 properties.setProperty("database-path",this.getDataFolder().getAbsolutePath());

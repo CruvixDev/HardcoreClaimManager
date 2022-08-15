@@ -80,7 +80,9 @@ public class PlayerData {
     public String toString() {
         String toString = String.format("The player %s own :\n",this.playerName);
         for (Claim claim : this.claims) {
-            toString += claim.toString();
+            if (!claim.isAdmin()) {
+                toString += claim.toString();
+            }
         }
         return toString;
     }

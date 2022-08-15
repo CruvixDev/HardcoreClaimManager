@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 public class ShowClaimsExecutor implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        //TODO not show claim admin
         String commandSenderName = commandSender.getName();
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(commandSenderName);
         if (playerData != null) {

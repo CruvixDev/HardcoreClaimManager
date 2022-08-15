@@ -26,8 +26,8 @@ public class PlayerDataManager {
         return playerDataManager;
     }
 
-    public String createClaim(Location corner1, Location corner2, UUID playerUUID) {
-        Claim claim = new Claim(corner1,corner2,playerUUID,null);
+    public String createClaim(Location corner1, Location corner2, UUID playerUUID, boolean isAdmin) {
+        Claim claim = new Claim(corner1,corner2,playerUUID,isAdmin);
         PlayerData playerData = getPlayerDataByUUID(playerUUID);
         String reason = "";
         if (playerData == null) {
@@ -36,12 +36,20 @@ public class PlayerDataManager {
         }
         if (claim.getCorner1().getWorld().equals(claim.getCorner2().getWorld())) {
             if (!isRiding(claim)) {
-                if (claim.getClaimSurface() < playerData.getClaimBlocks()) {
-                    claims.add(claim);
-                    reason = ChatColor.GREEN + "Claim successfully added!";
+                if (isAdmin) {
+                    if (!claims.contains(claim)) {
+                        claims.add(claim);
+                        reason = ChatColor.GREEN + "Claim successfully added!";
+                    }
                 }
                 else {
-                    reason = ChatColor.RED + "You have not enough claim blocks to claim this area";
+                    if (claim.getClaimSurface() < playerData.getClaimBlocks() && !claims.contains(claim)) {
+                        claims.add(claim);
+                        reason = ChatColor.GREEN + "Claim successfully added!";
+                    }
+                    else {
+                        reason = ChatColor.RED + "You have not enough claim blocks to claim this area";
+                    }
                 }
             }
             else {
@@ -52,6 +60,13 @@ public class PlayerDataManager {
             reason = ChatColor.RED + "The two corners are not in the same world!";
         }
         return reason;
+    }
+
+    public void removeClaim(Claim claim, String playerName) {
+        PlayerData playerData = getPlayerDataByName(playerName);
+        if (playerData != null && playerData.isOwned(claim)) {
+            this.claims.remove(claim);
+        }
     }
 
     public void addNewPlayerData(String playerName, UUID playerUUID) {
