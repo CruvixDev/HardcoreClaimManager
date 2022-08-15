@@ -9,23 +9,16 @@ import java.util.UUID;
 
 public class PlayerData {
     private String playerName;
+    private UUID playerUUID;
     private int claimBlocks;
     private ArrayList<Claim> claims;
     private Location lastToolLocation;
 
-    public PlayerData(String playerName) {
+    public PlayerData(String playerName, UUID playerUUID) {
+        this.playerUUID = playerUUID;
         this.playerName = playerName;
         this.claimBlocks = Integer.parseInt(HardcoreClaimManager.getProperties().getProperty("defaultClaimBlocks"));
         this.claims = new ArrayList<>();
-    }
-
-    public void addClaim(Claim claim) {
-        if (claim == null || claim.getCorner1() == null || claim.getCorner2() == null) {
-            return;
-        }
-        if (!this.claims.contains(claim)) {
-            this.claims.add(claim);
-        }
     }
 
     public void addClaimBlocks(int amount) {
@@ -51,12 +44,12 @@ public class PlayerData {
         return this.playerName;
     }
 
-    public int getClaimBlocks() {
-        return this.claimBlocks;
+    public UUID getPlayerUUID() {
+        return this.playerUUID;
     }
 
-    public ArrayList<Claim> getClaims() {
-        return this.claims;
+    public int getClaimBlocks() {
+        return this.claimBlocks;
     }
 
     public Location getLastToolLocation() {

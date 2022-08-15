@@ -7,13 +7,16 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class PlayerDataManager {
     private static PlayerDataManager playerDataManager;
     private ArrayList<PlayerData> playersData;
+    private ArrayList<Claim> claims;
 
     private PlayerDataManager() {
         this.playersData = new ArrayList<>();
+        this.claims = new ArrayList<>();
     }
 
     public static PlayerDataManager getInstance() {
@@ -23,12 +26,14 @@ public class PlayerDataManager {
         return playerDataManager;
     }
 
-    public String createClaim(Claim claim, PlayerData playerData) {
+    public String createClaim(Location corner1, Location corner2, UUID playerUUID) {
+        Claim claim = new Claim(corner1,corner2,playerUUID,null);
+        PlayerData playerData = getPlayerDataByUUID(playerUUID);
         String reason = "";
         if (claim.getCorner1().getWorld().equals(claim.getCorner2().getWorld())) {
             if (!isRiding(claim)) {
-                if (claim.claimSurface() < playerData.getClaimBlocks()) {
-                    playerData.addClaim(claim);
+                if (claim.getClaimSurface() < playerData.getClaimBlocks()) {
+                    claims.add(claim);
                     reason = ChatColor.GREEN + "Claim successfully added!";
                 }
                 else {
@@ -45,20 +50,20 @@ public class PlayerDataManager {
         return reason;
     }
 
-    public void addNewPlayerData(PlayerData playerData) {
+    public void addNewPlayerData(String playerName, UUID playerUUID) {
         boolean exists = false;
-        if (Bukkit.getServer().getPlayer(playerData.getPlayerName()) != null) {
+        if (Bukkit.getServer().getPlayer(playerName) != null) {
             exists = true;
         }
         for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
-            if (offlinePlayer.getName().equals(playerData.getPlayerName())) {
+            if (offlinePlayer.getName().equals(playerName)) {
                 exists = true;
                 break;
             }
         }
-        //TODO verify if we don't put claim completely false
         if (exists) {
-            if (playersData.contains(playerData)) {
+            PlayerData playerData = new PlayerData(playerName,playerUUID);
+            if (!playersData.contains(playerData)) {
                 playersData.add(playerData);
             }
         }
@@ -72,31 +77,24 @@ public class PlayerDataManager {
         return null;
     }
 
+    public PlayerData getPlayerDataByUUID(UUID playerUUID) {
+        for (PlayerData playerData : playersData) {
+            if (playerData.getPlayerUUID().equals(playerUUID));
+            return playerData;
+        }
+        return null;
+    }
+
     public PlayerData getPlayerDataByClaim(Claim claim) {
         for (PlayerData playerData : playersData) {
-            for (Claim cl : playerData.getClaims()) {
-                if (cl.equals(claim)) {
-                    return playerData;
-                }
+            if (playerData.getPlayerUUID().equals(claim.getOwnerUUID())) {
+                return playerData;
             }
         }
         return null;
     }
 
-    public boolean isRiding(Claim claimToVerify) {
-        boolean isRiding = false;
-        ArrayList<Claim> claims = getAllClaims();
-        for (Claim claim : claims) {
-            if (Claim.isInSurface(claimToVerify.getCorner1(),claim.getCorner1(),claim.getCorner2()) ||
-            Claim.isInSurface(claimToVerify.getCorner2(),claim.getCorner1(),claim.getCorner2())) {
-                isRiding = true;
-            }
-        }
-        return isRiding;
-    }
-
     public Claim getClaimAt(Location location) {
-        ArrayList<Claim> claims = getAllClaims();
         for (Claim claim : claims) {
             if (Claim.isInSurface(location,claim.getCorner1(),claim.getCorner2())) {
                 return claim;
@@ -105,11 +103,14 @@ public class PlayerDataManager {
         return null;
     }
 
-    private ArrayList<Claim> getAllClaims() {
-        ArrayList<Claim> claims = new ArrayList<>();
-        for (PlayerData playerData : playersData) {
-            claims.addAll(playerData.getClaims());
+    public boolean isRiding(Claim claimToVerify) {
+        boolean isRiding = false;
+        for (Claim claim : this.claims) {
+            if (Claim.isInSurface(claimToVerify.getCorner1(),claim.getCorner1(),claim.getCorner2()) ||
+            Claim.isInSurface(claimToVerify.getCorner2(),claim.getCorner1(),claim.getCorner2())) {
+                isRiding = true;
+            }
         }
-        return claims;
+        return isRiding;
     }
 }

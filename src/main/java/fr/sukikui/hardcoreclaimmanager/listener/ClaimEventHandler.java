@@ -17,7 +17,7 @@ public class ClaimEventHandler implements Listener {
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
 
         Claim claimConcerned = PlayerDataManager.getInstance().getClaimAt(blockLocation);
-        if (!playerData.isOwned(claimConcerned) || !claimConcerned.isAllowed(playerData)) {
+        if (!playerData.isOwned(claimConcerned) || !claimConcerned.isAllowed(e.getPlayer().getName())) {
             System.out.println("I can't place a block");
         }
     }
@@ -28,7 +28,7 @@ public class ClaimEventHandler implements Listener {
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
 
         Claim claimConcerned = PlayerDataManager.getInstance().getClaimAt(blockLocation);
-        if (!playerData.isOwned(claimConcerned) || !claimConcerned.isAllowed(playerData)) {
+        if (!playerData.isOwned(claimConcerned) || !claimConcerned.isAllowed(e.getPlayer().getName())) {
             System.out.println("I can't break a block");
         }
     }

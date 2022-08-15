@@ -1,6 +1,5 @@
 package fr.sukikui.hardcoreclaimmanager.listener;
 
-import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.Location;
@@ -19,7 +18,7 @@ public class PlayerEventHandler implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         if (!player.hasPlayedBefore()) {
-            PlayerDataManager.getInstance().addNewPlayerData(new PlayerData(e.getPlayer().getName()));
+            PlayerDataManager.getInstance().addNewPlayerData(player.getName(),player.getUniqueId());
         }
     }
 
@@ -39,8 +38,7 @@ public class PlayerEventHandler implements Listener {
             if (playerData.getLastToolLocation() != null && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                 Location corner1 = playerData.getLastToolLocation();
                 Location corner2 = e.getClickedBlock().getLocation();
-                Claim claim = new Claim(corner1,corner2);
-                String reason = PlayerDataManager.getInstance().createClaim(claim,playerData);
+                String reason = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId());
             }
         }
     }

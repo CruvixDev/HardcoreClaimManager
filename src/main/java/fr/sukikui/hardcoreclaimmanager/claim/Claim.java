@@ -1,47 +1,52 @@
 package fr.sukikui.hardcoreclaimmanager.claim;
 
-import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
-import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class Claim {
-    private ArrayList<PlayerData> trustedPlayers;
+    private Long claimID;
+    private UUID ownerUUID;
+    private ArrayList<String> trustedPlayers;
     private Location corner1;
     private Location corner2;
 
-    public Claim(Location corner1, Location corner2) {
+    public Claim(Location corner1, Location corner2, UUID ownerUUID, Long claimID) {
+        this.claimID = claimID;
+        this.ownerUUID = ownerUUID;
         this.corner1 = corner1;
         this.corner2 = corner2;
         this.trustedPlayers = new ArrayList<>();
     }
 
-    public boolean isAllowed(PlayerData playerData) {
-        if (this.trustedPlayers.contains(playerData)) {
+    public boolean isAllowed(String playerName) {
+        if (this.trustedPlayers.contains(playerName)) {
             return true;
         }
         return false;
     }
 
-    public void addTrustedPlayers(ArrayList<PlayerData> playersData) {
-        //TODO verify that a the player data is valid (see if it is better to have array list of string instead for parameter
-        PlayerData playerOwner = PlayerDataManager.getInstance().getPlayerDataByClaim(this);
-        if (playerOwner != null) {
-            playersData.remove(playerOwner);
+    public boolean isAllowed(UUID playerUUID) {
+        String playerName = Bukkit.getServer().getPlayer(playerUUID).getName();
+        if (this.trustedPlayers.contains(playerName)) {
+            return true;
         }
-        for (PlayerData playerData : playersData) {
-            if (!this.trustedPlayers.contains(playerData)) {
-                this.trustedPlayers.add(playerData);
-            }
+        return false;
+    }
+
+    public void addTrustedPlayers(String playerName) {
+        if (!trustedPlayers.contains(playerName)) {
+            trustedPlayers.add(playerName);
         }
     }
 
-    public void removeTrustedPlayers(ArrayList<PlayerData> playersData) {
-        this.trustedPlayers.removeAll(playersData);
+    public void removeTrustedPlayers(String playerName) {
+        this.trustedPlayers.remove(playerName);
     }
 
-    public int claimSurface() {
+    public int getClaimSurface() {
         return Math.abs(this.corner2.getBlockX() - this.corner1.getBlockX()) * Math.abs(this.corner2.getBlockZ() - this.corner1.getBlockZ());
     }
 
@@ -85,6 +90,10 @@ public class Claim {
 
     public Location getCorner2() {
         return corner2;
+    }
+
+    public UUID getOwnerUUID() {
+        return ownerUUID;
     }
 
     @Override
