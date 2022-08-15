@@ -14,7 +14,7 @@ public class DatabaseManager {
      * Se connecte à la base et reformate les tables si celles-ci sont incohérentes.
      */
     private DatabaseManager() {
-        this.databasePath = HardcoreClaimManager.getProperties().getProperty("databasePath");
+        this.databasePath = HardcoreClaimManager.getProperties().getProperty("database-path");
     }
 
     public static DatabaseManager getInstance() {
@@ -43,36 +43,36 @@ public class DatabaseManager {
     public void createDatabase() {
         String createClaimTableRequest = "CREATE TABLE IF NOT EXISTS Claim" +
                 "(" +
-                "claimID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                "playerName TEXT UNIQUE NOT NULL," +
-                "worldName TEXT UNIQUE NOT NULL," +
-                "corner1X INTEGER NOT NULL," +
-                "corner1Y INTEGER NOT NULL," +
-                "corner1Z INTEGER NOT NULL," +
-                "corner2X INTEGER NOT NULL," +
-                "corner2Y INTEGER NOT NULL," +
-                "corner2Z INTEGER NOT NULL," +
-                "FOREIGN KEY (playerName) REFERENCES Player(playerName)," +
-                "FOREIGN KEY (worldName) REFERENCES World(worldName)," +
-                "CONSTRAINT corner1 UNIQUE (worldName,corner1X,corner1Y,corner1Z)," +
-                "CONSTRAINT corner2 UNIQUE (worldName,corner2X,corner2Y,corner2Z)" +
+                    "claimID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                    "playerName TEXT UNIQUE NOT NULL," +
+                    "worldName TEXT UNIQUE NOT NULL," +
+                    "corner1X INTEGER NOT NULL," +
+                    "corner1Y INTEGER NOT NULL," +
+                    "corner1Z INTEGER NOT NULL," +
+                    "corner2X INTEGER NOT NULL," +
+                    "corner2Y INTEGER NOT NULL," +
+                    "corner2Z INTEGER NOT NULL," +
+                    "FOREIGN KEY (playerName) REFERENCES Player(playerName)," +
+                    "FOREIGN KEY (worldName) REFERENCES World(worldName)," +
+                    "CONSTRAINT corner1 UNIQUE (worldName,corner1X,corner1Y,corner1Z)," +
+                    "CONSTRAINT corner2 UNIQUE (worldName,corner2X,corner2Y,corner2Z)" +
                 ")";
         String createPlayerTableRequest = "CREATE TABLE IF NOT EXISTS Player" +
                 "(" +
-                "playerName TEXT NOT NULL PRIMARY KEY," +
-                "claimBlocs INTEGER NOT NULL" +
+                    "playerName TEXT NOT NULL PRIMARY KEY," +
+                    "claimBlocs INTEGER NOT NULL" +
                 ")";
         String createWorldTableRequest = "CREATE TABLE IF NOT EXISTS World" +
                 "(" +
-                "worldName TEXT NOT NULL PRIMARY KEY" +
+                    "worldName TEXT NOT NULL PRIMARY KEY" +
                 ")";
-        String createtrustedPlayersTableRequest = "CREATE TABLE IF NOT EXISTS trustedPlayers" +
+        String createTrustedPlayersTableRequest = "CREATE TABLE IF NOT EXISTS TrustedPlayers" +
                 "(" +
-                "claimID INTEGER NOT NULL," +
-                "playerName TEXT NOT NULL," +
-                "PRIMARY KEY (claimID,playerName)," +
-                "FOREIGN KEY (claimID) REFERENCES Claim(claimID)," +
-                "FOREIGN KEY (playerName) REFERENCES Player(playerName)" +
+                    "claimID INTEGER NOT NULL," +
+                    "playerName TEXT NOT NULL," +
+                    "PRIMARY KEY (claimID,playerName)," +
+                    "FOREIGN KEY (claimID) REFERENCES Claim(claimID)," +
+                    "FOREIGN KEY (playerName) REFERENCES Player(playerName)" +
                 ")";
 
         Connection connection = getConnection();
@@ -88,7 +88,7 @@ public class DatabaseManager {
             statement = connection.prepareStatement(createClaimTableRequest);
             statement.executeUpdate();
 
-            statement = connection.prepareStatement(createtrustedPlayersTableRequest);
+            statement = connection.prepareStatement(createTrustedPlayersTableRequest);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

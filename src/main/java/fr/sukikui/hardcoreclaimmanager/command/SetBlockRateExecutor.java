@@ -14,7 +14,7 @@ public class SetBlockRateExecutor implements CommandExecutor {
             if (strings.length == 1) {
                 try {
                     Integer.parseInt(strings[0]);
-                    HardcoreClaimManager.getProperties().setProperty("claimRate",strings[0]);
+                    HardcoreClaimManager.getProperties().setProperty("block-rate-per-hour",strings[0]);
                     return true;
                 }
                 catch (NumberFormatException e) {

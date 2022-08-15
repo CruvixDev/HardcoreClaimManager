@@ -31,7 +31,7 @@ public class AddClaimBlocksExecutor implements CommandExecutor {
                 }
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "Not enough arguments!");
+                commandSender.sendMessage(ChatColor.RED + "Not enough arguments or two many (>2)!");
                 return false;
             }
         }

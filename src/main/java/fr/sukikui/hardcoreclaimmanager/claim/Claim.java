@@ -2,6 +2,7 @@ package fr.sukikui.hardcoreclaimmanager.claim;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -36,13 +37,29 @@ public class Claim {
         return false;
     }
 
-    public void addTrustedPlayers(String playerName) {
-        if (!trustedPlayers.contains(playerName)) {
+    public void addTrustedPlayers(String playerName, UUID trustPlayer) {
+        if (!trustPlayer.equals(this.ownerUUID)) {
+            return;
+        }
+        UUID playerUUID = null;
+        if (Bukkit.getServer().getPlayer(playerName) != null) {
+            playerUUID = Bukkit.getServer().getPlayer(playerName).getUniqueId();
+        }
+        for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+            if (offlinePlayer.getName().equals(playerName)) {
+                playerUUID = offlinePlayer.getUniqueId();
+                break;
+            }
+        }
+        if (playerUUID != null && !trustedPlayers.contains(playerName)) {
             trustedPlayers.add(playerName);
         }
     }
 
-    public void removeTrustedPlayers(String playerName) {
+    public void removeTrustedPlayers(String playerName, UUID trustPlayer) {
+        if (!trustPlayer.equals(this.ownerUUID)) {
+            return;
+        }
         this.trustedPlayers.remove(playerName);
     }
 
@@ -100,6 +117,7 @@ public class Claim {
     public boolean equals(Object obj) {
         if (obj instanceof Claim) {
             Claim claim = (Claim) obj;
+            //TODO two claims are equals if corner1 == corner2 and corner2 == corner1 (inversion left/right)
             if (this.corner1.equals(claim.getCorner1()) && this.corner2.equals(claim.getCorner2())) {
                 return true;
             }
@@ -113,6 +131,6 @@ public class Claim {
     }
 
     @Override public String toString() {
-        return String.format("[Claim at (%d,%d) in the world %s]\n",corner1.getBlockX(),corner2.getBlockZ(),corner1.getWorld().getName());
+        return String.format("[Claim at (%d,%d) in the world \"%s\"]\n",corner1.getBlockX(),corner2.getBlockZ(),corner1.getWorld().getName());
     }
 }

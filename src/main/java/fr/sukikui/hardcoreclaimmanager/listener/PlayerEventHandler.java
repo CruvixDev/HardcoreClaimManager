@@ -39,6 +39,7 @@ public class PlayerEventHandler implements Listener {
                 Location corner1 = playerData.getLastToolLocation();
                 Location corner2 = e.getClickedBlock().getLocation();
                 String reason = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId());
+                e.getPlayer().sendMessage(reason);
             }
         }
     }

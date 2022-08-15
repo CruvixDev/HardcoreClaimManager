@@ -17,7 +17,7 @@ public class PlayerData {
     public PlayerData(String playerName, UUID playerUUID) {
         this.playerUUID = playerUUID;
         this.playerName = playerName;
-        this.claimBlocks = Integer.parseInt(HardcoreClaimManager.getProperties().getProperty("defaultClaimBlocks"));
+        this.claimBlocks = Integer.parseInt(HardcoreClaimManager.getProperties().getProperty("default-claim-blocks"));
         this.claims = new ArrayList<>();
     }
 

@@ -30,6 +30,10 @@ public class PlayerDataManager {
         Claim claim = new Claim(corner1,corner2,playerUUID,null);
         PlayerData playerData = getPlayerDataByUUID(playerUUID);
         String reason = "";
+        if (playerData == null) {
+            reason = ChatColor.RED + "The player does not exists!";
+            return reason;
+        }
         if (claim.getCorner1().getWorld().equals(claim.getCorner2().getWorld())) {
             if (!isRiding(claim)) {
                 if (claim.getClaimSurface() < playerData.getClaimBlocks()) {

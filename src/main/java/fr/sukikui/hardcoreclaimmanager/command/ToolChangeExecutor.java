@@ -15,7 +15,7 @@ public class ToolChangeExecutor implements CommandExecutor {
             if (strings.length == 1) {
                 Material material = Material.matchMaterial(strings[0]);
                 if (material != null) {
-                    HardcoreClaimManager.getProperties().setProperty("toolSelector",material.toString());
+                    HardcoreClaimManager.getProperties().setProperty("default-tool-selector",material.toString());
                     commandSender.sendMessage(ChatColor.GREEN + "Selector tool become " + material + " for all players.");
                     return true;
                 }
