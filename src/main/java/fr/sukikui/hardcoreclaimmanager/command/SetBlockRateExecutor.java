@@ -18,12 +18,12 @@ public class SetBlockRateExecutor implements CommandExecutor {
                     return true;
                 }
                 catch (NumberFormatException e) {
-                    commandSender.sendMessage(ChatColor.RED + "The number format is not valid!");
+                    commandSender.sendMessage(ChatColor.RED + "The parameter " + strings[0] + " is not valid!");
                     return false;
                 }
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "Not enough arguments!");
+                commandSender.sendMessage(ChatColor.RED + "Not enough arguments or too many (one required)!");
                 return false;
             }
         }

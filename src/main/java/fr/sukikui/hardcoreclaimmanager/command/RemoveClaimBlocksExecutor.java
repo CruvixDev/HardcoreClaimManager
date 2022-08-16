@@ -31,10 +31,9 @@ public class RemoveClaimBlocksExecutor implements CommandExecutor {
                 }
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "Not enough arguments!");
+                commandSender.sendMessage(ChatColor.RED + "Not enough arguments or too many (two required)!");
                 return false;
             }
-
         }
         else {
             commandSender.sendMessage(ChatColor.RED + "You are not allowed to perform this command!");

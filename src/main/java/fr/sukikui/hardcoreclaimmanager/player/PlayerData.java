@@ -56,6 +56,14 @@ public class PlayerData {
         return lastToolLocation;
     }
 
+    public void updateClaims() {
+        for (Claim claim : PlayerDataManager.getInstance().getClaims()) {
+            if (claim.getOwnerUUID().equals(this.playerUUID)) {
+                this.claims.add(claim);
+            }
+        }
+    }
+
     public void setLastToolLocation(Location location) {
         this.lastToolLocation = location;
     }

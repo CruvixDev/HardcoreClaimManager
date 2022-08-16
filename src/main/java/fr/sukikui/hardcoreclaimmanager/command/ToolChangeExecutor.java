@@ -25,7 +25,7 @@ public class ToolChangeExecutor implements CommandExecutor {
                 }
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "Invalid number of arguments!");
+                commandSender.sendMessage(ChatColor.RED + "The parameter " + strings[0] + " is not valid!");
                 return false;
             }
         }

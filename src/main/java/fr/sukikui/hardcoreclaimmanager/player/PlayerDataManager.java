@@ -37,8 +37,9 @@ public class PlayerDataManager {
         if (claim.getCorner1().getWorld().equals(claim.getCorner2().getWorld())) {
             if (!isRiding(claim)) {
                 if (isAdmin) {
-                    if (!claims.contains(claim)) {
-                        claims.add(claim);
+                    if (!this.claims.contains(claim)) {
+                        this.claims.add(claim);
+                        playerData.updateClaims();
                         reason = ChatColor.GREEN + "Claim successfully added!";
                     }
                 }
@@ -111,6 +112,10 @@ public class PlayerDataManager {
             }
         }
         return null;
+    }
+
+    public ArrayList<Claim> getClaims() {
+        return this.claims;
     }
 
     public Claim getClaimAt(Location location) {
