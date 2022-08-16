@@ -14,7 +14,7 @@ public class ShowClaimBlocksExecutor implements CommandExecutor {
         String commandSenderName = commandSender.getName();
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(commandSenderName);
         if (playerData != null) {
-            commandSender.sendMessage(ChatColor.AQUA + "The player " + playerData.getPlayerName() + " has " + playerData.getClaimBlocks() + "block of claim.");
+            commandSender.sendMessage(ChatColor.AQUA + "The player " + playerData.getPlayerName() + " has " + playerData.getClaimBlocks() + " block of claim.");
             return true;
         }
         else {

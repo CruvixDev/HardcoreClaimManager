@@ -133,6 +133,6 @@ public class Claim {
     }
 
     @Override public String toString() {
-        return String.format("[Claim at (%d,%d) in the world \"%s\"]\n",corner1.getBlockX(),corner2.getBlockZ(),corner1.getWorld().getName());
+        return String.format("[Claim at (%d,%d) and (%d,%d) in the world \"%s\"]\n",corner1.getBlockX(),corner1.getBlockZ(),corner2.getBlockX(),corner2.getBlockZ(),corner1.getWorld().getName());
     }
 }

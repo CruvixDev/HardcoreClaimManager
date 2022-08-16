@@ -58,7 +58,7 @@ public class PlayerData {
 
     public void updateClaims() {
         for (Claim claim : PlayerDataManager.getInstance().getClaims()) {
-            if (claim.getOwnerUUID().equals(this.playerUUID)) {
+            if (claim.getOwnerUUID().equals(this.playerUUID) && !this.claims.contains(claim)) {
                 this.claims.add(claim);
             }
         }
@@ -88,9 +88,7 @@ public class PlayerData {
     public String toString() {
         String toString = String.format("The player %s own :\n",this.playerName);
         for (Claim claim : this.claims) {
-            if (!claim.isAdmin()) {
-                toString += claim.toString();
-            }
+            toString += claim.toString();
         }
         return toString;
     }

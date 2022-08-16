@@ -40,12 +40,14 @@ public class PlayerDataManager {
                     if (!this.claims.contains(claim)) {
                         this.claims.add(claim);
                         playerData.updateClaims();
-                        reason = ChatColor.GREEN + "Claim successfully added!";
+                        reason = ChatColor.GREEN + "Claim successfully added! (admin)";
                     }
                 }
                 else {
                     if (claim.getClaimSurface() < playerData.getClaimBlocks() && !claims.contains(claim)) {
-                        claims.add(claim);
+                        this.claims.add(claim);
+                        playerData.updateClaims();
+                        playerData.removeClaimBlocks(claim.getClaimSurface());
                         reason = ChatColor.GREEN + "Claim successfully added!";
                     }
                     else {
@@ -85,6 +87,7 @@ public class PlayerDataManager {
             PlayerData playerData = new PlayerData(playerName,playerUUID);
             if (!playersData.contains(playerData)) {
                 playersData.add(playerData);
+                System.out.println("Player added!");
             }
         }
     }

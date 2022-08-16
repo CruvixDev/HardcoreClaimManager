@@ -3,6 +3,8 @@ package fr.sukikui.hardcoreclaimmanager.listener;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,8 +19,13 @@ public class ClaimEventHandler implements Listener {
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
 
         Claim claimConcerned = PlayerDataManager.getInstance().getClaimAt(blockLocation);
-        if (!playerData.isOwned(claimConcerned) || !claimConcerned.isAllowed(e.getPlayer().getName())) {
-            System.out.println("I can't place a block");
+        if (claimConcerned == null) {
+            return;
+        }
+        if (playerData != null && !playerData.isOwned(claimConcerned)) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place block here (claim is owned by " +
+                    Bukkit.getPlayer(claimConcerned.getOwnerUUID()).getName());
         }
     }
 
@@ -28,8 +35,13 @@ public class ClaimEventHandler implements Listener {
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
 
         Claim claimConcerned = PlayerDataManager.getInstance().getClaimAt(blockLocation);
-        if (!playerData.isOwned(claimConcerned) || !claimConcerned.isAllowed(e.getPlayer().getName())) {
-            System.out.println("I can't break a block");
+        if (claimConcerned == null) {
+            return;
+        }
+        if (playerData != null && !playerData.isOwned(claimConcerned)) {
+            e.setCancelled(true);
+            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place block here (claim is owned by " +
+                    Bukkit.getPlayer(claimConcerned.getOwnerUUID()).getName());
         }
     }
 }

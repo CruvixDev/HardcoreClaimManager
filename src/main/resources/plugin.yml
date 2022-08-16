@@ -2,14 +2,33 @@ name: HardcoreClaimManager
 version: '${project.version}'
 main: fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager
 api-version: 1.19
-authors: [ Sukikui ]
-description: Plugin spigot permettant aux joueurs de protéger leurs terrains, créé à l'occasion de l'évènement Hardcore de PMC.
+authors: [Sukikui]
+description: Spigot plugin to protect player's claim on the hardcore server
 commands:
-  protect:
-    description: "Commande joueur permettant de gérer ses terrains."
-    permission: protect.use
-    usage: "/protect <sous-commande> <joueur ?>"
-  protectadmin:
-    description: "Commande admin permettant de gérer les terrains."
-    permission: protectadmin.use
-    usage: "/protectadmin <sous-commande> <joueur ?>"
+  addClaimBlocks:
+    description: "Use this command to add claim blocks to a player, only server operators can execute this"
+    usage: "/addClaimBlocks <player> <amount>"
+  removeClaimBlocks:
+    description: "Use this command to remove claim blocks to a player, only server operators can execute this"
+    usage: "/removeClaimBlocks <player> <amount>"
+  setBlockRate:
+    description: "Use this command to modify the number of blocks earn by players per hour, only server operators can execute this"
+    usage: "/setBlockRate <amount>"
+  showClaimBlocks:
+    description: "Use this command to show the number of claim blocks that a player has"
+    usage: "/showClaimBlocks"
+  showClaim:
+    description: "Use this command to show player's claim"
+    usage: "/showClaim"
+  showTool:
+    description: "Use this command to show the item uses to select claim"
+    usage: "/showTool"
+  changeTool:
+    description: "Use this command to change the tool to use for claim selection, only server operators can execute this"
+    usage: "/changeTool <material>"
+  trustPlayers:
+    description: "Use this command to trust players in a claim"
+    usage: "/trustPlayers <player 1> <player 2> ... <player n>"
+  unregisterClaim:
+    description: "Use this command to unregister a claim, this command only works when a player is in a owned claim"
+    usage: "/unregisterClaim"
