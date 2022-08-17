@@ -27,7 +27,6 @@ public class PlayerEventHandler implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         PlayerDataManager.getInstance().addNewPlayerData(player.getName(),player.getUniqueId());
-        System.out.println("Player join");
     }
 
     @EventHandler
@@ -43,7 +42,6 @@ public class PlayerEventHandler implements Listener {
         }
         //handle claim creation with the tool's selector
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
-        System.out.println(playerData.getPlayerName());
         if (playerData != null) {
             if (playerData.getLastToolLocation() == null && e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
                 playerData.setLastToolLocation(e.getClickedBlock().getLocation());

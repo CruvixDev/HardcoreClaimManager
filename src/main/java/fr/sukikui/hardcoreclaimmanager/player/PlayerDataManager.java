@@ -1,5 +1,6 @@
 package fr.sukikui.hardcoreclaimmanager.player;
 
+import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -27,8 +28,6 @@ public class PlayerDataManager {
     }
 
     public String createClaim(Location corner1, Location corner2, UUID playerUUID, boolean isAdmin) {
-        //TODO verify that the claim is only horizontal and not completely vertical
-        //TODO minimum size of a claim to do
         Claim claim = new Claim(corner1,corner2,playerUUID,isAdmin);
         PlayerData playerData = getPlayerDataByUUID(playerUUID);
         String reason = "";
@@ -36,33 +35,41 @@ public class PlayerDataManager {
             reason = ChatColor.RED + "The player does not exists!";
             return reason;
         }
-        if (claim.getCorner1().getWorld().equals(claim.getCorner2().getWorld())) {
-            if (!isRiding(claim)) {
-                if (isAdmin) {
-                    if (!this.claims.contains(claim)) {
-                        this.claims.add(claim);
-                        playerData.updateClaims();
-                        reason = ChatColor.GREEN + "Claim successfully added! (admin)";
-                    }
-                }
-                else {
-                    if (claim.getClaimSurface() < playerData.getClaimBlocks() && !claims.contains(claim)) {
-                        this.claims.add(claim);
-                        playerData.updateClaims();
-                        playerData.removeClaimBlocks(claim.getClaimSurface());
-                        reason = ChatColor.GREEN + "Claim successfully added!";
-                    }
-                    else {
-                        reason = ChatColor.RED + "You have not enough claim blocks to claim this area";
-                    }
-                }
-            }
-            else {
-                reason = ChatColor.RED + "The claim is riding another claim!";
-            }
-        }
-        else {
+        if (!claim.getCorner1().getWorld().equals(claim.getCorner2().getWorld())) {
             reason = ChatColor.RED + "The two corners are not in the same world!";
+            return reason;
+        }
+        if (isRiding(claim)) {
+            reason = ChatColor.RED + "The claim is riding another claim!";
+            return reason;
+        }
+        HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getPluginManager().getPlugin("HardcoreClaimManager");
+        int claimMinSurface = 0;
+        try {
+            claimMinSurface = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("min-claim-size"));
+        }
+        catch (NumberFormatException e) {
+            reason = ChatColor.RED + "The parameter min-claim-size is not valid!";
+            return reason;
+        }
+        if (claim.getCorner1().getBlockX() - claim.getCorner2().getBlockX() == 0 || claim.getCorner1().getBlockZ() - claim.getCorner2().getBlockZ() == 0) {
+            reason = ChatColor.RED + "The claim is not valid!";
+            return reason;
+        }
+        if (claim.getClaimSurface() < claimMinSurface) {
+            reason = ChatColor.RED + "The claim is too small! Min size is: " + claimMinSurface;
+            return reason;
+        }
+        if (!this.claims.contains(claim)) {
+            this.claims.add(claim);
+            playerData.updateClaims();
+            if (isAdmin) {
+                reason = ChatColor.GREEN + "Claim successfully added! (admin)";
+            }
+            else if (claim.getClaimSurface() < playerData.getClaimBlocks()){
+                playerData.removeClaimBlocks(claim.getClaimSurface());
+                reason = ChatColor.GREEN + "Claim successfully added!";
+            }
         }
         return reason;
     }
@@ -107,15 +114,7 @@ public class PlayerDataManager {
 
     public PlayerData getPlayerDataByUUID(UUID playerUUID) {
         for (PlayerData playerData : playersData) {
-            if (playerData.getPlayerUUID().equals(playerUUID));
-            return playerData;
-        }
-        return null;
-    }
-
-    public PlayerData getPlayerDataByClaim(Claim claim) {
-        for (PlayerData playerData : playersData) {
-            if (playerData.getPlayerUUID().equals(claim.getOwnerUUID())) {
+            if (playerData.getPlayerUUID().equals(playerUUID)) {
                 return playerData;
             }
         }

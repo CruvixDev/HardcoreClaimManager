@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class PlayerData {
+    //TODO see for put here in attribute the last connection time to take the decision to declaim
     private String playerName;
     private UUID playerUUID;
     private int claimBlocks;
@@ -20,7 +21,7 @@ public class PlayerData {
         this.playerName = playerName;
         HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getServer().getPluginManager().getPlugin("HardcoreClaimManager");
         this.claimBlocks = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("default-claim-blocks"));
-        this.claims = new ArrayList<>();
+        this.claims = null;
     }
 
     public void addClaimBlocks(int amount) {
@@ -59,6 +60,7 @@ public class PlayerData {
     }
 
     public void updateClaims() {
+        this.claims = new ArrayList<>();
         for (Claim claim : PlayerDataManager.getInstance().getClaims()) {
             if (claim.getOwnerUUID().equals(this.playerUUID) && !this.claims.contains(claim)) {
                 this.claims.add(claim);

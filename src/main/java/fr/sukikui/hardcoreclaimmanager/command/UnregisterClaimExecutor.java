@@ -1,6 +1,7 @@
 package fr.sukikui.hardcoreclaimmanager.command;
 
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
+import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -16,7 +17,20 @@ public class UnregisterClaimExecutor implements CommandExecutor {
             Player player = (Player) commandSender;
             Claim claim = PlayerDataManager.getInstance().getClaimAt(player.getLocation());
             if (claim != null) {
-                PlayerDataManager.getInstance().removeClaim(claim,player.getName());
+                PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
+                if (playerData != null) {
+                    if (playerData.isOwned(claim)) {
+                        PlayerDataManager.getInstance().removeClaim(claim,player.getName());
+                        playerData.updateClaims();
+                        commandSender.sendMessage(ChatColor.GREEN + "Claim successfully unregistered!");
+                    }
+                    else {
+                        commandSender.sendMessage(ChatColor.RED + "You cannot unregister a claim that is not your!");
+                    }
+                }
+                else {
+
+                }
             }
             else {
                 commandSender.sendMessage(ChatColor.RED + "No claim was found at this location!");

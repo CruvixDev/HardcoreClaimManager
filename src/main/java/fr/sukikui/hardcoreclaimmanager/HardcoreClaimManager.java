@@ -3,6 +3,7 @@ package fr.sukikui.hardcoreclaimmanager;
 import fr.sukikui.hardcoreclaimmanager.command.*;
 import fr.sukikui.hardcoreclaimmanager.listener.ClaimEventHandler;
 import fr.sukikui.hardcoreclaimmanager.listener.PlayerEventHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;

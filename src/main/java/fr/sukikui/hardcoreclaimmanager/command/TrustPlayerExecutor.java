@@ -19,22 +19,30 @@ public class TrustPlayerExecutor implements CommandExecutor {
                 PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
                 if (playerData != null) {
                     Claim claim = PlayerDataManager.getInstance().getClaimAt(player.getLocation());
-                    for (String playerToTrust : strings) {
-                        claim.addTrustedPlayers(playerToTrust,player.getUniqueId());
+                    if (claim != null) {
+                        for (String playerToTrust : strings) {
+                            claim.addTrustedPlayers(playerToTrust,player.getUniqueId());
+                        }
+                        return true;
+                    }
+                    else {
+                        commandSender.sendMessage(ChatColor.RED + "You are not in a registered claim!");
+                        return false;
                     }
                 }
                 else {
                     commandSender.sendMessage(ChatColor.RED + "This player does not exists!");
+                    return false;
                 }
             }
             else {
                 commandSender.sendMessage(ChatColor.RED + "Only players can execute this command in their claims!");
+                return false;
             }
         }
         else {
             commandSender.sendMessage(ChatColor.RED + "No arguments given!");
             return false;
         }
-        return false;
     }
 }
