@@ -17,6 +17,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PlayerEventHandler implements Listener {
+    HardcoreClaimManager hardcoreClaimManager;
+
+    public PlayerEventHandler(HardcoreClaimManager hardcoreClaimManager) {
+        this.hardcoreClaimManager = hardcoreClaimManager;
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
@@ -32,7 +37,7 @@ public class PlayerEventHandler implements Listener {
 
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
-        String defaultTool = HardcoreClaimManager.getProperties().getProperty("default-tool-selector");
+        String defaultTool = this.hardcoreClaimManager.getProperties().getProperty("default-tool-selector");
         if (e.getItem() == null || !e.getItem().getType().equals(Material.matchMaterial(defaultTool))) {
             return;
         }

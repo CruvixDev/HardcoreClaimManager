@@ -7,19 +7,21 @@ import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 public class DatabaseManager {
     private String databasePath;
     private static DatabaseManager databaseManager;
+    private HardcoreClaimManager hardcoreClaimManager;
 
     /**
      * Constructeur à utiliser la première fois.
      * Crée la base de données et les tables si ces dernières n'existent pas.
      * Se connecte à la base et reformate les tables si celles-ci sont incohérentes.
      */
-    private DatabaseManager() {
-        this.databasePath = HardcoreClaimManager.getProperties().getProperty("database-path");
+    private DatabaseManager(HardcoreClaimManager hardcoreClaimManager) {
+        this.hardcoreClaimManager = hardcoreClaimManager;
+        this.databasePath = this.hardcoreClaimManager.getProperties().getProperty("database-path");
     }
 
-    public static DatabaseManager getInstance() {
+    public static DatabaseManager getInstance(HardcoreClaimManager hardcoreClaimManager) {
         if (databaseManager == null) {
-            databaseManager = new DatabaseManager();
+            databaseManager = new DatabaseManager(hardcoreClaimManager);
         }
         return databaseManager;
     }

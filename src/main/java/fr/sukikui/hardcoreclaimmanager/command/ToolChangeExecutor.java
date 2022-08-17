@@ -9,13 +9,20 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 public class ToolChangeExecutor implements CommandExecutor {
+    private HardcoreClaimManager hardcoreClaimManager;
+
+    public ToolChangeExecutor(HardcoreClaimManager hardcoreClaimManager) {
+        this.hardcoreClaimManager = hardcoreClaimManager;
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if (commandSender.isOp()) {
             if (strings.length == 1) {
                 Material material = Material.matchMaterial(strings[0]);
                 if (material != null) {
-                    HardcoreClaimManager.getProperties().setProperty("default-tool-selector",material.toString());
+                    this.hardcoreClaimManager.getProperties().setProperty("default-tool-selector",material.toString());
+                    this.hardcoreClaimManager.storeProperties();
                     commandSender.sendMessage(ChatColor.GREEN + "Selector tool become " + material + " for all players.");
                     return true;
                 }

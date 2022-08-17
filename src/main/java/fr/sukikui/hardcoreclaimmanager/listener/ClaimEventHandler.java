@@ -19,10 +19,10 @@ public class ClaimEventHandler implements Listener {
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
 
         Claim claimConcerned = PlayerDataManager.getInstance().getClaimAt(blockLocation);
-        if (claimConcerned == null) {
+        if (claimConcerned == null || playerData ==  null) {
             return;
         }
-        if (playerData != null && !playerData.isOwned(claimConcerned)) {
+        if (!playerData.isOwned(claimConcerned) && !claimConcerned.isAllowed(playerData.getPlayerUUID())) {
             e.setCancelled(true);
             e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place block here (claim is owned by " +
                     Bukkit.getPlayer(claimConcerned.getOwnerUUID()).getName());
@@ -35,12 +35,12 @@ public class ClaimEventHandler implements Listener {
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
 
         Claim claimConcerned = PlayerDataManager.getInstance().getClaimAt(blockLocation);
-        if (claimConcerned == null) {
+        if (claimConcerned == null || playerData ==  null) {
             return;
         }
-        if (playerData != null && !playerData.isOwned(claimConcerned)) {
+        if (!playerData.isOwned(claimConcerned) && !claimConcerned.isAllowed(playerData.getPlayerUUID())) {
             e.setCancelled(true);
-            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place block here (claim is owned by " +
+            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to break block here (claim is owned by " +
                     Bukkit.getPlayer(claimConcerned.getOwnerUUID()).getName());
         }
     }

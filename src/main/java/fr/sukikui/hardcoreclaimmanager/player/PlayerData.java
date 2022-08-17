@@ -2,6 +2,7 @@ package fr.sukikui.hardcoreclaimmanager.player;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
@@ -17,7 +18,8 @@ public class PlayerData {
     public PlayerData(String playerName, UUID playerUUID) {
         this.playerUUID = playerUUID;
         this.playerName = playerName;
-        this.claimBlocks = Integer.parseInt(HardcoreClaimManager.getProperties().getProperty("default-claim-blocks"));
+        HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getServer().getPluginManager().getPlugin("HardcoreClaimManager");
+        this.claimBlocks = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("default-claim-blocks"));
         this.claims = new ArrayList<>();
     }
 

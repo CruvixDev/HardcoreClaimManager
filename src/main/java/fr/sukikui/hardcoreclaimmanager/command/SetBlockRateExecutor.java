@@ -8,13 +8,20 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 public class SetBlockRateExecutor implements CommandExecutor {
+    private HardcoreClaimManager hardcoreClaimManager;
+
+    public SetBlockRateExecutor(HardcoreClaimManager hardcoreClaimManager) {
+        this.hardcoreClaimManager = hardcoreClaimManager;
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if (commandSender.isOp()) {
             if (strings.length == 1) {
                 try {
                     Integer.parseInt(strings[0]);
-                    HardcoreClaimManager.getProperties().setProperty("block-rate-per-hour",strings[0]);
+                    this.hardcoreClaimManager.getProperties().setProperty("block-rate-per-hour",strings[0]);
+                    this.hardcoreClaimManager.storeProperties();
                     return true;
                 }
                 catch (NumberFormatException e) {

@@ -8,9 +8,15 @@ import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 public class ShowToolExecutor implements CommandExecutor {
+    private HardcoreClaimManager hardcoreClaimManager;
+
+    public ShowToolExecutor(HardcoreClaimManager hardcoreClaimManager) {
+        this.hardcoreClaimManager = hardcoreClaimManager;
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        String toolUses = HardcoreClaimManager.getProperties().getProperty("default-tool-selector");
+        String toolUses = this.hardcoreClaimManager.getProperties().getProperty("default-tool-selector");
         commandSender.sendMessage(ChatColor.GREEN + "The tool uses to select claim is: " + toolUses);
         return true;
     }

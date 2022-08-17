@@ -27,6 +27,8 @@ public class PlayerDataManager {
     }
 
     public String createClaim(Location corner1, Location corner2, UUID playerUUID, boolean isAdmin) {
+        //TODO verify that the claim is only horizontal and not completely vertical
+        //TODO minimum size of a claim to do
         Claim claim = new Claim(corner1,corner2,playerUUID,isAdmin);
         PlayerData playerData = getPlayerDataByUUID(playerUUID);
         String reason = "";

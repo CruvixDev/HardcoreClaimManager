@@ -9,30 +9,45 @@ import java.io.*;
 import java.util.Properties;
 
 public final class HardcoreClaimManager extends JavaPlugin {
-    private static Properties properties = new Properties();
-    private String pluginFolderPath = this.getDataFolder().getAbsolutePath();
-    private InputStream inputStream;
+    private Properties properties = new Properties();
+    private  File propertyFile = new File(this.getDataFolder().getAbsolutePath() + "\\hardcoreClaimManager.properties");
     private OutputStream outputStream;
-    private File propertyFile;
 
     @Override
     public void onEnable() {
         this.getCommand("addClaimBlocks").setExecutor(new AddClaimBlocksExecutor());
         this.getCommand("removeClaimBlocks").setExecutor(new RemoveClaimBlocksExecutor());
-        this.getCommand("setBlockRate").setExecutor(new SetBlockRateExecutor());
+        this.getCommand("setBlockRate").setExecutor(new SetBlockRateExecutor(this));
         this.getCommand("showClaimBlocks").setExecutor(new ShowClaimBlocksExecutor());
         this.getCommand("showClaim").setExecutor(new ShowClaimsExecutor());
-        this.getCommand("showTool").setExecutor(new ShowToolExecutor());
-        this.getCommand("changeTool").setExecutor(new ToolChangeExecutor());
+        this.getCommand("showTool").setExecutor(new ShowToolExecutor(this));
+        this.getCommand("changeTool").setExecutor(new ToolChangeExecutor(this));
         this.getCommand("trustPlayers").setExecutor(new TrustPlayerExecutor());
         this.getCommand("unregisterClaim").setExecutor(new UnregisterClaimExecutor());
-        this.getServer().getPluginManager().registerEvents(new PlayerEventHandler(), this);
+        this.getServer().getPluginManager().registerEvents(new PlayerEventHandler(this), this);
         this.getServer().getPluginManager().registerEvents(new ClaimEventHandler(), this);
 
+        loadProperties();
+        storeProperties();
+    }
+
+    @Override
+    public void onDisable() {
+        storeProperties();
+    }
+
+    public Properties getProperties() {
+        return this.properties;
+    }
+
+    private void loadProperties() {
         try {
-            propertyFile = new File(pluginFolderPath + "hardcoreClaimManager.properties");
+            InputStream inputStream;
             if (!propertyFile.exists()) {
                 inputStream = this.getClassLoader().getResourceAsStream("hardcoreClaimManager.properties");
+                properties.load(inputStream);
+                File pluginFolder = new File(this.getDataFolder().getAbsolutePath());
+                pluginFolder.mkdirs();
                 propertyFile.createNewFile();
             }
             else {
@@ -40,25 +55,22 @@ public final class HardcoreClaimManager extends JavaPlugin {
             }
             properties.load(inputStream);
             properties.setProperty("database-path",this.getDataFolder().getAbsolutePath());
-            outputStream = new FileOutputStream(propertyFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onDisable() {
+    public void storeProperties() {
         try {
-            properties.store(outputStream,null);
-            outputStream.flush();
-            outputStream.close();
-            inputStream.close();
-        } catch (IOException e) {
+            if (propertyFile.exists()) {
+                outputStream = new FileOutputStream(propertyFile);
+                properties.store(outputStream,null);
+                outputStream.flush();
+                outputStream.close();
+            }
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static Properties getProperties() {
-        return properties;
     }
 }
