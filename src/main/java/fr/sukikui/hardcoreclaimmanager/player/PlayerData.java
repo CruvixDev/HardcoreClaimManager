@@ -55,7 +55,7 @@ public class PlayerData {
     }
 
     public Location getLastToolLocation() {
-        return lastToolLocation;
+        return this.lastToolLocation;
     }
 
     public void updateClaims() {

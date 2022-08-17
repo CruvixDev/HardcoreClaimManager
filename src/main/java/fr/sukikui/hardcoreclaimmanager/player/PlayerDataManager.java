@@ -89,15 +89,18 @@ public class PlayerDataManager {
             PlayerData playerData = new PlayerData(playerName,playerUUID);
             if (!playersData.contains(playerData)) {
                 playersData.add(playerData);
-                System.out.println("Player added!");
+                for (PlayerData playerData1 : playersData) {
+                    System.out.println(playerData1.getPlayerName());
+                }
             }
         }
     }
 
     public PlayerData getPlayerDataByName(String playerName) {
         for (PlayerData playerData : playersData) {
-            if (playerData.getPlayerName().equals(playerName));
-            return playerData;
+            if (playerData.getPlayerName().equals(playerName)) {
+                return playerData;
+            }
         }
         return null;
     }

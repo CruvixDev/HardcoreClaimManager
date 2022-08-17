@@ -43,13 +43,14 @@ public class PlayerEventHandler implements Listener {
         }
         //handle claim creation with the tool's selector
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
+        System.out.println(playerData.getPlayerName());
         if (playerData != null) {
             if (playerData.getLastToolLocation() == null && e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
                 playerData.setLastToolLocation(e.getClickedBlock().getLocation());
                 e.getPlayer().sendMessage(ChatColor.YELLOW + "First corner defined, right click on the other corner!");
                 e.setCancelled(true);
             }
-            if (playerData.getLastToolLocation() != null && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            else if (playerData.getLastToolLocation() != null && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                 Location corner1 = playerData.getLastToolLocation();
                 Location corner2 = e.getClickedBlock().getLocation();
                 String reason;
