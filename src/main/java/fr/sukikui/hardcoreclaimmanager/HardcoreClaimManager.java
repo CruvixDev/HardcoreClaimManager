@@ -1,17 +1,19 @@
 package fr.sukikui.hardcoreclaimmanager;
 
+import fr.sukikui.hardcoreclaimmanager.claim.PlayerAddBlocksTask;
 import fr.sukikui.hardcoreclaimmanager.command.*;
 import fr.sukikui.hardcoreclaimmanager.listener.ClaimEventHandler;
 import fr.sukikui.hardcoreclaimmanager.listener.PlayerEventHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.*;
 import java.util.Properties;
 
 public final class HardcoreClaimManager extends JavaPlugin {
     private Properties properties = new Properties();
-    private  File propertyFile = new File(this.getDataFolder().getAbsolutePath() + "\\hardcoreClaimManager.properties");
+    private File propertyFile = new File(this.getDataFolder().getAbsolutePath() + "\\hardcoreClaimManager.properties");
     private OutputStream outputStream;
 
     @Override
@@ -25,8 +27,12 @@ public final class HardcoreClaimManager extends JavaPlugin {
         this.getCommand("changeTool").setExecutor(new ToolChangeExecutor(this));
         this.getCommand("trustPlayers").setExecutor(new TrustPlayerExecutor());
         this.getCommand("unregisterClaim").setExecutor(new UnregisterClaimExecutor());
+
         this.getServer().getPluginManager().registerEvents(new PlayerEventHandler(this), this);
         this.getServer().getPluginManager().registerEvents(new ClaimEventHandler(), this);
+
+        BukkitScheduler scheduler = Bukkit.getScheduler();
+        scheduler.scheduleSyncRepeatingTask(this, new PlayerAddBlocksTask(this), 20L * 60, 20L * 60);
 
         loadProperties();
         storeProperties();

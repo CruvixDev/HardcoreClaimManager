@@ -26,7 +26,13 @@ public class PlayerEventHandler implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        PlayerDataManager.getInstance().addNewPlayerData(player.getName(),player.getUniqueId());
+        PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
+        if (playerData != null) {
+            playerData.setJoinDate(System.currentTimeMillis());
+        }
+        else {
+            PlayerDataManager.getInstance().addNewPlayerData(player.getName(),player.getUniqueId());
+        }
     }
 
     @EventHandler

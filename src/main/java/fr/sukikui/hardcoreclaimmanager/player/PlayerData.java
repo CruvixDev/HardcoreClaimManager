@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 public class PlayerData {
-    //TODO see for put here in attribute the last connection time to take the decision to declaim
     private String playerName;
     private UUID playerUUID;
     private int claimBlocks;
+    private long joinDate;
     private ArrayList<Claim> claims;
     private Location lastToolLocation;
 
@@ -49,6 +49,14 @@ public class PlayerData {
 
     public UUID getPlayerUUID() {
         return this.playerUUID;
+    }
+
+    public long getJoinDate() {
+        return joinDate;
+    }
+
+    public void setJoinDate(long joinDate) {
+        this.joinDate = joinDate;
     }
 
     public int getClaimBlocks() {
