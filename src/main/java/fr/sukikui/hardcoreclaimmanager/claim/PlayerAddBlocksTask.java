@@ -18,18 +18,20 @@ public class PlayerAddBlocksTask implements Runnable{
     @Override
     public void run() {
         ArrayList<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
-        int blockRate = 0;
+        int blockRate;
         try {
             blockRate = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("block-rate-per-hour"));
         }
-        catch (NumberFormatException e) {}
+        catch (NumberFormatException e) {
+            return;
+        }
         for (Player player : players) {
             PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
             if (playerData != null) {
                 long currentTime = System.currentTimeMillis();
-                int blockEarn = (int) ((currentTime - playerData.getJoinDate()) * Math.pow(10,-3) / 60) * blockRate / 60;
+                int blockEarn = (int) ((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) * blockRate / 60;
                 playerData.addClaimBlocks(blockEarn);
-                playerData.setJoinDate(currentTime);
+                playerData.setLastSaveBlocksGain(currentTime);
             }
         }
     }

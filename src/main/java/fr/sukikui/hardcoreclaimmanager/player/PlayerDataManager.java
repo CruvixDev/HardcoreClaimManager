@@ -96,7 +96,6 @@ public class PlayerDataManager {
             PlayerData playerData = new PlayerData(playerName,playerUUID);
             if (!playersData.contains(playerData)) {
                 playersData.add(playerData);
-                playerData.setJoinDate(System.currentTimeMillis());
             }
         }
     }

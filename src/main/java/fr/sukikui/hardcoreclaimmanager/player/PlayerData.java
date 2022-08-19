@@ -13,6 +13,7 @@ public class PlayerData {
     private UUID playerUUID;
     private int claimBlocks;
     private long joinDate;
+    private long lastSaveBlocksGain;
     private ArrayList<Claim> claims;
     private Location lastToolLocation;
 
@@ -21,7 +22,9 @@ public class PlayerData {
         this.playerName = playerName;
         HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getServer().getPluginManager().getPlugin("HardcoreClaimManager");
         this.claimBlocks = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("default-claim-blocks"));
-        this.claims = null;
+        this.claims = new ArrayList<>();
+        this.joinDate = System.currentTimeMillis();
+        this.lastSaveBlocksGain = this.joinDate;
     }
 
     public void addClaimBlocks(int amount) {
@@ -55,8 +58,8 @@ public class PlayerData {
         return joinDate;
     }
 
-    public void setJoinDate(long joinDate) {
-        this.joinDate = joinDate;
+    public long getLastSaveBlocksGain() {
+        return this.lastSaveBlocksGain;
     }
 
     public int getClaimBlocks() {
@@ -74,6 +77,10 @@ public class PlayerData {
                 this.claims.add(claim);
             }
         }
+    }
+
+    public void setLastSaveBlocksGain(long lastSaveBlocksGain) {
+        this.lastSaveBlocksGain = lastSaveBlocksGain;
     }
 
     public void setLastToolLocation(Location location) {

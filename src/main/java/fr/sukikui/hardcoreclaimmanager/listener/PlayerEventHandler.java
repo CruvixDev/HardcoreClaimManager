@@ -1,6 +1,8 @@
 package fr.sukikui.hardcoreclaimmanager.listener;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
+import fr.sukikui.hardcoreclaimmanager.claim.Claim;
+import fr.sukikui.hardcoreclaimmanager.claim.ClaimBoundariesVisualisation;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.Bukkit;
@@ -26,18 +28,24 @@ public class PlayerEventHandler implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
-        if (playerData != null) {
-            playerData.setJoinDate(System.currentTimeMillis());
-        }
-        else {
-            PlayerDataManager.getInstance().addNewPlayerData(player.getName(),player.getUniqueId());
-        }
+        PlayerDataManager.getInstance().addNewPlayerData(player.getName(),player.getUniqueId());
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
-        //TODO here save blocks claim according to playing time (if the schedule has not attribute him before quit)
+        int blockRate = 0;
+        try {
+            blockRate = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("block-rate-per-hour"));
+        }
+        catch (NumberFormatException numberFormatException) {
+            return;
+        }
+        PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
+        if (playerData != null) {
+            long currentTime = System.currentTimeMillis();
+            int blockEarn = (int) ((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) * blockRate / 60;
+            playerData.addClaimBlocks(blockEarn);
+        }
     }
 
     @EventHandler
@@ -73,6 +81,15 @@ public class PlayerEventHandler implements Listener {
 
     @EventHandler
     public void onPlayerHeldTool(PlayerItemHeldEvent e) {
-        //TODO boundaries visualisation (need a schedule to cancel false block)
+        if (e.getPlayer().getInventory().getItem(e.getNewSlot()) == null) {
+            return;
+        }
+        Material defaultTool = Material.matchMaterial(hardcoreClaimManager.getProperties().getProperty("default-tool-selector"));
+        if (e.getPlayer().getInventory().getItem(e.getNewSlot()).getType().equals(defaultTool)) {
+            Claim claim = PlayerDataManager.getInstance().getClaimAt(e.getPlayer().getLocation());
+            if (claim != null) {
+                ClaimBoundariesVisualisation.getInstance(claim.getCorner1(),claim.getCorner2()).startVisualisationTask(e.getPlayer().getName());
+            }
+        }
     }
 }

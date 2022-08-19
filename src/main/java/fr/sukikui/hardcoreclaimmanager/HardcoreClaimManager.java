@@ -32,7 +32,14 @@ public final class HardcoreClaimManager extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new ClaimEventHandler(), this);
 
         BukkitScheduler scheduler = Bukkit.getScheduler();
-        scheduler.scheduleSyncRepeatingTask(this, new PlayerAddBlocksTask(this), 20L * 60, 20L * 60);
+        int period;
+        try {
+            period = Integer.parseInt(properties.getProperty("clock-block-gain-duration"));
+        }
+        catch (NumberFormatException e) {
+            period = 1;
+        }
+        scheduler.scheduleSyncRepeatingTask(this, new PlayerAddBlocksTask(this), 20L * period * 60, 20L * period * 60);
 
         loadProperties();
         storeProperties();
