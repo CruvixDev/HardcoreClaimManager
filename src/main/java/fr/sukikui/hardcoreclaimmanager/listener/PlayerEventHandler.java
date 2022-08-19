@@ -88,7 +88,7 @@ public class PlayerEventHandler implements Listener {
         if (e.getPlayer().getInventory().getItem(e.getNewSlot()).getType().equals(defaultTool)) {
             Claim claim = PlayerDataManager.getInstance().getClaimAt(e.getPlayer().getLocation());
             if (claim != null) {
-                ClaimBoundariesVisualisation.getInstance(claim.getCorner1(),claim.getCorner2()).startVisualisationTask(e.getPlayer().getName());
+                ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),claim.getCorner1(),claim.getCorner2());
             }
         }
     }

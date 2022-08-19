@@ -61,12 +61,14 @@ public class PlayerDataManager {
             return reason;
         }
         if (!this.claims.contains(claim)) {
-            this.claims.add(claim);
-            playerData.updateClaims();
             if (isAdmin) {
+                this.claims.add(claim);
+                playerData.updateClaims();
                 reason = ChatColor.GREEN + "Claim successfully added! (admin)";
             }
             else if (claim.getClaimSurface() < playerData.getClaimBlocks()){
+                this.claims.add(claim);
+                playerData.updateClaims();
                 playerData.removeClaimBlocks(claim.getClaimSurface());
                 reason = ChatColor.GREEN + "Claim successfully added!";
             }

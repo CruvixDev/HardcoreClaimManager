@@ -13,33 +13,29 @@ import java.util.ArrayList;
 public class ClaimBoundariesVisualisation {
     private static ClaimBoundariesVisualisation claimBoundariesVisualisation;
     private ArrayList<String> playerSources = new ArrayList<>();
-    private Location corner1;
-    private Location corner2;
 
-    private ClaimBoundariesVisualisation(Location corner1, Location corner2) {
-        this.corner1 = corner1;
-        this.corner2 = corner2;
-    }
+    private ClaimBoundariesVisualisation() {}
 
-    public static ClaimBoundariesVisualisation getInstance(Location corner1, Location corner2) {
+    public static ClaimBoundariesVisualisation getInstance() {
         if (claimBoundariesVisualisation == null) {
-            claimBoundariesVisualisation = new ClaimBoundariesVisualisation(corner1,corner2);
+            claimBoundariesVisualisation = new ClaimBoundariesVisualisation();
         }
         return claimBoundariesVisualisation;
     }
 
-    public void startVisualisationTask(String playerSource) {
+    public void startVisualisationTask(String playerSource, Location corner1, Location corner2) {
         Player player = Bukkit.getPlayer(playerSource);
+        System.out.println(player.getName());
         if (!this.playerSources.contains(playerSource)) {
             if (player != null) {
                 playerSources.add(playerSource);
-                player.sendBlockChange(this.corner1, Material.GOLD_BLOCK.createBlockData());
-                player.sendBlockChange(this.corner2, Material.GOLD_BLOCK.createBlockData());
+                player.sendBlockChange(corner1, Material.GOLD_BLOCK.createBlockData());
+                player.sendBlockChange(corner2, Material.GOLD_BLOCK.createBlockData());
                 BukkitScheduler scheduler = Bukkit.getScheduler();
                 HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getPluginManager().getPlugin("HardcoreClaimManager");
                 Runnable task = () -> {
-                    player.sendBlockChange(corner1,Material.AIR.createBlockData());
-                    player.sendBlockChange(corner2,Material.AIR.createBlockData());
+                    player.sendBlockChange(corner1, corner1.getBlock().getBlockData());
+                    player.sendBlockChange(corner2, corner2.getBlock().getBlockData());
                     playerSources.remove(playerSource);
                 };
                 scheduler.scheduleSyncDelayedTask(hardcoreClaimManager,task,20L * 15);

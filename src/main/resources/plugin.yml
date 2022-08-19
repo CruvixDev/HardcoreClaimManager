@@ -3,7 +3,7 @@ version: '${project.version}'
 main: fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager
 api-version: 1.19
 authors: [Sukikui]
-description: Spigot plugin to protect player's claim on the hardcore server
+description: Spigot plugin to claim and protect terrain of player on the hardcore server.
 commands:
   addClaimBlocks:
     description: "Use this command to add claim blocks to a player, only server operators can execute this"

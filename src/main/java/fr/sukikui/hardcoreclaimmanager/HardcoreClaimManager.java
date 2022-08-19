@@ -39,7 +39,7 @@ public final class HardcoreClaimManager extends JavaPlugin {
         catch (NumberFormatException e) {
             period = 1;
         }
-        scheduler.scheduleSyncRepeatingTask(this, new PlayerAddBlocksTask(this), 20L * period * 60, 20L * period * 60);
+        scheduler.scheduleSyncRepeatingTask(this, new PlayerAddBlocksTask(this), (long) (period * 60 / 0.05), (long) (period * 60 / 0.05));
 
         loadProperties();
         storeProperties();

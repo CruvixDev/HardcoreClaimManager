@@ -29,7 +29,7 @@ public class PlayerAddBlocksTask implements Runnable{
             PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
             if (playerData != null) {
                 long currentTime = System.currentTimeMillis();
-                int blockEarn = (int) ((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) * blockRate / 60;
+                int blockEarn = (int) (((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) * blockRate / 60);
                 playerData.addClaimBlocks(blockEarn);
                 playerData.setLastSaveBlocksGain(currentTime);
             }
