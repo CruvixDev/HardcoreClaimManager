@@ -11,6 +11,9 @@ import org.bukkit.scheduler.BukkitScheduler;
 import java.io.*;
 import java.util.Properties;
 
+/**
+ * The plugin main class
+ */
 public final class HardcoreClaimManager extends JavaPlugin {
     private Properties properties = new Properties();
     private File propertyFile = new File(this.getDataFolder().getAbsolutePath() + "\\hardcoreClaimManager.properties");
@@ -50,10 +53,18 @@ public final class HardcoreClaimManager extends JavaPlugin {
         storeProperties();
     }
 
+    /**
+     *
+     * @return the properties object containing all plugin configurations
+     */
     public Properties getProperties() {
         return this.properties;
     }
 
+    /**
+     * Load all the configurations in the hardcoreClaimManager.properties file and created it, if it does not exist in the
+     * plugin folder
+     */
     private void loadProperties() {
         try {
             InputStream inputStream;
@@ -74,6 +85,9 @@ public final class HardcoreClaimManager extends JavaPlugin {
         }
     }
 
+    /**
+     * Store all configurations in the hardcoreClaimManager.properties file
+     */
     public void storeProperties() {
         try {
             if (propertyFile.exists()) {

@@ -12,6 +12,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
+/**
+ * Class handling all events related to claim
+ */
 public class ClaimEventHandler implements Listener {
 
     @EventHandler

@@ -4,21 +4,24 @@ import java.sql.*;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 
+/**
+ * Class handling all interactions with the SQLite database
+ */
 public class DatabaseManager {
     private String databasePath;
     private static DatabaseManager databaseManager;
     private HardcoreClaimManager hardcoreClaimManager;
 
-    /**
-     * Constructeur à utiliser la première fois.
-     * Crée la base de données et les tables si ces dernières n'existent pas.
-     * Se connecte à la base et reformate les tables si celles-ci sont incohérentes.
-     */
     private DatabaseManager(HardcoreClaimManager hardcoreClaimManager) {
         this.hardcoreClaimManager = hardcoreClaimManager;
         this.databasePath = this.hardcoreClaimManager.getProperties().getProperty("database-path");
     }
 
+    /**
+     * Method to get a unique instance of the DatabaseManager class
+     * @param hardcoreClaimManager the plugin instance
+     * @return a unique instance of the DatabaseManager class
+     */
     public static DatabaseManager getInstance(HardcoreClaimManager hardcoreClaimManager) {
         if (databaseManager == null) {
             databaseManager = new DatabaseManager(hardcoreClaimManager);
@@ -26,6 +29,10 @@ public class DatabaseManager {
         return databaseManager;
     }
 
+    /**
+     * A private method to get a connection to the SQLite database
+     * @return a connection to the SQLite database
+     */
     private Connection getConnection() {
         Connection connection = null;
         try {
@@ -42,6 +49,9 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Create all tables needed in the SQLite database to store plugin data
+     */
     public void createDatabase() {
         String createClaimTableRequest = "CREATE TABLE IF NOT EXISTS Claim" +
                 "(" +

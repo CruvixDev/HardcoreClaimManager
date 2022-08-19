@@ -8,6 +8,9 @@ import org.bukkit.Location;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Class representing a claim protection in a world
+ */
 public class Claim {
     private long claimID;
     private UUID ownerUUID;
@@ -24,6 +27,11 @@ public class Claim {
         this.trustedPlayers = new ArrayList<>();
     }
 
+    /**
+     * Method which tests if a player is allowed to interact with this claim
+     * @param playerName the name of the player to test
+     * @return true if the player is allowed or false if the player is not allowed or if the playerName is the owner
+     */
     public boolean isAllowed(String playerName) {
         if (this.trustedPlayers.contains(playerName)) {
             return true;
@@ -31,6 +39,11 @@ public class Claim {
         return false;
     }
 
+    /**
+     * Method which tests if a player is allowed to interact with this claim
+     * @param playerUUID the UUID of the player to test
+     * @return true if the player is allowed or false if the player is not allowed or if the playerUUID is the owner
+     */
     public boolean isAllowed(UUID playerUUID) {
         String playerName = Bukkit.getServer().getPlayer(playerUUID).getName();
         if (this.trustedPlayers.contains(playerName)) {
@@ -39,6 +52,11 @@ public class Claim {
         return false;
     }
 
+    /**
+     * Add a player into the trusted players list allowed to interact with this claim
+     * @param playerToTrustName the name of the player to trust in this claim
+     * @param trustPlayer the UUID of the player which asking to trust a player
+     */
     public void addTrustedPlayers(String playerToTrustName, UUID trustPlayer) {
         PlayerData trustPlayerData = PlayerDataManager.getInstance().getPlayerDataByUUID(trustPlayer);
         if (!trustPlayerData.isOwned(this)) {
@@ -50,6 +68,11 @@ public class Claim {
         }
     }
 
+    /**
+     * Remove a player from trusted players list allowed to interact with this claim
+     * @param playerName the name of the player to un-trust in this claim
+     * @param trustPlayer the UUID of the player asking to un-trust a player
+     */
     public void removeTrustedPlayers(String playerName, UUID trustPlayer) {
         if (!trustPlayer.equals(this.ownerUUID)) {
             return;
@@ -57,27 +80,46 @@ public class Claim {
         this.trustedPlayers.remove(playerName);
     }
 
+    /**
+     * Compute the claim's surface
+     * @return the claim's surface
+     */
     public int getClaimSurface() {
         return Math.abs(this.corner2.getBlockX() - this.corner1.getBlockX()) * Math.abs(this.corner2.getBlockZ() - this.corner1.getBlockZ());
     }
 
+    /**
+     *
+     * @return the claim ID
+     */
     public long getClaimID() {
         return this.claimID;
     }
 
+    /**
+     * Verify if this claim is an admin claim
+     * @return true if the claim is an admin claim false otherwise
+     */
     public boolean isAdmin() {
         return this.isAdmin;
     }
 
+    /**
+     * Utility method which verify if a given point is in the surface delimited by point1 and point2
+     * @param point the point to verify
+     * @param point1 the first corner of the rectangular surface
+     * @param point2 the second corner of the rectangular surface
+     * @return true if point is in the surface delimited by point2 and point2, false otherwise
+     */
     public static boolean isInSurface(Location point, Location point1, Location point2) {
         boolean isInSurface = false;
 
         int x = point.getBlockX();
         int z = point.getBlockZ();
-        int xmax = 0;
-        int xmin = 0;
-        int zmax = 0;
-        int zmin = 0;
+        int xmax;
+        int xmin;
+        int zmax;
+        int zmin;
 
         if (point1.getBlockX() >= point2.getBlockX()){
             xmax = point1.getBlockX();
@@ -103,16 +145,28 @@ public class Claim {
         return isInSurface;
     }
 
+    /**
+     *
+     * @return the first corner delimiting the claim
+     */
     public Location getCorner1() {
         return this.corner1;
     }
 
+    /**
+     *
+     * @return the second corner delimiting the claim
+     */
     public Location getCorner2() {
-        return corner2;
+        return this.corner2;
     }
 
+    /**
+     *
+     * @return the owner UUID
+     */
     public UUID getOwnerUUID() {
-        return ownerUUID;
+        return this.ownerUUID;
     }
 
     @Override

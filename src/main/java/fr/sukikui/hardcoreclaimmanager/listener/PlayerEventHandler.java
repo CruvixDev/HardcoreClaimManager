@@ -18,6 +18,9 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+/**
+ * Class handling all events related to players
+ */
 public class PlayerEventHandler implements Listener {
     HardcoreClaimManager hardcoreClaimManager;
 

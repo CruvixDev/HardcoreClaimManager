@@ -10,6 +10,9 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 
+/**
+ * Class handling boundaries visualisation tasks
+ */
 public class ClaimBoundariesVisualisation {
     private static ClaimBoundariesVisualisation claimBoundariesVisualisation;
     private ArrayList<String> playerSources = new ArrayList<>();
@@ -23,6 +26,12 @@ public class ClaimBoundariesVisualisation {
         return claimBoundariesVisualisation;
     }
 
+    /**
+     * Method starting boundaries visualisation task for a specific player and specific locations
+     * @param playerSource the player who want to start the visualisation task
+     * @param corner1 the first corner of the claim
+     * @param corner2 the second corner of the claim
+     */
     public void startVisualisationTask(String playerSource, Location corner1, Location corner2) {
         Player player = Bukkit.getPlayer(playerSource);
         System.out.println(player.getName());

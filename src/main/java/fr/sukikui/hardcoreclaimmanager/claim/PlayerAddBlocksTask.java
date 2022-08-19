@@ -8,6 +8,9 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 
+/**
+ * A task which attributes claim blocks according to player played time
+ */
 public class PlayerAddBlocksTask implements Runnable{
     HardcoreClaimManager hardcoreClaimManager;
 
