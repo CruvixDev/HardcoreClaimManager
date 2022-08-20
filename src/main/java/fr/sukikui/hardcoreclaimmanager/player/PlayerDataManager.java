@@ -108,6 +108,9 @@ public class PlayerDataManager {
         PlayerData playerData = getPlayerDataByName(playerName);
         if (playerData != null && playerData.isOwned(claim)) {
             this.claims.remove(claim);
+            if (!claim.isAdmin()) {
+                playerData.addClaimBlocks(claim.getClaimSurface());
+            }
         }
     }
 
@@ -194,7 +197,9 @@ public class PlayerDataManager {
         boolean isRiding = false;
         for (Claim claim : this.claims) {
             if (Claim.isInSurface(claimToVerify.getCorner1(),claim.getCorner1(),claim.getCorner2()) ||
-            Claim.isInSurface(claimToVerify.getCorner2(),claim.getCorner1(),claim.getCorner2())) {
+            Claim.isInSurface(claimToVerify.getCorner2(),claim.getCorner1(),claim.getCorner2()) ||
+            Claim.isInSurface(claim.getCorner1(),claimToVerify.getCorner1(),claimToVerify.getCorner2()) ||
+            Claim.isInSurface(claim.getCorner2(),claimToVerify.getCorner1(),claimToVerify.getCorner2())){
                 isRiding = true;
             }
         }

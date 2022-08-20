@@ -66,7 +66,12 @@ public class PlayerEventHandler implements Listener {
                 e.getPlayer().sendMessage(ChatColor.YELLOW + "First corner defined, right click on the other corner!");
                 e.setCancelled(true);
             }
-            else if (playerData.getLastToolLocation() != null && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            else if (playerData.getLastToolLocation() != null && e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+                playerData.setLastToolLocation(null);
+                e.getPlayer().sendMessage(ChatColor.YELLOW + "Claim creation cancel!");
+                e.setCancelled(true);
+            }
+            if (playerData.getLastToolLocation() != null && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                 Location corner1 = playerData.getLastToolLocation();
                 Location corner2 = e.getClickedBlock().getLocation();
                 String reason;
