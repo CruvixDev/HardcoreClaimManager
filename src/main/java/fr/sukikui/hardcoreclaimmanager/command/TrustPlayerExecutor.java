@@ -22,6 +22,7 @@ public class TrustPlayerExecutor implements CommandExecutor {
                     if (claim != null) {
                         for (String playerToTrust : strings) {
                             claim.addTrustedPlayers(playerToTrust,player.getUniqueId());
+                            //TODO little message
                         }
                         return true;
                     }

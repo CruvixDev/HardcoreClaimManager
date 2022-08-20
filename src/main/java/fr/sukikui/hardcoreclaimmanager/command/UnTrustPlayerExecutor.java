@@ -22,6 +22,7 @@ public class UnTrustPlayerExecutor implements CommandExecutor {
                     if (claim != null) {
                         for (String playerToUnTrust : strings) {
                             claim.removeTrustedPlayers(playerToUnTrust,player.getUniqueId());
+                            //TODO little message and create a command to show trusted players
                         }
                         return true;
                     }
