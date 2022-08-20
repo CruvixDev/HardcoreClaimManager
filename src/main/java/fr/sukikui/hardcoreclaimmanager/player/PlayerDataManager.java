@@ -8,6 +8,8 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -159,8 +161,8 @@ public class PlayerDataManager {
      *
      * @return all claims managed by the PlayerDataManager class
      */
-    public ArrayList<Claim> getClaims() {
-        return this.claims;
+    public List<Claim> getClaims() {
+        return Collections.unmodifiableList(this.claims);
     }
 
     /**
