@@ -3,6 +3,8 @@ package fr.sukikui.hardcoreclaimmanager.data;
 import java.sql.*;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
+import fr.sukikui.hardcoreclaimmanager.claim.Claim;
+import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 
 /**
  * Class handling all interactions with the SQLite database
@@ -34,7 +36,7 @@ public class DatabaseManager {
      * @return a connection to the SQLite database
      */
     private Connection getConnection() {
-        Connection connection = null;
+        Connection connection;
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:" + databasePath + "\\HardcoreClaimManager.db");
             //This request indicates to SQLite database to activate foreign key constraint.
@@ -56,7 +58,6 @@ public class DatabaseManager {
         String createClaimTableRequest = "CREATE TABLE IF NOT EXISTS Claim" +
                 "(" +
                     "claimID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                    "playerName TEXT UNIQUE NOT NULL," +
                     "worldName TEXT UNIQUE NOT NULL," +
                     "corner1X INTEGER NOT NULL," +
                     "corner1Y INTEGER NOT NULL," +
@@ -64,15 +65,20 @@ public class DatabaseManager {
                     "corner2X INTEGER NOT NULL," +
                     "corner2Y INTEGER NOT NULL," +
                     "corner2Z INTEGER NOT NULL," +
-                    "FOREIGN KEY (playerName) REFERENCES Player(playerName)," +
+                    "playerName TEXT NOT NULL," +
+                    "playerUUID TEXT NOT NULL," +
+                    "FOREIGN KEY (playerName,playerUUID) REFERENCES Player(playerName,playerUUID)," +
                     "FOREIGN KEY (worldName) REFERENCES World(worldName)," +
                     "CONSTRAINT corner1 UNIQUE (worldName,corner1X,corner1Y,corner1Z)," +
-                    "CONSTRAINT corner2 UNIQUE (worldName,corner2X,corner2Y,corner2Z)" +
+                    "CONSTRAINT corner2 UNIQUE (worldName,corner2X,corner2Y,corner2Z)," +
+                    "CHECK (corner1X != corner2X AND corner1Z != corner2Z)" +
                 ")";
         String createPlayerTableRequest = "CREATE TABLE IF NOT EXISTS Player" +
                 "(" +
-                    "playerName TEXT NOT NULL PRIMARY KEY," +
-                    "claimBlocs INTEGER NOT NULL" +
+                    "playerName TEXT NOT NULL," +
+                    "playerUUID TEXT NOT NULL," +
+                    "claimBlocks INTEGER NOT NULL" +
+                    "PRIMARY KEY (playerName,playerUUID)" +
                 ")";
         String createWorldTableRequest = "CREATE TABLE IF NOT EXISTS World" +
                 "(" +
@@ -82,9 +88,10 @@ public class DatabaseManager {
                 "(" +
                     "claimID INTEGER NOT NULL," +
                     "playerName TEXT NOT NULL," +
-                    "PRIMARY KEY (claimID,playerName)," +
+                    "playerUUID TEXT NOT NULL," +
                     "FOREIGN KEY (claimID) REFERENCES Claim(claimID)," +
-                    "FOREIGN KEY (playerName) REFERENCES Player(playerName)" +
+                    "FOREIGN KEY (playerName,playerUUID) REFERENCES Player(playerName,playerUUID)," +
+                    "PRIMARY KEY (claimID,playerName,playerUUID)" +
                 ")";
 
         Connection connection = getConnection();
@@ -114,20 +121,27 @@ public class DatabaseManager {
         }
     }
 
-    public void insertPlayer() {
-        //insert a player in the database
+    public void insertPlayer(PlayerData playerData) {
+        String insertPlayerRequest = "INSERT INTO Player (playerName,playerUUID,claimBlocks) VALUES (?,?,?)";
     }
 
-    public void deletePlayer() {
-        //delete a player in the database
+    public void deletePlayer(PlayerData playerData) {
+        String deletePlayerRequest = "DELETE FROM Player WHERE playerName=? AND playerUUID=?";
+        //TODO Delete all claims related to this player
     }
 
-    public void insertClaim() {
-        //insert a claim in the database
+    public void insertClaim(Claim claim, PlayerData playerData) {
+        String insertClaimRequest = "INSERT INTO Claim (worldName,corner1X,corner1Y,corner1Z,corner2X,corner2Y," +
+                "corner2Z,playerName,playerUUID) VALUES (?,?,?,?,?,?,?,?,?)";
     }
 
     public void deleteClaim() {
         //delete a claim in the database
+        //TODO Delete players if no claim are related to him
+    }
+
+    public void insertWorld(String worldName) {
+        String insertWorldRequest = "INSERT INTO World (worldName) VALUES (?)";
     }
 
     public void insertTrustedPlayers() {
