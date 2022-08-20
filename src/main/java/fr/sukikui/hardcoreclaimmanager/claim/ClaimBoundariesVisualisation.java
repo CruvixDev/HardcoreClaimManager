@@ -41,7 +41,8 @@ public class ClaimBoundariesVisualisation {
                 player.sendBlockChange(corner1, Material.GOLD_BLOCK.createBlockData());
                 player.sendBlockChange(corner2, Material.GOLD_BLOCK.createBlockData());
                 BukkitScheduler scheduler = Bukkit.getScheduler();
-                HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getPluginManager().getPlugin("HardcoreClaimManager");
+                HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getPluginManager().
+                        getPlugin("HardcoreClaimManager");
                 Runnable task = () -> {
                     player.sendBlockChange(corner1, corner1.getBlock().getBlockData());
                     player.sendBlockChange(corner2, corner2.getBlock().getBlockData());

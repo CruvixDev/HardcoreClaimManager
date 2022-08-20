@@ -17,7 +17,8 @@ public class RemoveClaimBlocksExecutor implements CommandExecutor {
                 if (playerData != null) {
                     try {
                         playerData.removeClaimBlocks(Integer.parseInt(strings[1]));
-                        commandSender.sendMessage(ChatColor.GREEN + "Successfully removed [" + strings[1] + "] blocks to " + strings[0] + "!");
+                        commandSender.sendMessage(ChatColor.GREEN + "Successfully removed [" + strings[1] + "] " +
+                                "blocks to " + strings[0] + "!");
                         return true;
                     }
                     catch (NumberFormatException e) {

@@ -16,7 +16,8 @@ import java.util.Properties;
  */
 public final class HardcoreClaimManager extends JavaPlugin {
     private Properties properties = new Properties();
-    private File propertyFile = new File(this.getDataFolder().getAbsolutePath() + "\\hardcoreClaimManager.properties");
+    private File propertyFile = new File(this.getDataFolder().getAbsolutePath() +
+            "\\hardcoreClaimManager.properties");
     private OutputStream outputStream;
 
     @Override
@@ -42,7 +43,8 @@ public final class HardcoreClaimManager extends JavaPlugin {
         catch (NumberFormatException e) {
             period = 1;
         }
-        scheduler.scheduleSyncRepeatingTask(this, new PlayerAddBlocksTask(this), (long) (period * 60 / 0.05), (long) (period * 60 / 0.05));
+        scheduler.scheduleSyncRepeatingTask(this, new PlayerAddBlocksTask(this),
+                (long) (period * 60 / 0.05), (long) (period * 60 / 0.05));
 
         loadProperties();
         storeProperties();
@@ -62,8 +64,8 @@ public final class HardcoreClaimManager extends JavaPlugin {
     }
 
     /**
-     * Load all the configurations in the hardcoreClaimManager.properties file and created it, if it does not exist in the
-     * plugin folder
+     * Load all the configurations in the hardcoreClaimManager.properties file and created it, if it does not exist in
+     * the plugin folder
      */
     private void loadProperties() {
         try {

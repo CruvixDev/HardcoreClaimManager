@@ -28,9 +28,10 @@ public class ClaimEventHandler implements Listener {
         }
         if (!playerData.isOwned(claimConcerned) && !claimConcerned.isAllowed(playerData.getPlayerUUID())) {
             e.setCancelled(true);
-            OfflinePlayer player = (Bukkit.getPlayer(claimConcerned.getOwnerUUID()) == null) ? Bukkit.getOfflinePlayer(claimConcerned.getOwnerUUID()) :
-                    Bukkit.getPlayer(claimConcerned.getOwnerUUID());
-            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place block here (claim is owned by " + player.getName());
+            OfflinePlayer player = (Bukkit.getPlayer(claimConcerned.getOwnerUUID()) == null) ? Bukkit.getOfflinePlayer
+                    (claimConcerned.getOwnerUUID()) : Bukkit.getPlayer(claimConcerned.getOwnerUUID());
+            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place block here (claim is owned by " +
+                    player.getName());
         }
     }
 
@@ -45,9 +46,10 @@ public class ClaimEventHandler implements Listener {
         }
         if (!playerData.isOwned(claimConcerned) && !claimConcerned.isAllowed(playerData.getPlayerUUID())) {
             e.setCancelled(true);
-            OfflinePlayer player = (Bukkit.getPlayer(claimConcerned.getOwnerUUID()) == null) ? Bukkit.getOfflinePlayer(claimConcerned.getOwnerUUID()) :
-                    Bukkit.getPlayer(claimConcerned.getOwnerUUID());
-            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place block here (claim is owned by " + player.getName());
+            OfflinePlayer player = (Bukkit.getPlayer(claimConcerned.getOwnerUUID()) == null) ? Bukkit.getOfflinePlayer
+                    (claimConcerned.getOwnerUUID()) : Bukkit.getPlayer(claimConcerned.getOwnerUUID());
+            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to break block here (claim is owned by " +
+                    player.getName());
         }
     }
 }

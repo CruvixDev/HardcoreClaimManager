@@ -46,7 +46,8 @@ public class PlayerEventHandler implements Listener {
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
         if (playerData != null) {
             long currentTime = System.currentTimeMillis();
-            int blockEarn = (int) ((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) * blockRate / 60;
+            int blockEarn = (int) ((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) *
+                    blockRate / 60;
             playerData.addClaimBlocks(blockEarn);
         }
     }
@@ -70,10 +71,12 @@ public class PlayerEventHandler implements Listener {
                 Location corner2 = e.getClickedBlock().getLocation();
                 String reason;
                 if (Bukkit.getServer().getOperators().contains(e.getPlayer())) {
-                    reason = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),true);
+                    reason = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
+                            true);
                 }
                 else {
-                    reason = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),false);
+                    reason = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
+                            false);
                 }
                 e.getPlayer().sendMessage(reason);
                 playerData.setLastToolLocation(null);
@@ -87,11 +90,13 @@ public class PlayerEventHandler implements Listener {
         if (e.getPlayer().getInventory().getItem(e.getNewSlot()) == null) {
             return;
         }
-        Material defaultTool = Material.matchMaterial(hardcoreClaimManager.getProperties().getProperty("default-tool-selector"));
+        Material defaultTool = Material.matchMaterial(hardcoreClaimManager.getProperties().
+                getProperty("default-tool-selector"));
         if (e.getPlayer().getInventory().getItem(e.getNewSlot()).getType().equals(defaultTool)) {
             Claim claim = PlayerDataManager.getInstance().getClaimAt(e.getPlayer().getLocation());
             if (claim != null) {
-                ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),claim.getCorner1(),claim.getCorner2());
+                ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),
+                        claim.getCorner1(),claim.getCorner2());
             }
         }
     }

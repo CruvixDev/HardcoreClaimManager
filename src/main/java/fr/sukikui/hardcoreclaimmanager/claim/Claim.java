@@ -85,7 +85,8 @@ public class Claim {
      * @return the claim's surface
      */
     public int getClaimSurface() {
-        return Math.abs(this.corner2.getBlockX() - this.corner1.getBlockX()) * Math.abs(this.corner2.getBlockZ() - this.corner1.getBlockZ());
+        return Math.abs(this.corner2.getBlockX() - this.corner1.getBlockX()) * Math.abs(this.corner2.getBlockZ() -
+                this.corner1.getBlockZ());
     }
 
     /**
@@ -187,6 +188,7 @@ public class Claim {
     }
 
     @Override public String toString() {
-        return String.format("[Claim at (%d,%d) and (%d,%d) in the world \"%s\"]\n",corner1.getBlockX(),corner1.getBlockZ(),corner2.getBlockX(),corner2.getBlockZ(),corner1.getWorld().getName());
+        return String.format("[Claim at (%d,%d) and (%d,%d) in the world \"%s\"]\n",corner1.getBlockX(),corner1.
+                getBlockZ(),corner2.getBlockX(),corner2.getBlockZ(),corner1.getWorld().getName());
     }
 }

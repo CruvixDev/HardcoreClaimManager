@@ -23,7 +23,8 @@ public class ToolChangeExecutor implements CommandExecutor {
                 if (material != null) {
                     this.hardcoreClaimManager.getProperties().setProperty("default-tool-selector",material.toString());
                     this.hardcoreClaimManager.storeProperties();
-                    commandSender.sendMessage(ChatColor.GREEN + "Selector tool become " + material + " for all players.");
+                    commandSender.sendMessage(ChatColor.GREEN + "Selector tool become " + material + " for all " +
+                            "players.");
                     return true;
                 }
                 else {

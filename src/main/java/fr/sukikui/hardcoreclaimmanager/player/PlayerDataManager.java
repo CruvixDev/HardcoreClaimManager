@@ -27,7 +27,7 @@ public class PlayerDataManager {
 
     /**
      * Method to get the unique instance of the PlayerDataManager class
-     * @return
+     * @return the unique instance of the PlayerDataManager class
      */
     public static PlayerDataManager getInstance() {
         if (playerDataManager == null) {
@@ -60,7 +60,8 @@ public class PlayerDataManager {
             reason = ChatColor.RED + "The claim is riding another claim!";
             return reason;
         }
-        HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getPluginManager().getPlugin("HardcoreClaimManager");
+        HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getPluginManager().
+                getPlugin("HardcoreClaimManager");
         int claimMinSurface = 0;
         try {
             claimMinSurface = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("min-claim-size"));
@@ -69,7 +70,8 @@ public class PlayerDataManager {
             reason = ChatColor.RED + "The parameter min-claim-size is not valid!";
             return reason;
         }
-        if (claim.getCorner1().getBlockX() - claim.getCorner2().getBlockX() == 0 || claim.getCorner1().getBlockZ() - claim.getCorner2().getBlockZ() == 0) {
+        if (claim.getCorner1().getBlockX() - claim.getCorner2().getBlockX() == 0 || claim.getCorner1().getBlockZ() -
+                claim.getCorner2().getBlockZ() == 0) {
             reason = ChatColor.RED + "The claim is not valid!";
             return reason;
         }
@@ -81,13 +83,17 @@ public class PlayerDataManager {
             if (isAdmin) {
                 this.claims.add(claim);
                 playerData.updateClaims();
-                reason = ChatColor.GREEN + "Claim successfully added! (admin)";
+                reason = ChatColor.GREEN + "Claim successfully added! (admin claim)";
             }
-            else if (claim.getClaimSurface() < playerData.getClaimBlocks()){
+            else if (claim.getClaimSurface() <= playerData.getClaimBlocks()){
                 this.claims.add(claim);
                 playerData.updateClaims();
                 playerData.removeClaimBlocks(claim.getClaimSurface());
                 reason = ChatColor.GREEN + "Claim successfully added!";
+            }
+            else {
+                reason = ChatColor.RED + "You have not enough blocks (" + playerData.getClaimBlocks() + ") to claim" +
+                        " this region because the surface of this is: " + claim.getClaimSurface();
             }
         }
         return reason;
