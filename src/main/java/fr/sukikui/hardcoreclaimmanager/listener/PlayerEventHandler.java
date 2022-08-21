@@ -46,7 +46,7 @@ public class PlayerEventHandler implements Listener {
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
         if (playerData != null) {
             long currentTime = System.currentTimeMillis();
-            int blockEarn = (int) ((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) *
+            float blockEarn = (float) ((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) *
                     blockRate / 60;
             playerData.addClaimBlocks(blockEarn);
         }
@@ -78,10 +78,14 @@ public class PlayerEventHandler implements Listener {
                 if (Bukkit.getServer().getOperators().contains(e.getPlayer())) {
                     reason = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
                             true);
+                    ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
+                            corner2);
                 }
                 else {
                     reason = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
                             false);
+                    ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
+                            corner2);
                 }
                 e.getPlayer().sendMessage(reason);
                 playerData.setLastToolLocation(null);

@@ -6,6 +6,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -33,10 +35,7 @@ public class Claim {
      * @return true if the player is allowed or false if the player is not allowed or if the playerName is the owner
      */
     public boolean isAllowed(String playerName) {
-        if (this.trustedPlayers.contains(playerName)) {
-            return true;
-        }
-        return false;
+        return this.trustedPlayers.contains(playerName);
     }
 
     /**
@@ -46,10 +45,7 @@ public class Claim {
      */
     public boolean isAllowed(UUID playerUUID) {
         String playerName = Bukkit.getServer().getPlayer(playerUUID).getName();
-        if (this.trustedPlayers.contains(playerName)) {
-            return true;
-        }
-        return false;
+        return this.trustedPlayers.contains(playerName);
     }
 
     /**
@@ -58,12 +54,11 @@ public class Claim {
      * @param trustPlayer the UUID of the player which asking to trust a player
      */
     public void addTrustedPlayers(String playerToTrustName, UUID trustPlayer) {
-        PlayerData trustPlayerData = PlayerDataManager.getInstance().getPlayerDataByUUID(trustPlayer);
-        if (!trustPlayerData.isOwned(this)) {
+        if (!trustPlayer.equals(this.ownerUUID)) {
             return;
         }
         PlayerData playerToTrustData = PlayerDataManager.getInstance().getPlayerDataByName(playerToTrustName);
-        if (playerToTrustData != null && trustPlayerData != null) {
+        if (playerToTrustData != null) {
             this.trustedPlayers.add(playerToTrustName);
         }
     }
@@ -85,8 +80,8 @@ public class Claim {
      * @return the claim's surface
      */
     public int getClaimSurface() {
-        return Math.abs(this.corner2.getBlockX() - this.corner1.getBlockX()) * Math.abs(this.corner2.getBlockZ() -
-                this.corner1.getBlockZ());
+        return (Math.abs(this.corner2.getBlockX() - this.corner1.getBlockX()) + 1) * (Math.abs(this.corner2.getBlockZ()
+                - this.corner1.getBlockZ()) + 1);
     }
 
     /**
@@ -168,6 +163,14 @@ public class Claim {
      */
     public UUID getOwnerUUID() {
         return this.ownerUUID;
+    }
+
+    /**
+     * Method to return all trusted players
+     * @return return an unmodifiable list of all trusted players
+     */
+    public List<String> getTrustedPlayers() {
+        return Collections.unmodifiableList(this.trustedPlayers);
     }
 
     @Override

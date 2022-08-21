@@ -51,8 +51,5 @@ public class ClaimBoundariesVisualisation {
                 scheduler.scheduleSyncDelayedTask(hardcoreClaimManager,task,20L * 15);
             }
         }
-        else {
-            player.sendMessage(ChatColor.RED + "You already visualise a claim!");
-        }
     }
 }

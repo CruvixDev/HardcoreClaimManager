@@ -14,7 +14,7 @@ import java.util.UUID;
 public class PlayerData {
     private String playerName;
     private UUID playerUUID;
-    private int claimBlocks;
+    private float claimBlocks;
     private long joinDate;
     private long lastSaveBlocksGain;
     private ArrayList<Claim> claims;
@@ -34,11 +34,11 @@ public class PlayerData {
      * Method adding a certain amount of blocks of claim for a specific player
      * @param amount the number of blocks of claim to add
      */
-    public void addClaimBlocks(int amount) {
+    public void addClaimBlocks(float amount) {
         this.claimBlocks += amount;
     }
 
-    public void removeClaimBlocks(int amount) {
+    public void removeClaimBlocks(float amount) {
         if (this.claimBlocks - amount > 0) {
             this.claimBlocks -= amount;
         }
@@ -95,7 +95,7 @@ public class PlayerData {
      * @return the amount of blocks of claim a player has
      */
     public int getClaimBlocks() {
-        return this.claimBlocks;
+        return (int) this.claimBlocks;
     }
 
     /**

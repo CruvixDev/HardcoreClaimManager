@@ -20,11 +20,17 @@ public class UnTrustPlayerExecutor implements CommandExecutor {
                 if (playerData != null) {
                     Claim claim = PlayerDataManager.getInstance().getClaimAt(player.getLocation());
                     if (claim != null) {
-                        for (String playerToUnTrust : strings) {
-                            claim.removeTrustedPlayers(playerToUnTrust,player.getUniqueId());
-                            //TODO little message and create a command to show trusted players
+                        if (playerData.isOwned(claim)) {
+                            for (String playerToUnTrust : strings) {
+                                claim.removeTrustedPlayers(playerToUnTrust,player.getUniqueId());
+                            }
+                            commandSender.sendMessage(ChatColor.GREEN + "Players successfully removed!");
+                            return true;
                         }
-                        return true;
+                        else {
+                            commandSender.sendMessage(ChatColor.RED + "You cannot trust players in other claims!");
+                            return false;
+                        }
                     }
                     else {
                         commandSender.sendMessage(ChatColor.RED + "You are not in a registered claim!");
