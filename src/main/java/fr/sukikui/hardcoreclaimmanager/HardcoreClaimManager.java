@@ -28,6 +28,7 @@ public final class HardcoreClaimManager extends JavaPlugin {
         this.getCommand("showClaimBlocks").setExecutor(new ShowClaimBlocksExecutor());
         this.getCommand("showClaim").setExecutor(new ShowClaimsExecutor());
         this.getCommand("showTool").setExecutor(new ShowToolExecutor(this));
+        this.getCommand("showTrustedPlayers").setExecutor(new ShowTrustedPlayersExecutor());
         this.getCommand("changeTool").setExecutor(new ToolChangeExecutor(this));
         this.getCommand("trustPlayers").setExecutor(new TrustPlayerExecutor());
         this.getCommand("unTrustPlayers").setExecutor(new UnTrustPlayerExecutor());

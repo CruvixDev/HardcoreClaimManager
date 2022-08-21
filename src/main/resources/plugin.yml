@@ -23,6 +23,9 @@ commands:
   showTool:
     description: "Use this command to show the item uses to select claim"
     usage: "/showTool"
+  showTrustedPlayers:
+    description: "Use this command to show all players trusted in your claim"
+    usage: "/showTrustedPlayers"
   changeTool:
     description: "Use this command to change the tool to use for claim selection, only server operators can execute this"
     usage: "/changeTool <material>"
