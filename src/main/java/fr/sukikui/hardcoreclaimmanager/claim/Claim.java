@@ -54,7 +54,7 @@ public class Claim {
      * @param trustPlayer the UUID of the player which asking to trust a player
      */
     public void addTrustedPlayers(String playerToTrustName, UUID trustPlayer) {
-        if (!trustPlayer.equals(this.ownerUUID)) {
+        if (trustPlayer.equals(this.ownerUUID)) {
             return;
         }
         PlayerData playerToTrustData = PlayerDataManager.getInstance().getPlayerDataByName(playerToTrustName);
@@ -69,7 +69,7 @@ public class Claim {
      * @param trustPlayer the UUID of the player asking to un-trust a player
      */
     public void removeTrustedPlayers(String playerName, UUID trustPlayer) {
-        if (!trustPlayer.equals(this.ownerUUID)) {
+        if (trustPlayer.equals(this.ownerUUID)) {
             return;
         }
         this.trustedPlayers.remove(playerName);

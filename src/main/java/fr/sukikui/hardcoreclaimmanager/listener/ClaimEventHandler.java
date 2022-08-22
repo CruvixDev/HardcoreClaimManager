@@ -26,7 +26,7 @@ public class ClaimEventHandler implements Listener {
         if (claimConcerned == null || playerData ==  null) {
             return;
         }
-        if (!playerData.isOwned(claimConcerned) && !claimConcerned.isAllowed(playerData.getPlayerUUID())) {
+        if (!playerData.isOwned(claimConcerned) && claimConcerned.isAllowed(playerData.getPlayerUUID())) {
             e.setCancelled(true);
             OfflinePlayer player = (Bukkit.getPlayer(claimConcerned.getOwnerUUID()) == null) ? Bukkit.getOfflinePlayer
                     (claimConcerned.getOwnerUUID()) : Bukkit.getPlayer(claimConcerned.getOwnerUUID());
@@ -44,7 +44,7 @@ public class ClaimEventHandler implements Listener {
         if (claimConcerned == null || playerData ==  null) {
             return;
         }
-        if (!playerData.isOwned(claimConcerned) && !claimConcerned.isAllowed(playerData.getPlayerUUID())) {
+        if (!playerData.isOwned(claimConcerned) && claimConcerned.isAllowed(playerData.getPlayerUUID())) {
             e.setCancelled(true);
             OfflinePlayer player = (Bukkit.getPlayer(claimConcerned.getOwnerUUID()) == null) ? Bukkit.getOfflinePlayer
                     (claimConcerned.getOwnerUUID()) : Bukkit.getPlayer(claimConcerned.getOwnerUUID());

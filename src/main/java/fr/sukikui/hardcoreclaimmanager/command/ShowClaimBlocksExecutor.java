@@ -11,15 +11,21 @@ import org.jetbrains.annotations.NotNull;
 public class ShowClaimBlocksExecutor implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
-        String commandSenderName = commandSender.getName();
-        PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(commandSenderName);
-        if (playerData != null) {
-            commandSender.sendMessage(ChatColor.AQUA + "The player " + playerData.getPlayerName() + " has " +
-                    playerData.getClaimBlocks() + " block of claim.");
-            return true;
+        if (strings.length == 0) {
+            String commandSenderName = commandSender.getName();
+            PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(commandSenderName);
+            if (playerData != null) {
+                commandSender.sendMessage(ChatColor.AQUA + "The player " + playerData.getPlayerName() + " has " +
+                        playerData.getClaimBlocks() + " block of claim.");
+                return true;
+            }
+            else {
+                commandSender.sendMessage(ChatColor.RED + "Player not found!");
+                return false;
+            }
         }
         else {
-            commandSender.sendMessage(ChatColor.RED + "Player not found!");
+            commandSender.sendMessage(ChatColor.RED + "Arguments given!");
             return false;
         }
     }

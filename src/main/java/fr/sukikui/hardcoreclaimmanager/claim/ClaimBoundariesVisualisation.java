@@ -34,22 +34,19 @@ public class ClaimBoundariesVisualisation {
      */
     public void startVisualisationTask(String playerSource, Location corner1, Location corner2) {
         Player player = Bukkit.getPlayer(playerSource);
-        System.out.println(player.getName());
-        if (!this.playerSources.contains(playerSource)) {
-            if (player != null) {
-                playerSources.add(playerSource);
-                player.sendBlockChange(corner1, Material.GOLD_BLOCK.createBlockData());
-                player.sendBlockChange(corner2, Material.GOLD_BLOCK.createBlockData());
-                BukkitScheduler scheduler = Bukkit.getScheduler();
-                HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getPluginManager().
-                        getPlugin("HardcoreClaimManager");
-                Runnable task = () -> {
-                    player.sendBlockChange(corner1, corner1.getBlock().getBlockData());
-                    player.sendBlockChange(corner2, corner2.getBlock().getBlockData());
-                    playerSources.remove(playerSource);
-                };
-                scheduler.scheduleSyncDelayedTask(hardcoreClaimManager,task,20L * 15);
-            }
+        if (!this.playerSources.contains(playerSource) && player != null) {
+            playerSources.add(playerSource);
+            player.sendBlockChange(corner1, Material.GOLD_BLOCK.createBlockData());
+            player.sendBlockChange(corner2, Material.GOLD_BLOCK.createBlockData());
+            BukkitScheduler scheduler = Bukkit.getScheduler();
+            HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getPluginManager().
+                    getPlugin("HardcoreClaimManager");
+            Runnable task = () -> {
+                player.sendBlockChange(corner1, corner1.getBlock().getBlockData());
+                player.sendBlockChange(corner2, corner2.getBlock().getBlockData());
+                playerSources.remove(playerSource);
+            };
+            scheduler.scheduleSyncDelayedTask(hardcoreClaimManager,task,20L * 15);
         }
     }
 }
