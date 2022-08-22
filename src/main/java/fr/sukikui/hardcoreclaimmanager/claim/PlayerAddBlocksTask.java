@@ -34,6 +34,7 @@ public class PlayerAddBlocksTask implements Runnable{
                 long currentTime = System.currentTimeMillis();
                 float blockEarn = (float) (((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) *
                         blockRate / 60);
+                System.out.println(blockEarn);
                 playerData.addClaimBlocks(blockEarn);
                 playerData.setLastSaveBlocksGain(currentTime);
             }

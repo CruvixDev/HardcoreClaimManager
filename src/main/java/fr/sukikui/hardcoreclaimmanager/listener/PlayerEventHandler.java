@@ -36,7 +36,7 @@ public class PlayerEventHandler implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
-        int blockRate = 0;
+        int blockRate;
         try {
             blockRate = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("block-rate-per-hour"));
         }

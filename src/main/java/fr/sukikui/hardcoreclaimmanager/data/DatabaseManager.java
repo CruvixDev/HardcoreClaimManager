@@ -1,6 +1,7 @@
 package fr.sukikui.hardcoreclaimmanager.data;
 
 import java.sql.*;
+import java.util.UUID;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
@@ -57,7 +58,7 @@ public class DatabaseManager {
     public void createDatabase() {
         String createClaimTableRequest = "CREATE TABLE IF NOT EXISTS Claim" +
                 "(" +
-                    "claimID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                    "claimID LONG NOT NULL PRIMARY KEY AUTOINCREMENT," +
                     "worldName TEXT UNIQUE NOT NULL," +
                     "corner1X INTEGER NOT NULL," +
                     "corner1Y INTEGER NOT NULL," +
@@ -67,8 +68,8 @@ public class DatabaseManager {
                     "corner2Z INTEGER NOT NULL," +
                     "playerName TEXT NOT NULL," +
                     "playerUUID TEXT NOT NULL," +
-                    "FOREIGN KEY (playerName,playerUUID) REFERENCES Player(playerName,playerUUID)," +
-                    "FOREIGN KEY (worldName) REFERENCES World(worldName)," +
+                    "FOREIGN KEY (playerName,playerUUID) REFERENCES Player(playerName,playerUUID) ON CASCADE," +
+                    "FOREIGN KEY (worldName) REFERENCES World(worldName) ON CASCADE," +
                     "CONSTRAINT corner1 UNIQUE (worldName,corner1X,corner1Y,corner1Z)," +
                     "CONSTRAINT corner2 UNIQUE (worldName,corner2X,corner2Y,corner2Z)," +
                     "CHECK (corner1X != corner2X AND corner1Z != corner2Z)" +
@@ -123,32 +124,211 @@ public class DatabaseManager {
 
     public void insertPlayer(PlayerData playerData) {
         String insertPlayerRequest = "INSERT INTO Player (playerName,playerUUID,claimBlocks) VALUES (?,?,?)";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            statement = connection.prepareStatement(insertPlayerRequest);
+            statement.setString(1,playerData.getPlayerName());
+            statement.setString(2,playerData.getPlayerUUID().toString());
+            statement.setInt(3,playerData.getClaimBlocks());
+
+            statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                statement.close();
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void deletePlayer(PlayerData playerData) {
         String deletePlayerRequest = "DELETE FROM Player WHERE playerName=? AND playerUUID=?";
-        //TODO Delete all claims related to this player
+        String deleteTrustedPlayersRequest = "DELETE FROM TrustedPlayers WHERE playerName NOT IN (SELECT playerName " +
+                "FROM Player)";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            statement = connection.prepareStatement(deletePlayerRequest);
+            statement.setString(1,playerData.getPlayerName());
+            statement.setString(2,playerData.getPlayerUUID().toString());
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement(deleteTrustedPlayersRequest);
+            statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                statement.close();
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void insertClaim(Claim claim, PlayerData playerData) {
         String insertClaimRequest = "INSERT INTO Claim (worldName,corner1X,corner1Y,corner1Z,corner2X,corner2Y," +
                 "corner2Z,playerName,playerUUID) VALUES (?,?,?,?,?,?,?,?,?)";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            statement = connection.prepareStatement(insertClaimRequest);
+            statement.setString(1,claim.getCorner1().getWorld().getName());
+            statement.setInt(2,claim.getCorner1().getBlockX());
+            statement.setInt(3,claim.getCorner1().getBlockY());
+            statement.setInt(4,claim.getCorner1().getBlockZ());
+            statement.setInt(5,claim.getCorner2().getBlockX());
+            statement.setInt(6,claim.getCorner2().getBlockY());
+            statement.setInt(7,claim.getCorner2().getBlockZ());
+            statement.setString(8,playerData.getPlayerName());
+            statement.setString(9,playerData.getPlayerUUID().toString());
+
+            statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                statement.close();
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public void deleteClaim() {
-        //delete a claim in the database
-        //TODO Delete players if no claim are related to him
+    public void deleteClaim(Claim claim) {
+        String deleteClaimRequest = "DELETE FROM CLAIM WHERE claimID=?";
+        String deleteTrustedPlayersRequest = "DELETE FROM TrustedPlayers WHERE claimID (SELECT claimID FROM Claim)";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            statement = connection.prepareStatement(deleteClaimRequest);
+            statement.setLong(1,claim.getClaimID());
+            statement.executeUpdate();
+
+            statement = connection.prepareStatement(deleteTrustedPlayersRequest);
+            statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                statement.close();
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void insertWorld(String worldName) {
         String insertWorldRequest = "INSERT INTO World (worldName) VALUES (?)";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            statement = connection.prepareStatement(insertWorldRequest);
+            statement.setString(1,worldName);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                statement.close();
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public void insertTrustedPlayers() {
-        //insert allowed players for a claim in the database
+    public void insertTrustedPlayer(PlayerData playerData, Claim claim) {
+        String insertTrustedPlayerRequest = "INSERT INTO TrustedPlayers (claimID,playerName,playerUUID) VALUES (?,?,?)";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            statement = connection.prepareStatement(insertTrustedPlayerRequest);
+            statement.setLong(1,claim.getClaimID());
+            statement.setString(2,playerData.getPlayerName());
+            statement.setString(3,playerData.getPlayerUUID().toString());
+
+            statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                statement.close();
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public void deleteTrustedPlayers() {
-        //delete allowed players for a claim in the database
+    public void deleteTrustedPlayers(PlayerData playerData, Claim claim) {
+        String deleteTrustedPlayerRequest = "DELETE FROM TrustedPlayers WHERE claimID=? AND playerName=? AND" +
+                "playerUUID=?";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            statement = connection.prepareStatement(deleteTrustedPlayerRequest);
+            statement.setLong(1,claim.getClaimID());
+            statement.setString(2,playerData.getPlayerName());
+            statement.setString(3,playerData.getPlayerUUID().toString());
+
+            statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                statement.close();
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void getAll() {
+        String selectClaimsAndPlayersRequest = "SELECT * FROM Claim INNER JOIN Player ON Player.playerName=" +
+                "Claim.playerName AND Player.playerUUID=Claim.playerUUID";
+        String selectAllTrustedPlayers = "SELECT * FROM TrustedPlayers";
     }
 }
