@@ -44,8 +44,8 @@ public class PlayerDataManager {
      * @param isAdmin true the claim is an admin claim, false the claim is a player claim
      * @return a string reason whether the claim is successfully created or not
      */
-    public String createClaim(Location corner1, Location corner2, UUID playerUUID, boolean isAdmin) {
-        Claim claim = new Claim(corner1,corner2,playerUUID,isAdmin);
+    public String createClaim(Location corner1, Location corner2, UUID playerUUID, boolean isAdmin, Long claimId) {
+        Claim claim = new Claim(corner1,corner2,playerUUID,isAdmin,claimId);
         PlayerData playerData = getPlayerDataByUUID(playerUUID);
         String reason = "";
         if (playerData == null) {
@@ -138,6 +138,25 @@ public class PlayerDataManager {
         }
     }
 
+    public void addNewPlayerData(String playerName, UUID playerUUID, float claimBlocks) {
+        boolean exists = false;
+        if (Bukkit.getServer().getPlayer(playerName) != null) {
+            exists = true;
+        }
+        for (OfflinePlayer offlinePlayer : Bukkit.getOfflinePlayers()) {
+            if (offlinePlayer.getName().equals(playerName)) {
+                exists = true;
+                break;
+            }
+        }
+        if (exists) {
+            PlayerData playerData = new PlayerData(playerName,playerUUID,claimBlocks);
+            if (!playersData.contains(playerData)) {
+                playersData.add(playerData);
+            }
+        }
+    }
+
     /**
      * Return the PlayerData of the player by name
      * @param playerName the name of the player
@@ -172,6 +191,20 @@ public class PlayerDataManager {
      */
     public List<Claim> getClaims() {
         return Collections.unmodifiableList(this.claims);
+    }
+
+    /**
+     * Get claim by its unique identifier
+     * @param claimID the claim unique identifier
+     * @return the claim with this unique identifier
+     */
+    public Claim getClaimById(long claimID) {
+        for (Claim claim : claims) {
+            if (claim.getClaimID() == claimID) {
+                return claim;
+            }
+        }
+        return null;
     }
 
     /**

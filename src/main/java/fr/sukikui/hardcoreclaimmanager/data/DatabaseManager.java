@@ -6,6 +6,9 @@ import java.util.UUID;
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
+import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 
 /**
  * Class handling all interactions with the SQLite database
@@ -60,6 +63,7 @@ public class DatabaseManager {
                 "(" +
                     "claimID LONG NOT NULL PRIMARY KEY AUTOINCREMENT," +
                     "worldName TEXT UNIQUE NOT NULL," +
+                    "isAdmin BOOLEAN NOT NULL," +
                     "corner1X INTEGER NOT NULL," +
                     "corner1Y INTEGER NOT NULL," +
                     "corner1Z INTEGER NOT NULL," +
@@ -72,7 +76,8 @@ public class DatabaseManager {
                     "FOREIGN KEY (worldName) REFERENCES World(worldName) ON CASCADE," +
                     "CONSTRAINT corner1 UNIQUE (worldName,corner1X,corner1Y,corner1Z)," +
                     "CONSTRAINT corner2 UNIQUE (worldName,corner2X,corner2Y,corner2Z)," +
-                    "CHECK (corner1X != corner2X AND corner1Z != corner2Z)" +
+                    "CHECK (corner1X != corner2X AND corner1Z != corner2Z)," +
+                    "CHECK (isAdmin IN (0,1))" +
                 ")";
         String createPlayerTableRequest = "CREATE TABLE IF NOT EXISTS Player" +
                 "(" +
@@ -182,8 +187,8 @@ public class DatabaseManager {
     }
 
     public void insertClaim(Claim claim, PlayerData playerData) {
-        String insertClaimRequest = "INSERT INTO Claim (worldName,corner1X,corner1Y,corner1Z,corner2X,corner2Y," +
-                "corner2Z,playerName,playerUUID) VALUES (?,?,?,?,?,?,?,?,?)";
+        String insertClaimRequest = "INSERT INTO Claim (worldName,idAdmin,corner1X,corner1Y,corner1Z,corner2X,corner2Y," +
+                "corner2Z,playerName,playerUUID) VALUES (?,?,?,?,?,?,?,?,?,?)";
 
         Connection connection = getConnection();
         PreparedStatement statement = null;
@@ -191,14 +196,15 @@ public class DatabaseManager {
         try {
             statement = connection.prepareStatement(insertClaimRequest);
             statement.setString(1,claim.getCorner1().getWorld().getName());
-            statement.setInt(2,claim.getCorner1().getBlockX());
-            statement.setInt(3,claim.getCorner1().getBlockY());
-            statement.setInt(4,claim.getCorner1().getBlockZ());
-            statement.setInt(5,claim.getCorner2().getBlockX());
-            statement.setInt(6,claim.getCorner2().getBlockY());
-            statement.setInt(7,claim.getCorner2().getBlockZ());
-            statement.setString(8,playerData.getPlayerName());
-            statement.setString(9,playerData.getPlayerUUID().toString());
+            statement.setBoolean(2,claim.isAdmin());
+            statement.setInt(3,claim.getCorner1().getBlockX());
+            statement.setInt(4,claim.getCorner1().getBlockY());
+            statement.setInt(5,claim.getCorner1().getBlockZ());
+            statement.setInt(6,claim.getCorner2().getBlockX());
+            statement.setInt(7,claim.getCorner2().getBlockY());
+            statement.setInt(8,claim.getCorner2().getBlockZ());
+            statement.setString(9,playerData.getPlayerName());
+            statement.setString(10,playerData.getPlayerUUID().toString());
 
             statement.executeUpdate();
         }
@@ -218,7 +224,8 @@ public class DatabaseManager {
 
     public void deleteClaim(Claim claim) {
         String deleteClaimRequest = "DELETE FROM CLAIM WHERE claimID=?";
-        String deleteTrustedPlayersRequest = "DELETE FROM TrustedPlayers WHERE claimID (SELECT claimID FROM Claim)";
+        String deleteTrustedPlayersRequest = "DELETE FROM TrustedPlayers WHERE claimID NOT IN (SELECT claimID FROM " +
+                "Claim)";
 
         Connection connection = getConnection();
         PreparedStatement statement = null;
@@ -330,5 +337,55 @@ public class DatabaseManager {
         String selectClaimsAndPlayersRequest = "SELECT * FROM Claim INNER JOIN Player ON Player.playerName=" +
                 "Claim.playerName AND Player.playerUUID=Claim.playerUUID";
         String selectAllTrustedPlayers = "SELECT * FROM TrustedPlayers";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            statement = connection.prepareStatement(selectClaimsAndPlayersRequest);
+            ResultSet claimsResultSet = statement.executeQuery();
+
+            statement = connection.prepareStatement(selectAllTrustedPlayers);
+            ResultSet trustedPlayersResultSet = statement.executeQuery();
+
+            while (claimsResultSet.next()) {
+                PlayerDataManager.getInstance().addNewPlayerData(claimsResultSet.getString("playerName"),
+                        UUID.fromString(claimsResultSet.getString("playerUUID")),
+                        claimsResultSet.getInt("claimBlocks"));
+                Location corner1 = Bukkit.getWorld(claimsResultSet.getString("worldName")).getBlockAt(
+                        claimsResultSet.getInt("corner1X"),
+                        claimsResultSet.getInt("corner1Y"),
+                        claimsResultSet.getInt("corner1Z")
+                ).getLocation();
+                Location corner2 = Bukkit.getWorld(claimsResultSet.getString("worldName")).getBlockAt(
+                        claimsResultSet.getInt("corner2X"),
+                        claimsResultSet.getInt("corner2Y"),
+                        claimsResultSet.getInt("corner2Z")
+                ).getLocation();
+                PlayerDataManager.getInstance().createClaim(corner1,corner2,UUID.fromString(claimsResultSet.getString
+                        ("playerUUID")), claimsResultSet.getBoolean("isAdmin"),
+                        claimsResultSet.getLong("claimID")
+                );
+            }
+
+            while (trustedPlayersResultSet.next()) {
+                Claim claim = PlayerDataManager.getInstance().getClaimById(trustedPlayersResultSet.
+                        getLong("claimID"));
+                claim.addTrustedPlayers(trustedPlayersResultSet.getString("playerName"),
+                        UUID.fromString(trustedPlayersResultSet.getString("playerUUID")));
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                statement.close();
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -77,13 +77,13 @@ public class PlayerEventHandler implements Listener {
                 String reason;
                 if (Bukkit.getServer().getOperators().contains(e.getPlayer())) {
                     reason = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
-                            true);
+                            true, null);
                     ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
                             corner2);
                 }
                 else {
                     reason = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
-                            false);
+                            false, null);
                     ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
                             corner2);
                 }

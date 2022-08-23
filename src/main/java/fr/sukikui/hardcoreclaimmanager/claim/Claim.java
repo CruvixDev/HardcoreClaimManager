@@ -14,14 +14,15 @@ import java.util.UUID;
  * Class representing a claim protection in a world
  */
 public class Claim {
-    private long claimID;
+    private Long claimID;
     private UUID ownerUUID;
     private boolean isAdmin;
     private ArrayList<String> trustedPlayers;
     private Location corner1;
     private Location corner2;
 
-    public Claim(Location corner1, Location corner2, UUID ownerUUID, boolean isAdmin) {
+    public Claim(Location corner1, Location corner2, UUID ownerUUID, boolean isAdmin, Long claimId) {
+        this.claimID = claimId;
         this.ownerUUID = ownerUUID;
         this.isAdmin = isAdmin;
         this.corner1 = corner1;

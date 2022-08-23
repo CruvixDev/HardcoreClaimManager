@@ -30,6 +30,15 @@ public class PlayerData {
         this.lastSaveBlocksGain = this.joinDate;
     }
 
+    public PlayerData(String playerName, UUID playerUUID, float claimBlocks) {
+        this.playerUUID = playerUUID;
+        this.playerName = playerName;
+        this.claimBlocks = claimBlocks;
+        this.claims = new ArrayList<>();
+        this.joinDate = System.currentTimeMillis();
+        this.lastSaveBlocksGain = this.joinDate;
+    }
+
     /**
      * Method adding a certain amount of blocks of claim for a specific player
      * @param amount the number of blocks of claim to add
