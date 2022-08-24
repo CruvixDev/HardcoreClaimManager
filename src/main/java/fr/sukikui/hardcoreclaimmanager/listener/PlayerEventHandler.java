@@ -3,6 +3,9 @@ package fr.sukikui.hardcoreclaimmanager.listener;
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.claim.ClaimBoundariesVisualisation;
+import fr.sukikui.hardcoreclaimmanager.claim.ClaimResults;
+import fr.sukikui.hardcoreclaimmanager.data.DatabaseManager;
+import fr.sukikui.hardcoreclaimmanager.enums.ClaimCreationMessages;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.Bukkit;
@@ -17,6 +20,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitScheduler;
 
 /**
  * Class handling all events related to players
@@ -31,7 +35,13 @@ public class PlayerEventHandler implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        PlayerDataManager.getInstance().addNewPlayerData(player.getName(),player.getUniqueId());
+        PlayerData playerData = PlayerDataManager.getInstance().addNewPlayerData(player.getName(),player.getUniqueId());
+        if (PlayerDataManager.getInstance().addNewPlayerData(player.getName(),player.getUniqueId()) != null) {
+            BukkitScheduler scheduler = Bukkit.getScheduler();
+            scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
+               DatabaseManager.getInstance(hardcoreClaimManager).insertPlayer(playerData);
+            });
+        }
     }
 
     @EventHandler
@@ -74,20 +84,32 @@ public class PlayerEventHandler implements Listener {
             if (playerData.getLastToolLocation() != null && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                 Location corner1 = playerData.getLastToolLocation();
                 Location corner2 = e.getClickedBlock().getLocation();
-                String reason;
+                ClaimResults results;
                 if (Bukkit.getServer().getOperators().contains(e.getPlayer())) {
-                    reason = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
+                    results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
                             true, null);
                     ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
                             corner2);
+                    if (results.claim != null) {
+                        BukkitScheduler scheduler = Bukkit.getScheduler();
+                        scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
+                           DatabaseManager.getInstance(hardcoreClaimManager).insertClaim(results.claim,playerData);
+                        });
+                    }
                 }
                 else {
-                    reason = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
+                    results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
                             false, null);
                     ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
                             corner2);
+                    if (results.claim != null) {
+                        BukkitScheduler scheduler = Bukkit.getScheduler();
+                        scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
+                            DatabaseManager.getInstance(hardcoreClaimManager).insertClaim(results.claim,playerData);
+                        });
+                    }
                 }
-                e.getPlayer().sendMessage(reason);
+                e.getPlayer().sendMessage(results.message.toString());
                 playerData.setLastToolLocation(null);
                 e.setCancelled(true);
             }

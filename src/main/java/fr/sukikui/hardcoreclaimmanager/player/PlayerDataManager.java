@@ -2,6 +2,8 @@ package fr.sukikui.hardcoreclaimmanager.player;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
+import fr.sukikui.hardcoreclaimmanager.claim.ClaimResults;
+import fr.sukikui.hardcoreclaimmanager.enums.ClaimCreationMessages;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -44,59 +46,50 @@ public class PlayerDataManager {
      * @param isAdmin true the claim is an admin claim, false the claim is a player claim
      * @return a string reason whether the claim is successfully created or not
      */
-    public String createClaim(Location corner1, Location corner2, UUID playerUUID, boolean isAdmin, Long claimId) {
+    public ClaimResults createClaim(Location corner1, Location corner2, UUID playerUUID, boolean isAdmin, Long claimId) {
         Claim claim = new Claim(corner1,corner2,playerUUID,isAdmin,claimId);
         PlayerData playerData = getPlayerDataByUUID(playerUUID);
-        String reason = "";
         if (playerData == null) {
-            reason = ChatColor.RED + "The player does not exists!";
-            return reason;
+            return new ClaimResults(null,ClaimCreationMessages.PlayerDoesNotExists);
         }
         if (!claim.getCorner1().getWorld().equals(claim.getCorner2().getWorld())) {
-            reason = ChatColor.RED + "The two corners are not in the same world!";
-            return reason;
+            return new ClaimResults(null,ClaimCreationMessages.CornersNotInTheSameWorld);
         }
         if (isRiding(claim)) {
-            reason = ChatColor.RED + "The claim is riding another claim!";
-            return reason;
+            return new ClaimResults(null,ClaimCreationMessages.ClaimsRiding);
         }
-        HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getPluginManager().
-                getPlugin("HardcoreClaimManager");
-        int claimMinSurface = 0;
+        HardcoreClaimManager hardcoreClaimManager = HardcoreClaimManager.getInstance();
+        int claimMinSurface;
         try {
             claimMinSurface = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("min-claim-size"));
         }
         catch (NumberFormatException e) {
-            reason = ChatColor.RED + "The parameter min-claim-size is not valid!";
-            return reason;
+            return new ClaimResults(null,ClaimCreationMessages.MinClaimSizeNotValid);
         }
         if (claim.getCorner1().getBlockX() - claim.getCorner2().getBlockX() == 0 || claim.getCorner1().getBlockZ() -
                 claim.getCorner2().getBlockZ() == 0) {
-            reason = ChatColor.RED + "The claim is not valid!";
-            return reason;
+            return new ClaimResults(null,ClaimCreationMessages.ClaimNotValid);
         }
         if (claim.getClaimSurface() < claimMinSurface) {
-            reason = ChatColor.RED + "The claim is too small! Min size is: " + claimMinSurface;
-            return reason;
+            return new ClaimResults(null,ClaimCreationMessages.ClaimTooSmall);
         }
         if (!this.claims.contains(claim)) {
             if (isAdmin) {
                 this.claims.add(claim);
                 playerData.updateClaims();
-                reason = ChatColor.GREEN + "Claim successfully added! (admin claim)";
+                return new ClaimResults(claim,ClaimCreationMessages.ClaimAdminCreated);
             }
             else if (claim.getClaimSurface() <= playerData.getClaimBlocks()){
                 this.claims.add(claim);
                 playerData.updateClaims();
                 playerData.removeClaimBlocks(claim.getClaimSurface());
-                reason = ChatColor.GREEN + "Claim successfully added!";
+                return new ClaimResults(claim,ClaimCreationMessages.ClaimCreated);
             }
             else {
-                reason = ChatColor.RED + "You have not enough blocks (" + playerData.getClaimBlocks() + ") to claim" +
-                        " this region because the surface of this is: " + claim.getClaimSurface();
+                return new ClaimResults(null,ClaimCreationMessages.NotEnoughBlock);
             }
         }
-        return reason;
+        return null;
     }
 
     /**
@@ -104,14 +97,16 @@ public class PlayerDataManager {
      * @param claim
      * @param playerName
      */
-    public void removeClaim(Claim claim, String playerName) {
+    public boolean removeClaim(Claim claim, String playerName) {
         PlayerData playerData = getPlayerDataByName(playerName);
         if (playerData != null && playerData.isOwned(claim)) {
             this.claims.remove(claim);
             if (!claim.isAdmin()) {
                 playerData.addClaimBlocks(claim.getClaimSurface());
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -119,7 +114,7 @@ public class PlayerDataManager {
      * @param playerName the name of the player
      * @param playerUUID the UUID of the player
      */
-    public void addNewPlayerData(String playerName, UUID playerUUID) {
+    public PlayerData addNewPlayerData(String playerName, UUID playerUUID) {
         boolean exists = false;
         if (Bukkit.getServer().getPlayer(playerName) != null) {
             exists = true;
@@ -134,11 +129,13 @@ public class PlayerDataManager {
             PlayerData playerData = new PlayerData(playerName,playerUUID);
             if (!playersData.contains(playerData)) {
                 playersData.add(playerData);
+                return playerData;
             }
         }
+        return null;
     }
 
-    public void addNewPlayerData(String playerName, UUID playerUUID, float claimBlocks) {
+    public PlayerData addNewPlayerData(String playerName, UUID playerUUID, float claimBlocks) {
         boolean exists = false;
         if (Bukkit.getServer().getPlayer(playerName) != null) {
             exists = true;
@@ -153,8 +150,10 @@ public class PlayerDataManager {
             PlayerData playerData = new PlayerData(playerName,playerUUID,claimBlocks);
             if (!playersData.contains(playerData)) {
                 playersData.add(playerData);
+                return playerData;
             }
         }
+        return null;
     }
 
     /**

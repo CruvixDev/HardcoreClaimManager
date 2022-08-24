@@ -2,6 +2,7 @@ package fr.sukikui.hardcoreclaimmanager;
 
 import fr.sukikui.hardcoreclaimmanager.claim.PlayerAddBlocksTask;
 import fr.sukikui.hardcoreclaimmanager.command.*;
+import fr.sukikui.hardcoreclaimmanager.data.DatabaseManager;
 import fr.sukikui.hardcoreclaimmanager.listener.ClaimEventHandler;
 import fr.sukikui.hardcoreclaimmanager.listener.PlayerEventHandler;
 import org.bukkit.Bukkit;
@@ -19,6 +20,7 @@ public final class HardcoreClaimManager extends JavaPlugin {
     private File propertyFile = new File(this.getDataFolder().getAbsolutePath() +
             "\\hardcoreClaimManager.properties");
     private OutputStream outputStream;
+    private static HardcoreClaimManager hardcoreClaimManager;
 
     @Override
     public void onEnable() {
@@ -30,9 +32,9 @@ public final class HardcoreClaimManager extends JavaPlugin {
         this.getCommand("showTool").setExecutor(new ShowToolExecutor(this));
         this.getCommand("showTrustedPlayers").setExecutor(new ShowTrustedPlayersExecutor());
         this.getCommand("changeTool").setExecutor(new ToolChangeExecutor(this));
-        this.getCommand("trustPlayers").setExecutor(new TrustPlayerExecutor());
-        this.getCommand("unTrustPlayers").setExecutor(new UnTrustPlayerExecutor());
-        this.getCommand("unregisterClaim").setExecutor(new UnregisterClaimExecutor());
+        this.getCommand("trustPlayers").setExecutor(new TrustPlayerExecutor(this));
+        this.getCommand("unTrustPlayers").setExecutor(new UnTrustPlayerExecutor(this));
+        this.getCommand("unregisterClaim").setExecutor(new UnregisterClaimExecutor(this));
 
         this.getServer().getPluginManager().registerEvents(new PlayerEventHandler(this), this);
         this.getServer().getPluginManager().registerEvents(new ClaimEventHandler(), this);
@@ -50,11 +52,21 @@ public final class HardcoreClaimManager extends JavaPlugin {
 
         loadProperties();
         storeProperties();
+        DatabaseManager.getInstance(this).createDatabase();
+        DatabaseManager.getInstance(this).getAll();
     }
 
     @Override
     public void onDisable() {
         storeProperties();
+    }
+
+    /**
+     * Method to get the unique instance of this plugin
+     * @return the unique instance of this plugin
+     */
+    public static HardcoreClaimManager getInstance() {
+        return hardcoreClaimManager;
     }
 
     /**

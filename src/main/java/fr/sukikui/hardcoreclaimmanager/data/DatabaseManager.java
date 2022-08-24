@@ -16,6 +16,7 @@ import org.bukkit.Location;
 public class DatabaseManager {
     private String databasePath;
     private static DatabaseManager databaseManager;
+    private Connection connection;
     private HardcoreClaimManager hardcoreClaimManager;
 
     private DatabaseManager(HardcoreClaimManager hardcoreClaimManager) {
@@ -72,8 +73,8 @@ public class DatabaseManager {
                     "corner2Z INTEGER NOT NULL," +
                     "playerName TEXT NOT NULL," +
                     "playerUUID TEXT NOT NULL," +
-                    "FOREIGN KEY (playerName,playerUUID) REFERENCES Player(playerName,playerUUID) ON CASCADE," +
-                    "FOREIGN KEY (worldName) REFERENCES World(worldName) ON CASCADE," +
+                    "FOREIGN KEY (playerName,playerUUID) REFERENCES Player(playerName,playerUUID) ON DELETE CASCADE," +
+                    "FOREIGN KEY (worldName) REFERENCES World(worldName) ON DELETE CASCADE," +
                     "CONSTRAINT corner1 UNIQUE (worldName,corner1X,corner1Y,corner1Z)," +
                     "CONSTRAINT corner2 UNIQUE (worldName,corner2X,corner2Y,corner2Z)," +
                     "CHECK (corner1X != corner2X AND corner1Z != corner2Z)," +
@@ -95,8 +96,8 @@ public class DatabaseManager {
                     "claimID INTEGER NOT NULL," +
                     "playerName TEXT NOT NULL," +
                     "playerUUID TEXT NOT NULL," +
-                    "FOREIGN KEY (claimID) REFERENCES Claim(claimID)," +
-                    "FOREIGN KEY (playerName,playerUUID) REFERENCES Player(playerName,playerUUID)," +
+                    "FOREIGN KEY (claimID) REFERENCES Claim(claimID) ON DELETE CASCADE," +
+                    "FOREIGN KEY (playerName,playerUUID) REFERENCES Player(playerName,playerUUID) ON DELETE CASCADE," +
                     "PRIMARY KEY (claimID,playerName,playerUUID)" +
                 ")";
 
@@ -157,8 +158,6 @@ public class DatabaseManager {
 
     public void deletePlayer(PlayerData playerData) {
         String deletePlayerRequest = "DELETE FROM Player WHERE playerName=? AND playerUUID=?";
-        String deleteTrustedPlayersRequest = "DELETE FROM TrustedPlayers WHERE playerName NOT IN (SELECT playerName " +
-                "FROM Player)";
 
         Connection connection = getConnection();
         PreparedStatement statement = null;
@@ -167,9 +166,6 @@ public class DatabaseManager {
             statement = connection.prepareStatement(deletePlayerRequest);
             statement.setString(1,playerData.getPlayerName());
             statement.setString(2,playerData.getPlayerUUID().toString());
-            statement.executeUpdate();
-
-            statement = connection.prepareStatement(deleteTrustedPlayersRequest);
             statement.executeUpdate();
         }
         catch (SQLException e) {
@@ -189,11 +185,16 @@ public class DatabaseManager {
     public void insertClaim(Claim claim, PlayerData playerData) {
         String insertClaimRequest = "INSERT INTO Claim (worldName,idAdmin,corner1X,corner1Y,corner1Z,corner2X,corner2Y," +
                 "corner2Z,playerName,playerUUID) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String insertWorldRequest = "INSERT INTO World (worldName) VALUES (?)";
 
         Connection connection = getConnection();
         PreparedStatement statement = null;
 
         try {
+            statement = connection.prepareStatement(insertWorldRequest);
+            statement.setString(1,claim.getCorner1().getWorld().getName());
+            statement.executeUpdate();
+
             statement = connection.prepareStatement(insertClaimRequest);
             statement.setString(1,claim.getCorner1().getWorld().getName());
             statement.setBoolean(2,claim.isAdmin());
@@ -205,7 +206,6 @@ public class DatabaseManager {
             statement.setInt(8,claim.getCorner2().getBlockZ());
             statement.setString(9,playerData.getPlayerName());
             statement.setString(10,playerData.getPlayerUUID().toString());
-
             statement.executeUpdate();
         }
         catch (SQLException e) {
@@ -224,8 +224,6 @@ public class DatabaseManager {
 
     public void deleteClaim(Claim claim) {
         String deleteClaimRequest = "DELETE FROM CLAIM WHERE claimID=?";
-        String deleteTrustedPlayersRequest = "DELETE FROM TrustedPlayers WHERE claimID NOT IN (SELECT claimID FROM " +
-                "Claim)";
 
         Connection connection = getConnection();
         PreparedStatement statement = null;
@@ -234,33 +232,6 @@ public class DatabaseManager {
             statement = connection.prepareStatement(deleteClaimRequest);
             statement.setLong(1,claim.getClaimID());
             statement.executeUpdate();
-
-            statement = connection.prepareStatement(deleteTrustedPlayersRequest);
-            statement.executeUpdate();
-        }
-        catch (SQLException e) {
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                statement.close();
-                connection.close();
-            }
-            catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void insertWorld(String worldName) {
-        String insertWorldRequest = "INSERT INTO World (worldName) VALUES (?)";
-
-        Connection connection = getConnection();
-        PreparedStatement statement = null;
-
-        try {
-            statement = connection.prepareStatement(insertWorldRequest);
-            statement.setString(1,worldName);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -363,7 +334,7 @@ public class DatabaseManager {
                         claimsResultSet.getInt("corner2Z")
                 ).getLocation();
                 PlayerDataManager.getInstance().createClaim(corner1,corner2,UUID.fromString(claimsResultSet.getString
-                        ("playerUUID")), claimsResultSet.getBoolean("isAdmin"),
+                        ("playerUUID")),claimsResultSet.getBoolean("isAdmin"),
                         claimsResultSet.getLong("claimID")
                 );
             }

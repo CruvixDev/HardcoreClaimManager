@@ -1,16 +1,26 @@
 package fr.sukikui.hardcoreclaimmanager.command;
 
+import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
+import fr.sukikui.hardcoreclaimmanager.data.DatabaseManager;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
 public class UnregisterClaimExecutor implements CommandExecutor {
+    private HardcoreClaimManager hardcoreClaimManager;
+
+    public UnregisterClaimExecutor(HardcoreClaimManager hardcoreClaimManager) {
+        this.hardcoreClaimManager = hardcoreClaimManager;
+    }
+
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
         if (commandSender instanceof Player) {
@@ -23,13 +33,18 @@ public class UnregisterClaimExecutor implements CommandExecutor {
                         PlayerDataManager.getInstance().removeClaim(claim,player.getName());
                         playerData.updateClaims();
                         commandSender.sendMessage(ChatColor.GREEN + "Claim successfully unregistered!");
+                        BukkitScheduler scheduler = Bukkit.getScheduler();
+                        scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
+                            DatabaseManager.getInstance(hardcoreClaimManager).deleteClaim(claim);
+                        });
                     }
                     else {
                         commandSender.sendMessage(ChatColor.RED + "You cannot unregister a claim that is not your!");
                     }
                 }
                 else {
-
+                    commandSender.sendMessage(ChatColor.RED + "This player does not exists!");
+                    return false;
                 }
             }
             else {
