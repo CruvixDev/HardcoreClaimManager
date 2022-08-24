@@ -40,15 +40,17 @@ public class UnTrustPlayerExecutor implements CommandExecutor {
                                     untrustedPlayers.add(playerToUnTrust);
                                 }
                             }
-                            BukkitScheduler scheduler = Bukkit.getScheduler();
-                            scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
-                                for (String playerToUntrust : untrustedPlayers) {
-                                    PlayerData playerToUnTrustData = PlayerDataManager.getInstance().
-                                            getPlayerDataByName(playerToUntrust);
-                                    DatabaseManager.getInstance(hardcoreClaimManager).deleteTrustedPlayers(
-                                            playerToUnTrustData,claim);
-                                }
-                            });
+                            if (untrustedPlayers.size() > 0) {
+                                BukkitScheduler scheduler = Bukkit.getScheduler();
+                                scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
+                                    for (String playerToUnTrust : untrustedPlayers) {
+                                        PlayerData playerToUnTrustData = PlayerDataManager.getInstance().
+                                                getPlayerDataByName(playerToUnTrust);
+                                        DatabaseManager.getInstance(hardcoreClaimManager).deleteTrustedPlayers(
+                                                playerToUnTrustData,claim);
+                                    }
+                                });
+                            }
                             commandSender.sendMessage(ChatColor.GREEN + "Players successfully removed!");
                             return true;
                         }

@@ -101,6 +101,7 @@ public class PlayerDataManager {
         PlayerData playerData = getPlayerDataByName(playerName);
         if (playerData != null && playerData.isOwned(claim)) {
             this.claims.remove(claim);
+            playerData.updateClaims();
             if (!claim.isAdmin()) {
                 playerData.addClaimBlocks(claim.getClaimSurface());
                 return true;

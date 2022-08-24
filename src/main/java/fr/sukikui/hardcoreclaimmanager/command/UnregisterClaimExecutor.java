@@ -30,13 +30,14 @@ public class UnregisterClaimExecutor implements CommandExecutor {
                 PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
                 if (playerData != null) {
                     if (playerData.isOwned(claim)) {
-                        PlayerDataManager.getInstance().removeClaim(claim,player.getName());
-                        playerData.updateClaims();
+                        boolean isRemoved = PlayerDataManager.getInstance().removeClaim(claim,player.getName());
                         commandSender.sendMessage(ChatColor.GREEN + "Claim successfully unregistered!");
-                        BukkitScheduler scheduler = Bukkit.getScheduler();
-                        scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
-                            DatabaseManager.getInstance(hardcoreClaimManager).deleteClaim(claim);
-                        });
+                        if (isRemoved) {
+                            BukkitScheduler scheduler = Bukkit.getScheduler();
+                            scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
+                                DatabaseManager.getInstance(hardcoreClaimManager).deleteClaim(claim);
+                            });
+                        }
                     }
                     else {
                         commandSender.sendMessage(ChatColor.RED + "You cannot unregister a claim that is not your!");
