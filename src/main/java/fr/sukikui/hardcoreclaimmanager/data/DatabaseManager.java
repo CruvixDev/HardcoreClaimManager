@@ -16,7 +16,6 @@ import org.bukkit.Location;
 public class DatabaseManager {
     private String databasePath;
     private static DatabaseManager databaseManager;
-    private Connection connection;
     private HardcoreClaimManager hardcoreClaimManager;
 
     private DatabaseManager(HardcoreClaimManager hardcoreClaimManager) {
