@@ -36,7 +36,7 @@ public class PlayerEventHandler implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         PlayerData playerData = PlayerDataManager.getInstance().addNewPlayerData(player.getName(),player.getUniqueId());
-        if (PlayerDataManager.getInstance().addNewPlayerData(player.getName(),player.getUniqueId()) != null) {
+        if (playerData != null) {
             BukkitScheduler scheduler = Bukkit.getScheduler();
             scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
                DatabaseManager.getInstance(hardcoreClaimManager).insertPlayer(playerData);
@@ -109,7 +109,12 @@ public class PlayerEventHandler implements Listener {
                         });
                     }
                 }
-                e.getPlayer().sendMessage(results.message.toString());
+                String message = results.message.getMessage();
+                if (results.message.equals(ClaimCreationMessages.NotEnoughBlock)) {
+                    message = String.format(results.message.getMessage(),playerData.getClaimBlocks(),
+                            results.claim.getClaimSurface());
+                }
+                e.getPlayer().sendMessage(message);
                 playerData.setLastToolLocation(null);
                 e.setCancelled(true);
             }

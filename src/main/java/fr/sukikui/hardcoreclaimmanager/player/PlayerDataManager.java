@@ -104,8 +104,8 @@ public class PlayerDataManager {
             playerData.updateClaims();
             if (!claim.isAdmin()) {
                 playerData.addClaimBlocks(claim.getClaimSurface());
-                return true;
             }
+            return true;
         }
         return false;
     }
@@ -191,6 +191,14 @@ public class PlayerDataManager {
      */
     public List<Claim> getClaims() {
         return Collections.unmodifiableList(this.claims);
+    }
+
+    /**
+     *
+     * @return all players data managed by the PlayerDataManager class
+     */
+    public List<PlayerData> getPlayersData() {
+        return Collections.unmodifiableList(this.playersData);
     }
 
     /**

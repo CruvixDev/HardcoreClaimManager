@@ -5,6 +5,8 @@ import fr.sukikui.hardcoreclaimmanager.command.*;
 import fr.sukikui.hardcoreclaimmanager.data.DatabaseManager;
 import fr.sukikui.hardcoreclaimmanager.listener.ClaimEventHandler;
 import fr.sukikui.hardcoreclaimmanager.listener.PlayerEventHandler;
+import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
+import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -24,6 +26,8 @@ public final class HardcoreClaimManager extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        hardcoreClaimManager = this;
+
         this.getCommand("addClaimBlocks").setExecutor(new AddClaimBlocksExecutor());
         this.getCommand("removeClaimBlocks").setExecutor(new RemoveClaimBlocksExecutor());
         this.getCommand("setBlockRate").setExecutor(new SetBlockRateExecutor(this));
@@ -59,6 +63,10 @@ public final class HardcoreClaimManager extends JavaPlugin {
     @Override
     public void onDisable() {
         storeProperties();
+        for (PlayerData playerData : PlayerDataManager.getInstance().getPlayersData()) {
+            DatabaseManager.getInstance(this).updatePlayerClaimBlocks(playerData);
+        }
+        Bukkit.getScheduler().cancelTasks(this);
     }
 
     /**

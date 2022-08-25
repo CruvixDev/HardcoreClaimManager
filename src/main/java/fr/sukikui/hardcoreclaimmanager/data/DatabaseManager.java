@@ -49,7 +49,8 @@ public class DatabaseManager {
             statement.execute();
             statement.close();
             return connection;
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
@@ -61,8 +62,8 @@ public class DatabaseManager {
     public void createDatabase() {
         String createClaimTableRequest = "CREATE TABLE IF NOT EXISTS Claim" +
                 "(" +
-                    "claimID LONG NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                    "worldName TEXT UNIQUE NOT NULL," +
+                    "claimID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                    "worldName TEXT NOT NULL," +
                     "isAdmin BOOLEAN NOT NULL," +
                     "corner1X INTEGER NOT NULL," +
                     "corner1Y INTEGER NOT NULL," +
@@ -83,7 +84,7 @@ public class DatabaseManager {
                 "(" +
                     "playerName TEXT NOT NULL," +
                     "playerUUID TEXT NOT NULL," +
-                    "claimBlocks INTEGER NOT NULL" +
+                    "claimBlocks INTEGER NOT NULL," +
                     "PRIMARY KEY (playerName,playerUUID)" +
                 ")";
         String createWorldTableRequest = "CREATE TABLE IF NOT EXISTS World" +
@@ -115,9 +116,11 @@ public class DatabaseManager {
 
             statement = connection.prepareStatement(createTrustedPlayersTableRequest);
             statement.executeUpdate();
-        } catch (SQLException e) {
+        }
+        catch (SQLException e) {
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             try {
                 statement.close();
                 connection.close();
@@ -139,6 +142,34 @@ public class DatabaseManager {
             statement.setString(2,playerData.getPlayerUUID().toString());
             statement.setInt(3,playerData.getClaimBlocks());
 
+            statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                statement.close();
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void updatePlayerClaimBlocks(PlayerData playerData) {
+        String updateClaimBlocksRequest = "UPDATE Player SET claimBlocks=? WHERE Player.playerName=? AND" +
+                " Player.playerUUID=?";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            statement = connection.prepareStatement(updateClaimBlocksRequest);
+            statement.setInt(1,playerData.getClaimBlocks());
+            statement.setString(2,playerData.getPlayerName());
+            statement.setString(3,playerData.getPlayerUUID().toString());
             statement.executeUpdate();
         }
         catch (SQLException e) {
@@ -182,9 +213,9 @@ public class DatabaseManager {
     }
 
     public void insertClaim(Claim claim, PlayerData playerData) {
-        String insertClaimRequest = "INSERT INTO Claim (worldName,idAdmin,corner1X,corner1Y,corner1Z,corner2X,corner2Y," +
+        String insertClaimRequest = "INSERT INTO Claim (worldName,isAdmin,corner1X,corner1Y,corner1Z,corner2X,corner2Y," +
                 "corner2Z,playerName,playerUUID) VALUES (?,?,?,?,?,?,?,?,?,?)";
-        String insertWorldRequest = "INSERT INTO World (worldName) VALUES (?)";
+        String insertWorldRequest = "INSERT OR IGNORE INTO World (worldName) VALUES (?)";
 
         Connection connection = getConnection();
         PreparedStatement statement = null;
@@ -193,7 +224,12 @@ public class DatabaseManager {
             statement = connection.prepareStatement(insertWorldRequest);
             statement.setString(1,claim.getCorner1().getWorld().getName());
             statement.executeUpdate();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
 
+        try {
             statement = connection.prepareStatement(insertClaimRequest);
             statement.setString(1,claim.getCorner1().getWorld().getName());
             statement.setBoolean(2,claim.isAdmin());
@@ -304,24 +340,30 @@ public class DatabaseManager {
     }
 
     public void getAll() {
-        String selectClaimsAndPlayersRequest = "SELECT * FROM Claim INNER JOIN Player ON Player.playerName=" +
-                "Claim.playerName AND Player.playerUUID=Claim.playerUUID";
+        String selectPlayersRequest = "SELECT * FROM Player";
+        String selectClaimsRequest = "SELECT * FROM Claim";
         String selectAllTrustedPlayers = "SELECT * FROM TrustedPlayers";
 
         Connection connection = getConnection();
         PreparedStatement statement = null;
 
         try {
-            statement = connection.prepareStatement(selectClaimsAndPlayersRequest);
+            statement = connection.prepareStatement(selectPlayersRequest);
+            ResultSet playersResultSet = statement.executeQuery();
+
+            statement = connection.prepareStatement(selectClaimsRequest);
             ResultSet claimsResultSet = statement.executeQuery();
 
             statement = connection.prepareStatement(selectAllTrustedPlayers);
             ResultSet trustedPlayersResultSet = statement.executeQuery();
 
+            while (playersResultSet.next()) {
+                PlayerDataManager.getInstance().addNewPlayerData(playersResultSet.getString("playerName"),
+                        UUID.fromString(playersResultSet.getString("playerUUID")),
+                        playersResultSet.getInt("claimBlocks"));
+            }
+
             while (claimsResultSet.next()) {
-                PlayerDataManager.getInstance().addNewPlayerData(claimsResultSet.getString("playerName"),
-                        UUID.fromString(claimsResultSet.getString("playerUUID")),
-                        claimsResultSet.getInt("claimBlocks"));
                 Location corner1 = Bukkit.getWorld(claimsResultSet.getString("worldName")).getBlockAt(
                         claimsResultSet.getInt("corner1X"),
                         claimsResultSet.getInt("corner1Y"),
