@@ -2,6 +2,9 @@ package fr.sukikui.hardcoreclaimmanager.enums;
 
 import org.bukkit.ChatColor;
 
+/**
+ * Enum to store all messages related to claim creation
+ */
 public enum ClaimCreationMessages {
     PlayerDoesNotExists(ChatColor.RED + "The player does not exists!"),
     CornersNotInTheSameWorld(ChatColor.RED + "The two corners are not in the same world!"),

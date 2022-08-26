@@ -130,6 +130,10 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Insert player data in database in the Player table
+     * @param playerData the player's data
+     */
     public void insertPlayer(PlayerData playerData) {
         String insertPlayerRequest = "INSERT INTO Player (playerName,playerUUID,claimBlocks) VALUES (?,?,?)";
 
@@ -158,6 +162,10 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Update the number of claim blocks in the database in the Player database
+     * @param playerData the player's data
+     */
     public void updatePlayerClaimBlocks(PlayerData playerData) {
         String updateClaimBlocksRequest = "UPDATE Player SET claimBlocks=? WHERE Player.playerName=? AND" +
                 " Player.playerUUID=?";
@@ -186,6 +194,10 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Delete player data in the database in the Player table
+     * @param playerData the player's data
+     */
     public void deletePlayer(PlayerData playerData) {
         String deletePlayerRequest = "DELETE FROM Player WHERE playerName=? AND playerUUID=?";
 
@@ -212,6 +224,11 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Insert a new claim in the database in the Claim table
+     * @param claim the claim to insert
+     * @param playerData the player's data
+     */
     public void insertClaim(Claim claim, PlayerData playerData) {
         String insertClaimRequest = "INSERT INTO Claim (worldName,isAdmin,corner1X,corner1Y,corner1Z,corner2X,corner2Y," +
                 "corner2Z,playerName,playerUUID) VALUES (?,?,?,?,?,?,?,?,?,?)";
@@ -257,6 +274,10 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Delete a claim in the database in the Claim table
+     * @param claim the claim to delete
+     */
     public void deleteClaim(Claim claim) {
         String deleteClaimRequest = "DELETE FROM CLAIM WHERE claimID=?";
 
@@ -282,6 +303,11 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Insert a new trusted player in a claim in the database in the TrustedPlayers table
+     * @param playerData the player's data to trust
+     * @param claim the claim to add the trusted player
+     */
     public void insertTrustedPlayer(PlayerData playerData, Claim claim) {
         String insertTrustedPlayerRequest = "INSERT INTO TrustedPlayers (claimID,playerName,playerUUID) VALUES (?,?,?)";
 
@@ -310,6 +336,11 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Delete a trusted player in a claim in the database in the TrustedPlayers table
+     * @param playerData the player's data to untrust
+     * @param claim the claim to remove the untrust player
+     */
     public void deleteTrustedPlayers(PlayerData playerData, Claim claim) {
         String deleteTrustedPlayerRequest = "DELETE FROM TrustedPlayers WHERE claimID=? AND playerName=? AND" +
                 "playerUUID=?";
@@ -339,6 +370,9 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Get all claims and player's data to cache them into the PlayerDataManager class
+     */
     public void getAll() {
         String selectPlayersRequest = "SELECT * FROM Player";
         String selectClaimsRequest = "SELECT * FROM Claim";
@@ -401,6 +435,10 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Get the last id inserted in the Claim table
+     * @return the last id
+     */
     public int getLastID() {
         String selectLastIDRequest = "SELECT MAX(claimID) FROM Claim";
 
