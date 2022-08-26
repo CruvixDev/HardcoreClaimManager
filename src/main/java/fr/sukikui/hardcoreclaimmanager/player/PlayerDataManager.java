@@ -50,13 +50,13 @@ public class PlayerDataManager {
         Claim claim = new Claim(corner1,corner2,playerUUID,isAdmin,claimId);
         PlayerData playerData = getPlayerDataByUUID(playerUUID);
         if (playerData == null) {
-            return new ClaimResults(null,ClaimCreationMessages.PlayerDoesNotExists);
+            return new ClaimResults(null,ClaimCreationMessages.PlayerDoesNotExists,claim.getClaimSurface());
         }
         if (!claim.getCorner1().getWorld().equals(claim.getCorner2().getWorld())) {
-            return new ClaimResults(null,ClaimCreationMessages.CornersNotInTheSameWorld);
+            return new ClaimResults(null,ClaimCreationMessages.CornersNotInTheSameWorld,claim.getClaimSurface());
         }
         if (isRiding(claim)) {
-            return new ClaimResults(null,ClaimCreationMessages.ClaimsRiding);
+            return new ClaimResults(null,ClaimCreationMessages.ClaimsRiding,claim.getClaimSurface());
         }
         HardcoreClaimManager hardcoreClaimManager = HardcoreClaimManager.getInstance();
         int claimMinSurface;
@@ -64,29 +64,29 @@ public class PlayerDataManager {
             claimMinSurface = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("min-claim-size"));
         }
         catch (NumberFormatException e) {
-            return new ClaimResults(null,ClaimCreationMessages.MinClaimSizeNotValid);
+            return new ClaimResults(null,ClaimCreationMessages.MinClaimSizeNotValid,claim.getClaimSurface());
         }
         if (claim.getCorner1().getBlockX() - claim.getCorner2().getBlockX() == 0 || claim.getCorner1().getBlockZ() -
                 claim.getCorner2().getBlockZ() == 0) {
-            return new ClaimResults(null,ClaimCreationMessages.ClaimNotValid);
+            return new ClaimResults(null,ClaimCreationMessages.ClaimNotValid,claim.getClaimSurface());
         }
         if (claim.getClaimSurface() < claimMinSurface) {
-            return new ClaimResults(null,ClaimCreationMessages.ClaimTooSmall);
+            return new ClaimResults(null,ClaimCreationMessages.ClaimTooSmall,claim.getClaimSurface());
         }
         if (!this.claims.contains(claim)) {
             if (isAdmin) {
                 this.claims.add(claim);
                 playerData.updateClaims();
-                return new ClaimResults(claim,ClaimCreationMessages.ClaimAdminCreated);
+                return new ClaimResults(claim,ClaimCreationMessages.ClaimAdminCreated,claim.getClaimSurface());
             }
             else if (claim.getClaimSurface() <= playerData.getClaimBlocks()){
                 this.claims.add(claim);
                 playerData.updateClaims();
                 playerData.removeClaimBlocks(claim.getClaimSurface());
-                return new ClaimResults(claim,ClaimCreationMessages.ClaimCreated);
+                return new ClaimResults(claim,ClaimCreationMessages.ClaimCreated,claim.getClaimSurface());
             }
             else {
-                return new ClaimResults(null,ClaimCreationMessages.NotEnoughBlock);
+                return new ClaimResults(null,ClaimCreationMessages.NotEnoughBlock,claim.getClaimSurface());
             }
         }
         return null;

@@ -28,6 +28,11 @@ public final class HardcoreClaimManager extends JavaPlugin {
     public void onEnable() {
         hardcoreClaimManager = this;
 
+        loadProperties();
+        storeProperties();
+        DatabaseManager.getInstance(this).createDatabase();
+        DatabaseManager.getInstance(this).getAll();
+
         this.getCommand("addClaimBlocks").setExecutor(new AddClaimBlocksExecutor());
         this.getCommand("removeClaimBlocks").setExecutor(new RemoveClaimBlocksExecutor());
         this.getCommand("setBlockRate").setExecutor(new SetBlockRateExecutor(this));
@@ -53,11 +58,6 @@ public final class HardcoreClaimManager extends JavaPlugin {
         }
         scheduler.scheduleSyncRepeatingTask(this, new PlayerAddBlocksTask(this),
                 (long) (period * 60 / 0.05), (long) (period * 60 / 0.05));
-
-        loadProperties();
-        storeProperties();
-        DatabaseManager.getInstance(this).createDatabase();
-        DatabaseManager.getInstance(this).getAll();
     }
 
     @Override

@@ -400,4 +400,30 @@ public class DatabaseManager {
             }
         }
     }
+
+    public int getLastID() {
+        String selectLastIDRequest = "SELECT MAX(claimID) FROM Claim";
+
+        Connection connection = getConnection();
+        PreparedStatement statement = null;
+
+        try {
+            statement = connection.prepareStatement(selectLastIDRequest);
+            ResultSet resultSet = statement.executeQuery();
+            return resultSet.getInt(1);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+        finally {
+            try {
+                statement.close();
+                connection.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

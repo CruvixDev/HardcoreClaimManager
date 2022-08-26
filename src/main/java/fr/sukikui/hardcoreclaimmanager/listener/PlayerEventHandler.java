@@ -27,9 +27,11 @@ import org.bukkit.scheduler.BukkitScheduler;
  */
 public class PlayerEventHandler implements Listener {
     HardcoreClaimManager hardcoreClaimManager;
+    private int claimID;
 
     public PlayerEventHandler(HardcoreClaimManager hardcoreClaimManager) {
         this.hardcoreClaimManager = hardcoreClaimManager;
+        claimID = DatabaseManager.getInstance(hardcoreClaimManager).getLastID();
     }
 
     @EventHandler
@@ -70,16 +72,18 @@ public class PlayerEventHandler implements Listener {
         }
         //handle claim creation with the tool's selector
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
-        if (playerData != null) {
-            if (playerData.getLastToolLocation() == null && e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-                playerData.setLastToolLocation(e.getClickedBlock().getLocation());
-                e.getPlayer().sendMessage(ChatColor.YELLOW + "First corner defined, right click on the other corner!");
-                e.setCancelled(true);
-            }
-            else if (playerData.getLastToolLocation() != null && e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-                playerData.setLastToolLocation(null);
-                e.getPlayer().sendMessage(ChatColor.YELLOW + "Claim creation cancel!");
-                e.setCancelled(true);
+        if (playerData != null && claimID >= 0) {
+            if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+                if (playerData.getLastToolLocation() == null) {
+                    playerData.setLastToolLocation(e.getClickedBlock().getLocation());
+                    e.getPlayer().sendMessage(ChatColor.YELLOW + "First corner defined, right click on the other corner!");
+                    e.setCancelled(true);
+                }
+                else {
+                    playerData.setLastToolLocation(null);
+                    e.getPlayer().sendMessage(ChatColor.YELLOW + "Claim creation cancel!");
+                    e.setCancelled(true);
+                }
             }
             if (playerData.getLastToolLocation() != null && e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
                 Location corner1 = playerData.getLastToolLocation();
@@ -87,32 +91,34 @@ public class PlayerEventHandler implements Listener {
                 ClaimResults results;
                 if (Bukkit.getServer().getOperators().contains(e.getPlayer())) {
                     results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
-                            true, null);
-                    ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
-                            corner2);
-                    if (results.claim != null) {
-                        BukkitScheduler scheduler = Bukkit.getScheduler();
-                        scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
-                           DatabaseManager.getInstance(hardcoreClaimManager).insertClaim(results.claim,playerData);
-                        });
-                    }
-                }
-                else {
-                    results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
-                            false, null);
+                            true,claimID + 1L);
                     ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
                             corner2);
                     if (results.claim != null) {
                         BukkitScheduler scheduler = Bukkit.getScheduler();
                         scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
                             DatabaseManager.getInstance(hardcoreClaimManager).insertClaim(results.claim,playerData);
+                            claimID = DatabaseManager.getInstance(hardcoreClaimManager).getLastID();
+                        });
+                    }
+                }
+                else {
+                    results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
+                            false,claimID + 1L);
+                    ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
+                            corner2);
+                    if (results.claim != null) {
+                        BukkitScheduler scheduler = Bukkit.getScheduler();
+                        scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
+                            DatabaseManager.getInstance(hardcoreClaimManager).insertClaim(results.claim,playerData);
+                            claimID = DatabaseManager.getInstance(hardcoreClaimManager).getLastID();
                         });
                     }
                 }
                 String message = results.message.getMessage();
                 if (results.message.equals(ClaimCreationMessages.NotEnoughBlock)) {
                     message = String.format(results.message.getMessage(),playerData.getClaimBlocks(),
-                            results.claim.getClaimSurface());
+                            results.claimSurface);
                 }
                 e.getPlayer().sendMessage(message);
                 playerData.setLastToolLocation(null);
