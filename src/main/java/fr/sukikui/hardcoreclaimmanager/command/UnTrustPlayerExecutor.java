@@ -55,7 +55,7 @@ public class UnTrustPlayerExecutor implements CommandExecutor {
                             return true;
                         }
                         else {
-                            commandSender.sendMessage(ChatColor.RED + "You cannot trust players in other claims!");
+                            commandSender.sendMessage(ChatColor.RED + "You cannot untrust players in other claims!");
                             return false;
                         }
                     }

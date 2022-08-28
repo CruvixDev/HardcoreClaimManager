@@ -32,26 +32,32 @@ public class TrustPlayerExecutor implements CommandExecutor {
                 if (playerData != null) {
                     Claim claim = PlayerDataManager.getInstance().getClaimAt(player.getLocation());
                     if (claim != null) {
-                        ArrayList<String> trustedPlayers = new ArrayList<>();
-                        for (String playerToTrust : strings) {
-                            boolean isTrusted = claim.addTrustedPlayers(playerToTrust,player.getUniqueId());
-                            if (isTrusted) {
-                                trustedPlayers.add(playerToTrust);
-                            }
-                        }
-                        if (trustedPlayers.size() > 0) {
-                            BukkitScheduler scheduler = Bukkit.getScheduler();
-                            scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
-                                for (String playerName : trustedPlayers) {
-                                    PlayerData playerToTrustData = PlayerDataManager.getInstance().
-                                            getPlayerDataByName(playerName);
-                                    DatabaseManager.getInstance(hardcoreClaimManager).insertTrustedPlayer(
-                                            playerToTrustData,claim);
+                        if (playerData.isOwned(claim)) {
+                            ArrayList<String> trustedPlayers = new ArrayList<>();
+                            for (String playerToTrust : strings) {
+                                boolean isTrusted = claim.addTrustedPlayers(playerToTrust,player.getUniqueId());
+                                if (isTrusted) {
+                                    trustedPlayers.add(playerToTrust);
                                 }
-                            });
+                            }
+                            if (trustedPlayers.size() > 0) {
+                                BukkitScheduler scheduler = Bukkit.getScheduler();
+                                scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
+                                    for (String playerName : trustedPlayers) {
+                                        PlayerData playerToTrustData = PlayerDataManager.getInstance().
+                                                getPlayerDataByName(playerName);
+                                        DatabaseManager.getInstance(hardcoreClaimManager).insertTrustedPlayer(
+                                                playerToTrustData,claim);
+                                    }
+                                });
+                            }
+                            commandSender.sendMessage(ChatColor.GREEN + "Players successfully trusted!");
+                            return true;
                         }
-                        commandSender.sendMessage(ChatColor.GREEN + "Players successfully trusted!");
-                        return true;
+                        else {
+                            commandSender.sendMessage(ChatColor.RED + "You cannot trust players in other claims!");
+                            return false;
+                        }
                     }
                     else {
                         commandSender.sendMessage(ChatColor.RED + "You are not in a registered claim!");

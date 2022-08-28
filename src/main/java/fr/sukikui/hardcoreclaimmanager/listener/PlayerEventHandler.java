@@ -6,6 +6,7 @@ import fr.sukikui.hardcoreclaimmanager.claim.ClaimBoundariesVisualisation;
 import fr.sukikui.hardcoreclaimmanager.claim.ClaimResults;
 import fr.sukikui.hardcoreclaimmanager.data.DatabaseManager;
 import fr.sukikui.hardcoreclaimmanager.enums.ClaimCreationMessages;
+import fr.sukikui.hardcoreclaimmanager.enums.ClaimCreationSource;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.Bukkit;
@@ -91,7 +92,7 @@ public class PlayerEventHandler implements Listener {
                 ClaimResults results;
                 if (Bukkit.getServer().getOperators().contains(e.getPlayer())) {
                     results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
-                            true,claimID + 1L);
+                            true,claimID + 1L, ClaimCreationSource.PLAYER);
                     ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
                             corner2);
                     if (results.claim != null) {
@@ -104,7 +105,7 @@ public class PlayerEventHandler implements Listener {
                 }
                 else {
                     results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
-                            false,claimID + 1L);
+                            false,claimID + 1L,ClaimCreationSource.PLAYER);
                     ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
                             corner2);
                     if (results.claim != null) {

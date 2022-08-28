@@ -55,11 +55,11 @@ public class Claim {
      * @param trustPlayer the UUID of the player which asking to trust a player
      */
     public boolean addTrustedPlayers(String playerToTrustName, UUID trustPlayer) {
-        if (trustPlayer.equals(this.ownerUUID)) {
+        if (!trustPlayer.equals(this.ownerUUID)) {
             return false;
         }
         PlayerData playerToTrustData = PlayerDataManager.getInstance().getPlayerDataByName(playerToTrustName);
-        if (playerToTrustData != null) {
+        if (playerToTrustData != null && !trustedPlayers.contains(playerToTrustName)) {
             this.trustedPlayers.add(playerToTrustName);
             return true;
         }
@@ -72,7 +72,7 @@ public class Claim {
      * @param trustPlayer the UUID of the player asking to un-trust a player
      */
     public boolean removeTrustedPlayers(String playerName, UUID trustPlayer) {
-        if (trustPlayer.equals(this.ownerUUID)) {
+        if (!trustPlayer.equals(this.ownerUUID)) {
             return false;
         }
         this.trustedPlayers.remove(playerName);

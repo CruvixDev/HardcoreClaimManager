@@ -4,8 +4,8 @@ import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.claim.ClaimResults;
 import fr.sukikui.hardcoreclaimmanager.enums.ClaimCreationMessages;
+import fr.sukikui.hardcoreclaimmanager.enums.ClaimCreationSource;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 
@@ -46,7 +46,7 @@ public class PlayerDataManager {
      * @param isAdmin true the claim is an admin claim, false the claim is a player claim
      * @return a string reason whether the claim is successfully created or not
      */
-    public ClaimResults createClaim(Location corner1, Location corner2, UUID playerUUID, boolean isAdmin, Long claimId) {
+    public ClaimResults createClaim(Location corner1, Location corner2, UUID playerUUID, boolean isAdmin, long claimId, ClaimCreationSource source) {
         Claim claim = new Claim(corner1,corner2,playerUUID,isAdmin,claimId);
         PlayerData playerData = getPlayerDataByUUID(playerUUID);
         if (playerData == null) {
@@ -74,19 +74,25 @@ public class PlayerDataManager {
             return new ClaimResults(null,ClaimCreationMessages.ClaimTooSmall,claim.getClaimSurface());
         }
         if (!this.claims.contains(claim)) {
-            if (isAdmin) {
+            if (source.equals(ClaimCreationSource.PLAYER)) {
+                if (isAdmin) {
+                    this.claims.add(claim);
+                    playerData.updateClaims();
+                    return new ClaimResults(claim,ClaimCreationMessages.ClaimAdminCreated,claim.getClaimSurface());
+                }
+                else if (claim.getClaimSurface() <= playerData.getClaimBlocks()) {
+                    this.claims.add(claim);
+                    playerData.updateClaims();
+                    playerData.removeClaimBlocks(claim.getClaimSurface());
+                    return new ClaimResults(claim,ClaimCreationMessages.ClaimCreated,claim.getClaimSurface());
+                }
+                else {
+                    return new ClaimResults(null,ClaimCreationMessages.NotEnoughBlock,claim.getClaimSurface());
+                }
+            }
+            else if (source.equals(ClaimCreationSource.DATABASE)) {
                 this.claims.add(claim);
                 playerData.updateClaims();
-                return new ClaimResults(claim,ClaimCreationMessages.ClaimAdminCreated,claim.getClaimSurface());
-            }
-            else if (claim.getClaimSurface() <= playerData.getClaimBlocks()){
-                this.claims.add(claim);
-                playerData.updateClaims();
-                playerData.removeClaimBlocks(claim.getClaimSurface());
-                return new ClaimResults(claim,ClaimCreationMessages.ClaimCreated,claim.getClaimSurface());
-            }
-            else {
-                return new ClaimResults(null,ClaimCreationMessages.NotEnoughBlock,claim.getClaimSurface());
             }
         }
         return null;

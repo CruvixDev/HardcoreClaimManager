@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
+import fr.sukikui.hardcoreclaimmanager.enums.ClaimCreationSource;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.Bukkit;
@@ -342,7 +343,7 @@ public class DatabaseManager {
      * @param claim the claim to remove the untrust player
      */
     public void deleteTrustedPlayers(PlayerData playerData, Claim claim) {
-        String deleteTrustedPlayerRequest = "DELETE FROM TrustedPlayers WHERE claimID=? AND playerName=? AND" +
+        String deleteTrustedPlayerRequest = "DELETE FROM TrustedPlayers WHERE claimID=? AND playerName=? AND " +
                 "playerUUID=?";
 
         Connection connection = getConnection();
@@ -410,7 +411,8 @@ public class DatabaseManager {
                 ).getLocation();
                 PlayerDataManager.getInstance().createClaim(corner1,corner2,UUID.fromString(claimsResultSet.getString
                         ("playerUUID")),claimsResultSet.getBoolean("isAdmin"),
-                        claimsResultSet.getLong("claimID")
+                        claimsResultSet.getLong("claimID"),
+                        ClaimCreationSource.DATABASE
                 );
             }
 
