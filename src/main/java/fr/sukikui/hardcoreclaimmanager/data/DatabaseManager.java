@@ -420,7 +420,7 @@ public class DatabaseManager {
                 Claim claim = PlayerDataManager.getInstance().getClaimById(trustedPlayersResultSet.
                         getLong("claimID"));
                 claim.addTrustedPlayers(trustedPlayersResultSet.getString("playerName"),
-                        UUID.fromString(trustedPlayersResultSet.getString("playerUUID")));
+                        claim.getOwnerUUID());
             }
         }
         catch (SQLException e) {
