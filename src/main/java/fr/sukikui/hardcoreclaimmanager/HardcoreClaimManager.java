@@ -28,8 +28,8 @@ public final class HardcoreClaimManager extends JavaPlugin {
     public void onEnable() {
         hardcoreClaimManager = this;
 
-        loadProperties();
-        storeProperties();
+        this.loadProperties();
+        this.storeProperties();
         DatabaseManager.getInstance(this).createDatabase();
         DatabaseManager.getInstance(this).getAll();
 
@@ -43,21 +43,12 @@ public final class HardcoreClaimManager extends JavaPlugin {
         this.getCommand("changeTool").setExecutor(new ToolChangeExecutor(this));
         this.getCommand("trustPlayers").setExecutor(new TrustPlayerExecutor(this));
         this.getCommand("unTrustPlayers").setExecutor(new UnTrustPlayerExecutor(this));
-        this.getCommand("unregisterClaim").setExecutor(new UnregisterClaimExecutor(this));
+        this.getCommand("removeClaim").setExecutor(new UnregisterClaimExecutor(this));
 
         this.getServer().getPluginManager().registerEvents(new PlayerEventHandler(this), this);
         this.getServer().getPluginManager().registerEvents(new ClaimEventHandler(), this);
 
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-        int period;
-        try {
-            period = Integer.parseInt(properties.getProperty("clock-block-gain-duration"));
-        }
-        catch (NumberFormatException e) {
-            period = 1;
-        }
-        scheduler.scheduleSyncRepeatingTask(this, new PlayerAddBlocksTask(this),
-                (long) (period * 60 / 0.05), (long) (period * 60 / 0.05));
+        this.runBlockGainTask();
     }
 
     @Override
@@ -124,5 +115,21 @@ public final class HardcoreClaimManager extends JavaPlugin {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Run the block gain task
+     */
+    public void runBlockGainTask() {
+        BukkitScheduler scheduler = Bukkit.getScheduler();
+        int period;
+        try {
+            period = Integer.parseInt(properties.getProperty("clock-block-gain-duration"));
+        }
+        catch (NumberFormatException e) {
+            period = 1;
+        }
+        scheduler.scheduleSyncRepeatingTask(this, new PlayerAddBlocksTask(this),
+                (long) (period * 60 / 0.05), (long) (period * 60 / 0.05));
     }
 }

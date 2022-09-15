@@ -29,8 +29,8 @@ public class UnregisterClaimExecutor implements CommandExecutor {
             if (claim != null) {
                 PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
                 if (playerData != null) {
-                    if (playerData.isOwned(claim)) {
-                        boolean isRemoved = PlayerDataManager.getInstance().removeClaim(claim,player.getName());
+                    if (playerData.isOwned(claim) || commandSender.isOp()) {
+                        boolean isRemoved = PlayerDataManager.getInstance().removeClaim(claim,player.getUniqueId());
                         commandSender.sendMessage(ChatColor.GREEN + "Claim successfully unregistered!");
                         if (isRemoved) {
                             BukkitScheduler scheduler = Bukkit.getScheduler();

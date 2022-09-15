@@ -60,8 +60,10 @@ public class PlayerDataManager {
         }
         HardcoreClaimManager hardcoreClaimManager = HardcoreClaimManager.getInstance();
         int claimMinSurface;
+        int claimMaxSurface;
         try {
             claimMinSurface = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("min-claim-size"));
+            claimMaxSurface = Integer.parseInt((hardcoreClaimManager.getProperties().getProperty("max-claim-size")));
         }
         catch (NumberFormatException e) {
             return new ClaimResults(null,ClaimCreationMessages.MinClaimSizeNotValid,claim.getClaimSurface());
@@ -72,6 +74,9 @@ public class PlayerDataManager {
         }
         if (claim.getClaimSurface() < claimMinSurface) {
             return new ClaimResults(null,ClaimCreationMessages.ClaimTooSmall,claim.getClaimSurface());
+        }
+        if (claim.getClaimSurface() > claimMaxSurface) {
+            return new ClaimResults(null,ClaimCreationMessages.ClaimTooBig,claim.getClaimSurface());
         }
         if (!this.claims.contains(claim)) {
             if (source.equals(ClaimCreationSource.PLAYER)) {
@@ -101,10 +106,18 @@ public class PlayerDataManager {
     /**
      * Method to remove a claim in the manager
      * @param claim
-     * @param playerName
+     * @param playerUUID
      */
-    public boolean removeClaim(Claim claim, String playerName) {
-        PlayerData playerData = getPlayerDataByName(playerName);
+    public boolean removeClaim(Claim claim, UUID playerUUID) {
+        OfflinePlayer player = (Bukkit.getPlayer(playerUUID) == null) ? Bukkit.getOfflinePlayer
+                (playerUUID) : Bukkit.getPlayer(playerUUID);
+        PlayerData playerData;
+        if (Bukkit.getServer().getOperators().contains(player)) {
+            playerData = getPlayerDataByUUID(claim.getOwnerUUID());
+        }
+        else {
+            playerData = getPlayerDataByUUID(playerUUID);
+        }
         if (playerData != null && playerData.isOwned(claim)) {
             this.claims.remove(claim);
             playerData.updateClaims();

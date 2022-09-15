@@ -59,7 +59,8 @@ public class Claim {
             return false;
         }
         PlayerData playerToTrustData = PlayerDataManager.getInstance().getPlayerDataByName(playerToTrustName);
-        if (playerToTrustData != null && !trustedPlayers.contains(playerToTrustName)) {
+        if (playerToTrustData != null && !trustedPlayers.contains(playerToTrustName) &&
+                !trustPlayer.equals(playerToTrustData.getPlayerUUID())) {
             this.trustedPlayers.add(playerToTrustName);
             return true;
         }

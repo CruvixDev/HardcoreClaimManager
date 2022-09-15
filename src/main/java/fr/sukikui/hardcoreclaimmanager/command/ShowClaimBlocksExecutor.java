@@ -24,8 +24,20 @@ public class ShowClaimBlocksExecutor implements CommandExecutor {
                 return false;
             }
         }
+        else if (strings.length == 1 && commandSender.isOp()) {
+            PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(strings[0]);
+            if (playerData != null) {
+                commandSender.sendMessage(ChatColor.AQUA + "The player " + playerData.getPlayerName() + " has " +
+                        playerData.getClaimBlocks() + " block of claim.");
+                return true;
+            }
+            else {
+                commandSender.sendMessage(ChatColor.RED + "Invalid player given!");
+                return false;
+            }
+        }
         else {
-            commandSender.sendMessage(ChatColor.RED + "Arguments given!");
+            commandSender.sendMessage(ChatColor.RED + "Too many arguments!");
             return false;
         }
     }

@@ -3,19 +3,32 @@ package fr.sukikui.hardcoreclaimmanager.listener;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Class handling all events related to claim
  */
 public class ClaimEventHandler implements Listener {
+    private List<Material> SHRIEKER_TOOL = Arrays.asList(
+            Material.WOODEN_HOE,
+            Material.STONE_HOE,
+            Material.IRON_HOE,
+            Material.GOLDEN_HOE,
+            Material.DIAMOND_HOE,
+            Material.NETHERITE_HOE
+    );
+
+    private List<Material> AUTHORIZED_BLOCKS = Arrays.asList(
+            Material.SCULK_SHRIEKER,
+            Material.TNT
+    );
 
     @EventHandler
     public void onBlockPlaced(BlockPlaceEvent e) {
@@ -26,7 +39,8 @@ public class ClaimEventHandler implements Listener {
         if (claimConcerned == null || playerData ==  null) {
             return;
         }
-        if (!playerData.isOwned(claimConcerned) && !claimConcerned.isAllowed(playerData.getPlayerUUID())) {
+        if (!playerData.isOwned(claimConcerned) && !claimConcerned.isAllowed(playerData.getPlayerUUID()) &&
+        !AUTHORIZED_BLOCKS.contains(e.getBlock().getType())) {
             e.setCancelled(true);
             OfflinePlayer player = (Bukkit.getPlayer(claimConcerned.getOwnerUUID()) == null) ? Bukkit.getOfflinePlayer
                     (claimConcerned.getOwnerUUID()) : Bukkit.getPlayer(claimConcerned.getOwnerUUID());
@@ -44,7 +58,16 @@ public class ClaimEventHandler implements Listener {
         if (claimConcerned == null || playerData ==  null) {
             return;
         }
+
         if (!playerData.isOwned(claimConcerned) && !claimConcerned.isAllowed(playerData.getPlayerUUID())) {
+            if (AUTHORIZED_BLOCKS.contains(e.getBlock().getType())) {
+                if (e.getBlock().getType() == Material.SCULK_SHRIEKER
+                        && !SHRIEKER_TOOL.contains(e.getPlayer().getInventory().getItemInMainHand().getType())) {
+                    e.setCancelled(true);
+                    return;
+                }
+                return;
+            }
             e.setCancelled(true);
             OfflinePlayer player = (Bukkit.getPlayer(claimConcerned.getOwnerUUID()) == null) ? Bukkit.getOfflinePlayer
                     (claimConcerned.getOwnerUUID()) : Bukkit.getPlayer(claimConcerned.getOwnerUUID());

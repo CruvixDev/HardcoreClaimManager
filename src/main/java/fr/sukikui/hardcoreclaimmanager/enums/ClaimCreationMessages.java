@@ -12,10 +12,11 @@ public enum ClaimCreationMessages {
     MinClaimSizeNotValid(ChatColor.RED + "The parameter min-claim-size is not valid!"),
     ClaimNotValid(ChatColor.RED + "The claim is not valid!"),
     ClaimTooSmall(ChatColor.RED + "The claim is too small!"),
+    ClaimTooBig(ChatColor.RED + "The claim is too big!"),
     ClaimAdminCreated(ChatColor.GREEN + "Claim successfully added! (admin claim)"),
     ClaimCreated(ChatColor.GREEN + "Claim successfully added!"),
     NotEnoughBlock(ChatColor.RED + "You have not enough blocks (%d) to claim this region because the surface of " +
-            "this is: %d")
+            "this is: %d"),
     ;
 
     private String message;

@@ -35,6 +35,6 @@ commands:
   unTrustPlayers:
     description: "Use this command to un-trust players in a claim"
     usage: "/unTrustPlayers <player 1> <player2> ... <player n>"
-  unregisterClaim:
+  removeClaim:
     description: "Use this command to unregister a claim, this command only works when a player is in a owned claim"
     usage: "/unregisterClaim"

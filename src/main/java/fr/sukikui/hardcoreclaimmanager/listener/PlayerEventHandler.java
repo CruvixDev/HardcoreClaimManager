@@ -93,9 +93,9 @@ public class PlayerEventHandler implements Listener {
                 if (Bukkit.getServer().getOperators().contains(e.getPlayer())) {
                     results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
                             true,claimID + 1L, ClaimCreationSource.PLAYER);
-                    ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
-                            corner2);
                     if (results.claim != null) {
+                        ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),
+                                results.claim.getCorner1(),results.claim.getCorner2());
                         BukkitScheduler scheduler = Bukkit.getScheduler();
                         scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
                             DatabaseManager.getInstance(hardcoreClaimManager).insertClaim(results.claim,playerData);
