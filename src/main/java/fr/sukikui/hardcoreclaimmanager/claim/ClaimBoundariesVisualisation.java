@@ -2,7 +2,6 @@ package fr.sukikui.hardcoreclaimmanager.claim;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -35,7 +34,7 @@ public class ClaimBoundariesVisualisation {
     }
 
     /**
-     * Method starting boundaries visualisation task for a specific player and specific locations
+     * Method starting boundary's visualisation task for a specific player and specific locations
      * @param playerSource the player who want to start the visualisation task
      * @param corner1 the first corner of the claim
      * @param corner2 the second corner of the claim
