@@ -20,22 +20,23 @@ public class PlayerData {
     private ArrayList<Claim> claims;
     private Location lastToolLocation;
 
-    public PlayerData(String playerName, UUID playerUUID) {
+    public PlayerData(String playerName, UUID playerUUID, long joinDate) {
         this.playerUUID = playerUUID;
         this.playerName = playerName;
-        HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getServer().getPluginManager().getPlugin("HardcoreClaimManager");
+        HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getServer().getPluginManager().
+                getPlugin("HardcoreClaimManager");
         this.claimBlocks = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("default-claim-blocks"));
         this.claims = new ArrayList<>();
-        this.joinDate = System.currentTimeMillis();
+        this.joinDate = joinDate;
         this.lastSaveBlocksGain = this.joinDate;
     }
 
-    public PlayerData(String playerName, UUID playerUUID, float claimBlocks) {
+    public PlayerData(String playerName, UUID playerUUID, float claimBlocks, long joinDate) {
         this.playerUUID = playerUUID;
         this.playerName = playerName;
         this.claimBlocks = claimBlocks;
         this.claims = new ArrayList<>();
-        this.joinDate = System.currentTimeMillis();
+        this.joinDate = joinDate;
         this.lastSaveBlocksGain = this.joinDate;
     }
 
@@ -157,6 +158,15 @@ public class PlayerData {
         else {
             return false;
         }
+    }
+
+    /**
+     *
+     * @param joinDate the join date of the player on the server
+     */
+    public void setJoinDate(long joinDate) {
+        this.joinDate = joinDate;
+        this.lastSaveBlocksGain = joinDate;
     }
 
     @Override

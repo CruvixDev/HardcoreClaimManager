@@ -38,12 +38,22 @@ public class PlayerEventHandler implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
-        PlayerData playerData = PlayerDataManager.getInstance().addNewPlayerData(player.getName(),player.getUniqueId());
+        PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
         if (playerData != null) {
-            BukkitScheduler scheduler = Bukkit.getScheduler();
-            scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
-               DatabaseManager.getInstance(hardcoreClaimManager).insertPlayer(playerData);
-            });
+            playerData.setJoinDate(System.currentTimeMillis());
+        }
+        else {
+            PlayerData newPlayerData = PlayerDataManager.getInstance().addNewPlayerData(player.getName(),
+                    player.getUniqueId(), System.currentTimeMillis());
+            if (newPlayerData != null) {
+                BukkitScheduler scheduler = Bukkit.getScheduler();
+                scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
+                    DatabaseManager.getInstance(hardcoreClaimManager).insertPlayer(newPlayerData);
+                });
+            }
+        }
+        if (Bukkit.getOnlinePlayers().size() == 1) {
+            hardcoreClaimManager.runBlockGainTask();
         }
     }
 
@@ -62,6 +72,13 @@ public class PlayerEventHandler implements Listener {
             float blockEarn = (float) ((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) *
                     blockRate / 60;
             playerData.addClaimBlocks(blockEarn);
+            System.out.println("Current time : " + currentTime);
+            System.out.println("last save date : " + playerData.getLastSaveBlocksGain());
+            System.out.println("block rate : " + blockRate);
+            System.out.println("block earned : " + blockEarn);
+        }
+        if (Bukkit.getOnlinePlayers().size() == 0) {
+            Bukkit.getScheduler().cancelTasks(hardcoreClaimManager);
         }
     }
 
