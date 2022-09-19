@@ -12,22 +12,23 @@ import java.util.ArrayList;
  * A task which attributes claim blocks according to player played time
  */
 public class PlayerAddBlocksTask implements Runnable{
-    HardcoreClaimManager hardcoreClaimManager;
+    private HardcoreClaimManager hardcoreClaimManager;
+    private int blockRate;
 
     public PlayerAddBlocksTask(HardcoreClaimManager hardcoreClaimManager) {
         this.hardcoreClaimManager = hardcoreClaimManager;
+        try {
+            this.blockRate = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("block-rate-per-hour"));
+        }
+        catch (NumberFormatException e) {
+            this.blockRate = 100;
+            return;
+        }
     }
 
     @Override
     public void run() {
         ArrayList<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());
-        int blockRate;
-        try {
-            blockRate = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("block-rate-per-hour"));
-        }
-        catch (NumberFormatException e) {
-            return;
-        }
         for (Player player : players) {
             PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
             if (playerData != null) {
