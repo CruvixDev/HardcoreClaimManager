@@ -4,10 +4,13 @@ import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.*;
+import org.bukkit.block.BlockFace;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +30,8 @@ public class ClaimEventHandler implements Listener {
 
     private List<Material> AUTHORIZED_BLOCKS = Arrays.asList(
             Material.SCULK_SHRIEKER,
-            Material.TNT
+            Material.TNT,
+            Material.END_CRYSTAL
     );
 
     @EventHandler
@@ -44,8 +48,8 @@ public class ClaimEventHandler implements Listener {
             e.setCancelled(true);
             OfflinePlayer player = (Bukkit.getPlayer(claimConcerned.getOwnerUUID()) == null) ? Bukkit.getOfflinePlayer
                     (claimConcerned.getOwnerUUID()) : Bukkit.getPlayer(claimConcerned.getOwnerUUID());
-            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place block here (claim is owned by " +
-                    player.getName());
+            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place blocks here (claim is owned by " +
+                    player.getName() + ")");
         }
     }
 
@@ -71,8 +75,21 @@ public class ClaimEventHandler implements Listener {
             e.setCancelled(true);
             OfflinePlayer player = (Bukkit.getPlayer(claimConcerned.getOwnerUUID()) == null) ? Bukkit.getOfflinePlayer
                     (claimConcerned.getOwnerUUID()) : Bukkit.getPlayer(claimConcerned.getOwnerUUID());
-            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to break block here (claim is owned by " +
-                    player.getName());
+            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to break blocks here (claim is owned by " +
+                    player.getName() + ")");
+        }
+    }
+
+    @EventHandler
+    public void onWaterFlowInClaim(BlockFromToEvent e) {
+        if (e.getFace() == BlockFace.DOWN) return;
+
+        Location sourceLocation = e.getBlock().getLocation();
+        Location toLocation = e.getToBlock().getLocation();
+        Claim sourceClaim = PlayerDataManager.getInstance().getClaimAt(sourceLocation);
+        Claim toClaim = PlayerDataManager.getInstance().getClaimAt(toLocation);
+        if (sourceClaim == null && toClaim != null) {
+            e.setCancelled(true);
         }
     }
 }

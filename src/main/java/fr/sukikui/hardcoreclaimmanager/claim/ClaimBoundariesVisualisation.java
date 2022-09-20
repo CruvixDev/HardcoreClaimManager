@@ -51,10 +51,10 @@ public class ClaimBoundariesVisualisation {
         corners.add(corner3);
         corners.add(corner4);
 
-        locations.addAll(addLocations2(corner1,corner3));
-        locations.addAll(addLocations2(corner3,corner2));
-        locations.addAll(addLocations2(corner2,corner4));
-        locations.addAll(addLocations2(corner4,corner1));
+        locations.addAll(drawLine(corner1,corner3));
+        locations.addAll(drawLine(corner3,corner2));
+        locations.addAll(drawLine(corner2,corner4));
+        locations.addAll(drawLine(corner4,corner1));
 
         if (!this.playerSources.contains(playerSource) && player != null) {
             playerSources.add(playerSource);
@@ -86,26 +86,13 @@ public class ClaimBoundariesVisualisation {
         }
     }
 
-    public ArrayList<Location> addLocations(Location point1, Location point2) {
-        ArrayList<Location> locations = new ArrayList<>();
-        Location pointM = point2;
-        Location pointM2 = point1;
-        double distance = distance(point1,pointM);
-        while (distance > 5) {
-            pointM = new Location(point1.getWorld(),(point1.getBlockX() + pointM.getBlockX()) / 2,
-                    point1.getBlockY(),(point1.getBlockZ() + pointM.getBlockZ()) / 2);
-            pointM2 = new Location(point2.getWorld(),(point2.getBlockX() + pointM2.getBlockX()) / 2,
-                    point1.getBlockY(),(point2.getBlockZ() + pointM2.getBlockZ()) / 2);
-            if (distance(point1,pointM) >= 5 && distance(point2,pointM2) >= 5) {
-                locations.add(pointM);
-                locations.add(pointM2);
-            }
-            distance = distance(point1,pointM);
-        }
-        return locations;
-    }
-
-    public ArrayList<Location> addLocations2(Location point1, Location point2) {
+    /**
+     * Method to draw false blocks on a segment defined by point1 and point2
+     * @param point1 the first point of the segment where to draw false blocks
+     * @param point2 the second point of the segment where to draw false blocks
+     * @return a list containing false blocks to draw
+     */
+    private ArrayList<Location> drawLine(Location point1, Location point2) {
         ArrayList<Location> locations = new ArrayList<>();
         double distance = distance(point1,point2);
         if (distance > 8) {
@@ -126,7 +113,13 @@ public class ClaimBoundariesVisualisation {
         return locations;
     }
 
-    public double distance(Location point1, Location point2) {
+    /**
+     * Compute the distance between two points in xOz plan
+     * @param point1 the first point of the segment
+     * @param point2 the second point of the segment
+     * @return the distance between the two points
+     */
+    private double distance(Location point1, Location point2) {
         return Math.sqrt(Math.pow(point2.getBlockX() - point1.getBlockX(),2) + Math.pow(point2.getBlockZ() -
                 point1.getBlockZ(),2));
     }

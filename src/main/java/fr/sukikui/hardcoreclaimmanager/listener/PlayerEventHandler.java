@@ -17,10 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitScheduler;
 
 /**
@@ -147,6 +144,20 @@ public class PlayerEventHandler implements Listener {
             if (claim != null) {
                 ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),
                         claim.getCorner1(),claim.getCorner2());
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerEmptyBucketInClaim(PlayerBucketEmptyEvent e) {
+        Claim claim = PlayerDataManager.getInstance().getClaimAt(e.getBlock().getLocation());
+        if (claim != null) {
+            PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
+            if (playerData != null && !playerData.isOwned(claim) && !claim.isAllowed(playerData.getPlayerName())) {
+                e.setCancelled(true);
+                PlayerData claimOwnerData = PlayerDataManager.getInstance().getPlayerDataByUUID(claim.getOwnerUUID());
+                e.getPlayer().sendMessage(ChatColor.RED + "Your not allowed to use buckets here (claim is owned by "
+                        + claimOwnerData.getPlayerName() + ")");
             }
         }
     }
