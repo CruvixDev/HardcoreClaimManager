@@ -2,6 +2,7 @@ package fr.sukikui.hardcoreclaimmanager.claim;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
 import org.bukkit.Bukkit;
+import org.bukkit.HeightMap;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.BlockFace;
@@ -41,35 +42,48 @@ public class ClaimBoundariesVisualisation {
      */
     public void startVisualisationTask(String playerSource, Location corner1, Location corner2) {
         Player player = Bukkit.getPlayer(playerSource);
-        Location corner3 = new Location(corner1.getWorld(),corner2.getBlockX(),corner2.getBlockY(),corner1.getBlockZ());
-        Location corner4 = new Location(corner1.getWorld(),corner1.getBlockX(),corner2.getBlockY(),corner2.getBlockZ());
-        ArrayList<Location> locations = new ArrayList<>();
-        ArrayList<Location> corners = new ArrayList<>();
-
-        corners.add(corner1);
-        corners.add(corner2);
-        corners.add(corner3);
-        corners.add(corner4);
-
-        locations.addAll(drawLine(corner1,corner3));
-        locations.addAll(drawLine(corner3,corner2));
-        locations.addAll(drawLine(corner2,corner4));
-        locations.addAll(drawLine(corner4,corner1));
 
         if (!this.playerSources.contains(playerSource) && player != null) {
             playerSources.add(playerSource);
+
+            Location corner3 = new Location(corner1.getWorld(),corner2.getBlockX(),corner2.getBlockY(),corner1.getBlockZ());
+            Location corner4 = new Location(corner1.getWorld(),corner1.getBlockX(),corner2.getBlockY(),corner2.getBlockZ());
+            ArrayList<Location> locations = new ArrayList<>();
+            ArrayList<Location> corners = new ArrayList<>();
+
+            corners.add(corner1);
+            corners.add(corner2);
+            corners.add(corner3);
+            corners.add(corner4);
+
             for (Location corner : corners) {
                 for (BlockFace blockFace : cardinalPoints) {
                     if (Claim.isInSurface(corner.getBlock().getRelative(blockFace).getLocation(), corner1, corner2)) {
                         locations.add(corner.getBlock().getRelative(blockFace).getLocation());
                     }
-                    player.sendBlockChange(corner, Material.GLOWSTONE.createBlockData());
                 }
             }
 
+            locations.addAll(drawLine(corner1,corner3));
+            locations.addAll(drawLine(corner3,corner2));
+            locations.addAll(drawLine(corner2,corner4));
+            locations.addAll(drawLine(corner4,corner1));
+
+            for (Location location : locations) {
+                location.setY(Bukkit.getWorld(location.getWorld().getName()).getHighestBlockYAt(location,
+                        HeightMap.WORLD_SURFACE));
+            }
+            for (Location corner : corners) {
+                corner.setY(Bukkit.getWorld(corner.getWorld().getName()).getHighestBlockYAt(corner,
+                        HeightMap.WORLD_SURFACE));
+            }
             for (Location location : locations) {
                 player.sendBlockChange(location, Material.GOLD_BLOCK.createBlockData());
             }
+            for (Location corner : corners) {
+                player.sendBlockChange(corner, Material.GLOWSTONE.createBlockData());
+            }
+
             BukkitScheduler scheduler = Bukkit.getScheduler();
             HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getPluginManager().
                     getPlugin("HardcoreClaimManager");

@@ -66,6 +66,8 @@ public class PlayerEventHandler implements Listener {
             float blockEarn = (float) ((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) *
                     blockRate / 60;
             playerData.addClaimBlocks(blockEarn);
+            System.out.println(blockEarn);
+            playerData.setLastSaveBlocksGain(currentTime);
         }
     }
 

@@ -39,3 +39,6 @@ commands:
   removeClaim:
     description: "Use this command to remove a claim, this command only works when a player is in a owned claim"
     usage: "/removeClaim"
+  seen:
+    description: "Use this command to see the last join date of a player"
+    usage: "/seen <valid player name>"

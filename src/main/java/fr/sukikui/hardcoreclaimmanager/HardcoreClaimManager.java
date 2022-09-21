@@ -8,6 +8,7 @@ import fr.sukikui.hardcoreclaimmanager.listener.PlayerEventHandler;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
@@ -44,9 +45,16 @@ public final class HardcoreClaimManager extends JavaPlugin {
         this.getCommand("trustPlayers").setExecutor(new TrustPlayerExecutor(this));
         this.getCommand("unTrustPlayers").setExecutor(new UnTrustPlayerExecutor(this));
         this.getCommand("removeClaim").setExecutor(new UnregisterClaimExecutor(this));
+        this.getCommand("seen").setExecutor(new SeenExecutor());
 
         this.getServer().getPluginManager().registerEvents(new PlayerEventHandler(this), this);
         this.getServer().getPluginManager().registerEvents(new ClaimEventHandler(), this);
+
+        long currentTime = System.currentTimeMillis();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
+            playerData.setLastSaveBlocksGain(currentTime);
+        }
 
         this.runBlockGainTask();
     }
