@@ -8,6 +8,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -37,12 +39,12 @@ public class SeenExecutor implements CommandExecutor {
         Date now = new Date();
         long differenceInTime = now.getTime() - lastJoinDate.getTime();
         long years = TimeUnit.MILLISECONDS.toDays(differenceInTime) / 365;
-        long months = TimeUnit.MILLISECONDS.toDays(differenceInTime) / (365/12);
-        long days = TimeUnit.MILLISECONDS.toDays(differenceInTime) % 365;
+        long months = TimeUnit.MILLISECONDS.toDays(differenceInTime) % 30;
+        long days = TimeUnit.MILLISECONDS.toDays(differenceInTime) % 365 - 30 * months;
         long hours = TimeUnit.MILLISECONDS.toHours(differenceInTime) % 24;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(differenceInTime) % 60;
         long seconds = TimeUnit.MILLISECONDS.toSeconds(differenceInTime) % 60;
-        return String.format(" last connection: %d year(s) %d month(s) %d day(s) %d hour(s) %d minute(s) %d " +
+        return String.format(" last connection: %d year(s) %d months %d day(s) %d hour(s) %d minute(s) %d " +
                 "second(s)", years, months, days, hours, minutes, seconds);
     }
 }
