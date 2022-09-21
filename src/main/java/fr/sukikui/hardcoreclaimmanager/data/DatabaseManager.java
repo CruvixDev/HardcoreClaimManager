@@ -86,7 +86,7 @@ public class DatabaseManager {
                     "playerName TEXT NOT NULL," +
                     "playerUUID TEXT NOT NULL," +
                     "claimBlocks INTEGER NOT NULL," +
-                    "lastJoinDate INTEGER NOT NULL," +
+                    "lastlastJoinDate INTEGER NOT NULL," +
                     "PRIMARY KEY (playerName,playerUUID)" +
                 ")";
         String createWorldTableRequest = "CREATE TABLE IF NOT EXISTS World" +
@@ -137,7 +137,7 @@ public class DatabaseManager {
      * @param playerData the player's data
      */
     public void insertPlayer(PlayerData playerData) {
-        String insertPlayerRequest = "INSERT INTO Player (playerName,playerUUID,claimBlocks,lastJoinDate) " +
+        String insertPlayerRequest = "INSERT INTO Player (playerName,playerUUID,claimBlocks,lastlastJoinDate) " +
                 "VALUES (?,?,?,?)";
 
         Connection connection = getConnection();
@@ -148,7 +148,7 @@ public class DatabaseManager {
             statement.setString(1,playerData.getPlayerName());
             statement.setString(2,playerData.getPlayerUUID().toString());
             statement.setInt(3,playerData.getClaimBlocks());
-            statement.setLong(4,playerData.getJoinDate());
+            statement.setLong(4,playerData.getLastJoinDate());
 
             statement.executeUpdate();
         }
@@ -198,16 +198,16 @@ public class DatabaseManager {
         }
     }
 
-    public void updateLastJoinDate(PlayerData playerData) {
-        String updateLastJoinDateRequest = "UPDATE Player SET lastJoinDate=? WHERE Player.playerName=? AND" +
+    public void updateLastlastJoinDate(PlayerData playerData) {
+        String updateLastlastJoinDateRequest = "UPDATE Player SET lastlastJoinDate=? WHERE Player.playerName=? AND" +
                 " Player.playerUUID=?";
 
         Connection connection = getConnection();
         PreparedStatement statement = null;
 
         try {
-            statement = connection.prepareStatement(updateLastJoinDateRequest);
-            statement.setLong(1,playerData.getJoinDate());
+            statement = connection.prepareStatement(updateLastlastJoinDateRequest);
+            statement.setLong(1,playerData.getLastJoinDate());
             statement.setString(2,playerData.getPlayerName());
             statement.setString(3,playerData.getPlayerUUID().toString());
             statement.executeUpdate();
@@ -427,7 +427,7 @@ public class DatabaseManager {
                 PlayerDataManager.getInstance().addNewPlayerData(playersResultSet.getString("playerName"),
                         UUID.fromString(playersResultSet.getString("playerUUID")),
                         playersResultSet.getFloat("claimBlocks"),
-                        playersResultSet.getLong("lastJoinDate"));
+                        playersResultSet.getLong("lastlastJoinDate"));
             }
 
             while (claimsResultSet.next()) {

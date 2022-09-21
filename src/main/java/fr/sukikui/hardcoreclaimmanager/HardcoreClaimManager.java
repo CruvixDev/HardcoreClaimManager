@@ -64,7 +64,7 @@ public final class HardcoreClaimManager extends JavaPlugin {
         storeProperties();
         for (PlayerData playerData : PlayerDataManager.getInstance().getPlayersData()) {
             DatabaseManager.getInstance(this).updatePlayerClaimBlocks(playerData);
-            DatabaseManager.getInstance(this).updateLastJoinDate(playerData);
+            DatabaseManager.getInstance(this).updateLastlastJoinDate(playerData);
         }
         Bukkit.getScheduler().cancelTasks(this);
     }

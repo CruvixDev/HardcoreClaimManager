@@ -2,6 +2,7 @@ package fr.sukikui.hardcoreclaimmanager.command;
 
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -19,7 +20,7 @@ public class SeenExecutor implements CommandExecutor {
         if (strings.length == 1) {
             PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(strings[0]);
             if (playerData != null) {
-                String message = getLastConnection(playerData.getJoinDate());
+                String message = getLastConnection(playerData);
                 commandSender.sendMessage(ChatColor.AQUA + playerData.getPlayerName() + message);
                 return true;
             }
@@ -34,17 +35,28 @@ public class SeenExecutor implements CommandExecutor {
         }
     }
 
-    private String getLastConnection(long playerJoinDate) {
-        Date lastJoinDate = new Date(playerJoinDate);
+    /**
+     * Create a message with the number of years, months, days, hours, minutes and seconds since the player is connected
+     * or disconnected
+     * @param playerData the player's data
+     * @return the message
+     */
+    private String getLastConnection(PlayerData playerData) {
+        Date lastlastJoinDate = new Date(playerData.getLastJoinDate());
         Date now = new Date();
-        long differenceInTime = now.getTime() - lastJoinDate.getTime();
+        long differenceInTime = now.getTime() - lastlastJoinDate.getTime();
         long years = TimeUnit.MILLISECONDS.toDays(differenceInTime) / 365;
         long months = TimeUnit.MILLISECONDS.toDays(differenceInTime) % 30;
         long days = TimeUnit.MILLISECONDS.toDays(differenceInTime) % 365 - 30 * months;
         long hours = TimeUnit.MILLISECONDS.toHours(differenceInTime) % 24;
         long minutes = TimeUnit.MILLISECONDS.toMinutes(differenceInTime) % 60;
         long seconds = TimeUnit.MILLISECONDS.toSeconds(differenceInTime) % 60;
-        return String.format(" last connection: %d year(s) %d months %d day(s) %d hour(s) %d minute(s) %d " +
-                "second(s)", years, months, days, hours, minutes, seconds);
+        if (Bukkit.getOnlinePlayers().contains(Bukkit.getPlayer(playerData.getPlayerName()))) {
+            return String.format(" is connected since: %d hour(s) %d minute(s) %d second(s)", hours, minutes, seconds);
+        }
+        else {
+            return String.format((" is disconnected since: %d year(s) %d month(s) %d day(s) %d hour(s) %d minute(s)" +
+                    " %d second(s)"),years,months,days,hours,minutes,seconds);
+        }
     }
 }

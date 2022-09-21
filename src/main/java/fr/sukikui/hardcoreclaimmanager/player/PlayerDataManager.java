@@ -134,7 +134,7 @@ public class PlayerDataManager {
      * @param playerName the name of the player
      * @param playerUUID the UUID of the player
      */
-    public PlayerData addNewPlayerData(String playerName, UUID playerUUID, long joinDate) {
+    public PlayerData addNewPlayerData(String playerName, UUID playerUUID, long lastJoinDate) {
         boolean exists = false;
         if (Bukkit.getServer().getPlayer(playerName) != null) {
             exists = true;
@@ -146,7 +146,7 @@ public class PlayerDataManager {
             }
         }
         if (exists) {
-            PlayerData playerData = new PlayerData(playerName,playerUUID, joinDate);
+            PlayerData playerData = new PlayerData(playerName,playerUUID, lastJoinDate);
             if (!playersData.contains(playerData)) {
                 playersData.add(playerData);
                 return playerData;
@@ -155,7 +155,7 @@ public class PlayerDataManager {
         return null;
     }
 
-    public PlayerData addNewPlayerData(String playerName, UUID playerUUID, float claimBlocks, long joinDate) {
+    public PlayerData addNewPlayerData(String playerName, UUID playerUUID, float claimBlocks, long lastJoinDate) {
         boolean exists = false;
         if (Bukkit.getServer().getPlayer(playerName) != null) {
             exists = true;
@@ -167,7 +167,7 @@ public class PlayerDataManager {
             }
         }
         if (exists) {
-            PlayerData playerData = new PlayerData(playerName,playerUUID,claimBlocks,joinDate);
+            PlayerData playerData = new PlayerData(playerName,playerUUID,claimBlocks,lastJoinDate);
             if (!playersData.contains(playerData)) {
                 playersData.add(playerData);
                 return playerData;

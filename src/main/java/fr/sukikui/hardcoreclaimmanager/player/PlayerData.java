@@ -15,29 +15,29 @@ public class PlayerData {
     private String playerName;
     private UUID playerUUID;
     private float claimBlocks;
-    private long joinDate;
+    private long lastJoinDate;
     private long lastSaveBlocksGain;
     private ArrayList<Claim> claims;
     private Location lastToolLocation;
 
-    public PlayerData(String playerName, UUID playerUUID, long joinDate) {
+    public PlayerData(String playerName, UUID playerUUID, long lastJoinDate) {
         this.playerUUID = playerUUID;
         this.playerName = playerName;
         HardcoreClaimManager hardcoreClaimManager = (HardcoreClaimManager) Bukkit.getServer().getPluginManager().
                 getPlugin("HardcoreClaimManager");
         this.claimBlocks = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("default-claim-blocks"));
         this.claims = new ArrayList<>();
-        this.joinDate = joinDate;
-        this.lastSaveBlocksGain = this.joinDate;
+        this.lastJoinDate = lastJoinDate;
+        this.lastSaveBlocksGain = this.lastJoinDate;
     }
 
-    public PlayerData(String playerName, UUID playerUUID, float claimBlocks, long joinDate) {
+    public PlayerData(String playerName, UUID playerUUID, float claimBlocks, long lastJoinDate) {
         this.playerUUID = playerUUID;
         this.playerName = playerName;
         this.claimBlocks = claimBlocks;
         this.claims = new ArrayList<>();
-        this.joinDate = joinDate;
-        this.lastSaveBlocksGain = this.joinDate;
+        this.lastJoinDate = lastJoinDate;
+        this.lastSaveBlocksGain = this.lastJoinDate;
     }
 
     /**
@@ -88,8 +88,8 @@ public class PlayerData {
      *
      * @return the player join date (Timestamp)
      */
-    public long getJoinDate() {
-        return joinDate;
+    public long getLastJoinDate() {
+        return lastJoinDate;
     }
 
     /**
@@ -162,11 +162,11 @@ public class PlayerData {
 
     /**
      *
-     * @param joinDate the join date of the player on the server
+     * @param lastJoinDate the join date of the player on the server
      */
-    public void setJoinDate(long joinDate) {
-        this.joinDate = joinDate;
-        this.lastSaveBlocksGain = joinDate;
+    public void setLastJoinDate(long lastJoinDate) {
+        this.lastJoinDate = lastJoinDate;
+        this.lastSaveBlocksGain = lastJoinDate;
     }
 
     @Override

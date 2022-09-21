@@ -37,7 +37,7 @@ public class PlayerEventHandler implements Listener {
         Player player = e.getPlayer();
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
         if (playerData != null) {
-            playerData.setJoinDate(System.currentTimeMillis());
+            playerData.setLastJoinDate(System.currentTimeMillis());
         }
         else {
             PlayerData newPlayerData = PlayerDataManager.getInstance().addNewPlayerData(player.getName(),
@@ -66,8 +66,7 @@ public class PlayerEventHandler implements Listener {
             float blockEarn = (float) ((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) *
                     blockRate / 60;
             playerData.addClaimBlocks(blockEarn);
-            System.out.println(blockEarn);
-            playerData.setLastSaveBlocksGain(currentTime);
+            playerData.setLastJoinDate(currentTime);
         }
     }
 
