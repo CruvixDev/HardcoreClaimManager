@@ -86,7 +86,7 @@ public class DatabaseManager {
                     "playerName TEXT NOT NULL," +
                     "playerUUID TEXT NOT NULL," +
                     "claimBlocks INTEGER NOT NULL," +
-                    "lastlastJoinDate INTEGER NOT NULL," +
+                    "lastJoinDate INTEGER NOT NULL," +
                     "PRIMARY KEY (playerName,playerUUID)" +
                 ")";
         String createWorldTableRequest = "CREATE TABLE IF NOT EXISTS World" +
@@ -137,7 +137,7 @@ public class DatabaseManager {
      * @param playerData the player's data
      */
     public void insertPlayer(PlayerData playerData) {
-        String insertPlayerRequest = "INSERT INTO Player (playerName,playerUUID,claimBlocks,lastlastJoinDate) " +
+        String insertPlayerRequest = "INSERT INTO Player (playerName,playerUUID,claimBlocks,lastJoinDate) " +
                 "VALUES (?,?,?,?)";
 
         Connection connection = getConnection();
@@ -198,15 +198,15 @@ public class DatabaseManager {
         }
     }
 
-    public void updateLastlastJoinDate(PlayerData playerData) {
-        String updateLastlastJoinDateRequest = "UPDATE Player SET lastlastJoinDate=? WHERE Player.playerName=? AND" +
+    public void updateLastJoinDate(PlayerData playerData) {
+        String updateLastJoinDateRequest = "UPDATE Player SET lastJoinDate=? WHERE Player.playerName=? AND" +
                 " Player.playerUUID=?";
 
         Connection connection = getConnection();
         PreparedStatement statement = null;
 
         try {
-            statement = connection.prepareStatement(updateLastlastJoinDateRequest);
+            statement = connection.prepareStatement(updateLastJoinDateRequest);
             statement.setLong(1,playerData.getLastJoinDate());
             statement.setString(2,playerData.getPlayerName());
             statement.setString(3,playerData.getPlayerUUID().toString());
@@ -427,7 +427,7 @@ public class DatabaseManager {
                 PlayerDataManager.getInstance().addNewPlayerData(playersResultSet.getString("playerName"),
                         UUID.fromString(playersResultSet.getString("playerUUID")),
                         playersResultSet.getFloat("claimBlocks"),
-                        playersResultSet.getLong("lastlastJoinDate"));
+                        playersResultSet.getLong("lastJoinDate"));
             }
 
             while (claimsResultSet.next()) {

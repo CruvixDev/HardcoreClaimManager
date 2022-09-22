@@ -14,15 +14,21 @@ import java.util.ArrayList;
 public class PlayerAddBlocksTask implements Runnable{
     private HardcoreClaimManager hardcoreClaimManager;
     private int blockRate;
+    private int clockPeriod;
 
     public PlayerAddBlocksTask(HardcoreClaimManager hardcoreClaimManager) {
         this.hardcoreClaimManager = hardcoreClaimManager;
         try {
             this.blockRate = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("block-rate-per-hour"));
+            this.clockPeriod = Integer.parseInt((hardcoreClaimManager.getProperties().getProperty(
+                    "clock-block-gain-duration")));
+            if (this.clockPeriod < 1) {
+                this.clockPeriod = 1;
+            }
         }
         catch (NumberFormatException e) {
             this.blockRate = 100;
-            return;
+            this.clockPeriod = 1;
         }
     }
 
@@ -34,9 +40,8 @@ public class PlayerAddBlocksTask implements Runnable{
             if (playerData != null) {
                 long currentTime = System.currentTimeMillis();
                 float blockEarn = (float) (((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) *
-                        blockRate / 60);
+                        (blockRate * clockPeriod) / 60);
                 playerData.addClaimBlocks(blockEarn);
-                System.out.println(blockEarn);
                 playerData.setLastSaveBlocksGain(currentTime);
             }
         }

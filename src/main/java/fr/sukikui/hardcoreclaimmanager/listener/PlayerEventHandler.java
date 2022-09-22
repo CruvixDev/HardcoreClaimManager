@@ -29,7 +29,7 @@ public class PlayerEventHandler implements Listener {
 
     public PlayerEventHandler(HardcoreClaimManager hardcoreClaimManager) {
         this.hardcoreClaimManager = hardcoreClaimManager;
-        claimID = DatabaseManager.getInstance(hardcoreClaimManager).getLastID();
+        this.claimID = DatabaseManager.getInstance(hardcoreClaimManager).getLastID();
     }
 
     @EventHandler
@@ -44,8 +44,8 @@ public class PlayerEventHandler implements Listener {
                     player.getUniqueId(), System.currentTimeMillis());
             if (newPlayerData != null) {
                 BukkitScheduler scheduler = Bukkit.getScheduler();
-                scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
-                    DatabaseManager.getInstance(hardcoreClaimManager).insertPlayer(newPlayerData);
+                scheduler.runTaskAsynchronously(this.hardcoreClaimManager,() -> {
+                    DatabaseManager.getInstance(this.hardcoreClaimManager).insertPlayer(newPlayerData);
                 });
             }
         }
@@ -54,17 +54,24 @@ public class PlayerEventHandler implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         int blockRate;
+        int clockPeriod;
         try {
-            blockRate = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("block-rate-per-hour"));
+            blockRate = Integer.parseInt(this.hardcoreClaimManager.getProperties().getProperty("block-rate-per-hour"));
+            clockPeriod = Integer.parseInt(this.hardcoreClaimManager.getProperties().getProperty(
+                    "clock-block-gain-duration"));
+            if (clockPeriod < 1) {
+                clockPeriod = 1;
+            }
         }
         catch (NumberFormatException numberFormatException) {
-            return;
+            blockRate = 100;
+            clockPeriod = 1;
         }
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
         if (playerData != null) {
             long currentTime = System.currentTimeMillis();
             float blockEarn = (float) ((currentTime - playerData.getLastSaveBlocksGain()) * Math.pow(10,-3) / 60) *
-                    blockRate / 60;
+                    (blockRate * clockPeriod) / 60;
             playerData.addClaimBlocks(blockEarn);
             playerData.setLastJoinDate(currentTime);
         }
@@ -76,9 +83,20 @@ public class PlayerEventHandler implements Listener {
         if (e.getItem() == null || !e.getItem().getType().equals(Material.matchMaterial(defaultTool))) {
             return;
         }
+
+        //handle stick interaction in worlds
+        if (e.getItem().getType().equals(Material.STICK)) {
+            Claim claim = PlayerDataManager.getInstance().getClaimAt(e.getClickedBlock().getLocation());
+            if (claim != null) {
+                PlayerData playerOwnerData = PlayerDataManager.getInstance().getPlayerDataByUUID(claim.getOwnerUUID());
+                e.getPlayer().sendMessage(ChatColor.AQUA + "This block was claimed by " + playerOwnerData.
+                        getPlayerName());
+            }
+        }
+
         //handle claim creation with the tool's selector
         PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
-        if (playerData != null && claimID >= 0) {
+        if (playerData != null && this.claimID >= 0) {
             if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
                 if (playerData.getLastToolLocation() == null) {
                     playerData.setLastToolLocation(e.getClickedBlock().getLocation());
@@ -97,7 +115,7 @@ public class PlayerEventHandler implements Listener {
                 ClaimResults results;
                 if (Bukkit.getServer().getOperators().contains(e.getPlayer())) {
                     results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
-                            true,claimID + 1L, ClaimCreationSource.PLAYER);
+                            true,this.claimID + 1L, ClaimCreationSource.PLAYER);
                     if (results.claim != null) {
                         ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),
                                 results.claim.getCorner1(),results.claim.getCorner2());
@@ -110,14 +128,14 @@ public class PlayerEventHandler implements Listener {
                 }
                 else {
                     results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
-                            false,claimID + 1L,ClaimCreationSource.PLAYER);
+                            false,this.claimID + 1L,ClaimCreationSource.PLAYER);
                     ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
                             corner2);
                     if (results.claim != null) {
                         BukkitScheduler scheduler = Bukkit.getScheduler();
                         scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
                             DatabaseManager.getInstance(hardcoreClaimManager).insertClaim(results.claim,playerData);
-                            claimID = DatabaseManager.getInstance(hardcoreClaimManager).getLastID();
+                            this.claimID = DatabaseManager.getInstance(hardcoreClaimManager).getLastID();
                         });
                     }
                 }
@@ -138,7 +156,7 @@ public class PlayerEventHandler implements Listener {
         if (e.getPlayer().getInventory().getItem(e.getNewSlot()) == null) {
             return;
         }
-        Material defaultTool = Material.matchMaterial(hardcoreClaimManager.getProperties().
+        Material defaultTool = Material.matchMaterial(this.hardcoreClaimManager.getProperties().
                 getProperty("default-tool-selector"));
         if (e.getPlayer().getInventory().getItem(e.getNewSlot()).getType().equals(defaultTool)) {
             Claim claim = PlayerDataManager.getInstance().getClaimAt(e.getPlayer().getLocation());

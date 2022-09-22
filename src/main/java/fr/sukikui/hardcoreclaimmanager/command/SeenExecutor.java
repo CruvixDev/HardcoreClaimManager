@@ -42,9 +42,9 @@ public class SeenExecutor implements CommandExecutor {
      * @return the message
      */
     private String getLastConnection(PlayerData playerData) {
-        Date lastlastJoinDate = new Date(playerData.getLastJoinDate());
+        Date lastJoinDate = new Date(playerData.getLastJoinDate());
         Date now = new Date();
-        long differenceInTime = now.getTime() - lastlastJoinDate.getTime();
+        long differenceInTime = now.getTime() - lastJoinDate.getTime();
         long years = TimeUnit.MILLISECONDS.toDays(differenceInTime) / 365;
         long months = TimeUnit.MILLISECONDS.toDays(differenceInTime) % 30;
         long days = TimeUnit.MILLISECONDS.toDays(differenceInTime) % 365 - 30 * months;
