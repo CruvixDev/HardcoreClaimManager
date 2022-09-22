@@ -147,6 +147,22 @@ public class Claim {
     }
 
     /**
+     * Compute the width of the claim
+     * @return the claim width
+     */
+    public int getWidth() {
+       return Math.abs(corner2.getBlockX() - corner1.getBlockX());
+    }
+
+    /**
+     * Compute the claim height
+     * @return the claim height
+     */
+    public int getHeight() {
+        return Math.abs(corner2.getBlockZ() - corner1.getBlockZ());
+    }
+
+    /**
      *
      * @return the first corner delimiting the claim
      */

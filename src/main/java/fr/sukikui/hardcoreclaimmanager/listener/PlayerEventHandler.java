@@ -113,36 +113,38 @@ public class PlayerEventHandler implements Listener {
                 Location corner1 = playerData.getLastToolLocation();
                 Location corner2 = e.getClickedBlock().getLocation();
                 ClaimResults results;
+                boolean isAdmin = false;
+
                 if (Bukkit.getServer().getOperators().contains(e.getPlayer())) {
-                    results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
-                            true,this.claimID + 1L, ClaimCreationSource.PLAYER);
-                    if (results.claim != null) {
-                        ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),
-                                results.claim.getCorner1(),results.claim.getCorner2());
-                        BukkitScheduler scheduler = Bukkit.getScheduler();
-                        scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
-                            DatabaseManager.getInstance(hardcoreClaimManager).insertClaim(results.claim,playerData);
-                            claimID = DatabaseManager.getInstance(hardcoreClaimManager).getLastID();
-                        });
-                    }
+                    isAdmin = true;
                 }
-                else {
-                    results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
-                            false,this.claimID + 1L,ClaimCreationSource.PLAYER);
-                    ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),corner1,
-                            corner2);
-                    if (results.claim != null) {
-                        BukkitScheduler scheduler = Bukkit.getScheduler();
-                        scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
-                            DatabaseManager.getInstance(hardcoreClaimManager).insertClaim(results.claim,playerData);
-                            this.claimID = DatabaseManager.getInstance(hardcoreClaimManager).getLastID();
-                        });
-                    }
+                results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
+                        isAdmin,this.claimID + 1L, ClaimCreationSource.PLAYER);
+                if (results.claim != null) {
+                    ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),
+                            results.claim.getCorner1(),results.claim.getCorner2());
+                    BukkitScheduler scheduler = Bukkit.getScheduler();
+                    scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
+                        DatabaseManager.getInstance(hardcoreClaimManager).insertClaim(results.claim,playerData);
+                        claimID = DatabaseManager.getInstance(hardcoreClaimManager).getLastID();
+                    });
                 }
                 String message = results.message.getMessage();
                 if (results.message.equals(ClaimCreationMessages.NotEnoughBlock)) {
                     message = String.format(results.message.getMessage(),playerData.getClaimBlocks(),
                             results.claimSurface);
+                }
+                if (results.message.equals(ClaimCreationMessages.ClaimTooShrink)) {
+                    int claimMinWidth;
+                    try {
+                        claimMinWidth = Integer.parseInt(this.hardcoreClaimManager.getProperties().getProperty(
+                                "min-claim-width"));
+                    }
+                    catch (NumberFormatException ex) {
+                        claimMinWidth = 5;
+                    }
+                    message = String.format(results.message.getMessage(),results.claim.getWidth(),results.claim.getHeight(),
+                            claimMinWidth);
                 }
                 e.getPlayer().sendMessage(message);
                 playerData.setLastToolLocation(null);

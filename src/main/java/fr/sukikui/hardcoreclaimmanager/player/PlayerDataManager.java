@@ -18,6 +18,7 @@ import java.util.UUID;
  * The god class managing all claims and players data and verify their integrity before using them
  */
 public class PlayerDataManager {
+    private HardcoreClaimManager hardcoreClaimManager;
     private static PlayerDataManager playerDataManager;
     private ArrayList<PlayerData> playersData;
     private ArrayList<Claim> claims;
@@ -25,6 +26,7 @@ public class PlayerDataManager {
     private PlayerDataManager() {
         this.playersData = new ArrayList<>();
         this.claims = new ArrayList<>();
+        this.hardcoreClaimManager = HardcoreClaimManager.getInstance();
     }
 
     /**
@@ -52,31 +54,45 @@ public class PlayerDataManager {
         if (playerData == null) {
             return new ClaimResults(null,ClaimCreationMessages.PlayerDoesNotExists,claim.getClaimSurface());
         }
-        if (!claim.getCorner1().getWorld().equals(claim.getCorner2().getWorld())) {
-            return new ClaimResults(null,ClaimCreationMessages.CornersNotInTheSameWorld,claim.getClaimSurface());
-        }
         if (isRiding(claim)) {
             return new ClaimResults(null,ClaimCreationMessages.ClaimsRiding,claim.getClaimSurface());
         }
-        HardcoreClaimManager hardcoreClaimManager = HardcoreClaimManager.getInstance();
-        int claimMinSurface;
-        int claimMaxSurface;
-        try {
-            claimMinSurface = Integer.parseInt(hardcoreClaimManager.getProperties().getProperty("min-claim-size"));
-            claimMaxSurface = Integer.parseInt((hardcoreClaimManager.getProperties().getProperty("max-claim-size")));
-        }
-        catch (NumberFormatException e) {
-            return new ClaimResults(null,ClaimCreationMessages.MinClaimSizeNotValid,claim.getClaimSurface());
+        if (!claim.getCorner1().getWorld().equals(claim.getCorner2().getWorld())) {
+            return new ClaimResults(null,ClaimCreationMessages.CornersNotInTheSameWorld,claim.getClaimSurface());
         }
         if (claim.getCorner1().getBlockX() - claim.getCorner2().getBlockX() == 0 || claim.getCorner1().getBlockZ() -
                 claim.getCorner2().getBlockZ() == 0) {
             return new ClaimResults(null,ClaimCreationMessages.ClaimNotValid,claim.getClaimSurface());
+        }
+        int claimMinSurface;
+        int claimMaxSurface;
+        int claimMinWidth;
+        try {
+            claimMinSurface = Integer.parseInt(this.hardcoreClaimManager.getProperties().getProperty("min-claim-size"));
+        }
+        catch (NumberFormatException e) {
+            claimMinSurface = 25;
+        }
+        try {
+            claimMaxSurface = Integer.parseInt(this.hardcoreClaimManager.getProperties().getProperty("max-claim-size"));
+        }
+        catch (NumberFormatException e) {
+            claimMaxSurface = 10000;
+        }
+        try {
+            claimMinWidth = Integer.parseInt(this.hardcoreClaimManager.getProperties().getProperty("min-claim-width"));
+        }
+        catch (NumberFormatException e) {
+            claimMinWidth = 5;
         }
         if (claim.getClaimSurface() < claimMinSurface) {
             return new ClaimResults(null,ClaimCreationMessages.ClaimTooSmall,claim.getClaimSurface());
         }
         if (claim.getClaimSurface() > claimMaxSurface) {
             return new ClaimResults(null,ClaimCreationMessages.ClaimTooBig,claim.getClaimSurface());
+        }
+        if (claim.getWidth() < claimMinWidth || claim.getHeight() < claimMinWidth) {
+            return new ClaimResults(claim, ClaimCreationMessages.ClaimTooShrink, claim.getClaimSurface());
         }
         if (!this.claims.contains(claim)) {
             if (source.equals(ClaimCreationSource.PLAYER)) {
@@ -214,7 +230,7 @@ public class PlayerDataManager {
 
     /**
      *
-     * @return all players data managed by the PlayerDataManager class
+     * @return all player's data managed by the PlayerDataManager class
      */
     public List<PlayerData> getPlayersData() {
         return Collections.unmodifiableList(this.playersData);
