@@ -4,12 +4,13 @@ import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.type.Dispenser;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockFromToEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 import java.util.Arrays;
@@ -92,4 +93,29 @@ public class ClaimEventHandler implements Listener {
             e.setCancelled(true);
         }
     }
+
+    @EventHandler
+    public void onBlockDispensed(BlockDispenseEvent e) {
+        BlockData blockData = e.getBlock().getBlockData();
+        if (blockData instanceof Dispenser) {
+            Block block = e.getBlock().getRelative(((Dispenser) blockData).getFacing());
+            Claim claim = PlayerDataManager.getInstance().getClaimAt(block.getLocation());
+            if (claim != null && !Claim.isInSurface(e.getBlock().getLocation(),claim.getCorner1(),claim.getCorner2())
+                    && (e.getItem().getType().equals(Material.WATER_BUCKET) || e.getItem().getType().equals(
+                            Material.LAVA_BUCKET))) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+   /* @EventHandler
+    public void onBlockMelt(BlockFadeEvent e) {
+        Claim claim = PlayerDataManager.getInstance().getClaimAt(e.getBlock().getLocation());
+        if (claim != null) {
+            if (e.getBlock().getType().equals(Material.ICE) || e.getBlock().getType().equals(Material.SNOW)
+                    || e.getBlock().getType().equals(Material.SNOW_BLOCK)) {
+                e.setCancelled(true);
+            }
+        }
+    }*/
 }

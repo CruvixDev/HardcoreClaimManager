@@ -79,19 +79,21 @@ public class PlayerEventHandler implements Listener {
 
     @EventHandler
     public void onPlayerInteractEvent(PlayerInteractEvent e) {
-        String defaultTool = this.hardcoreClaimManager.getProperties().getProperty("default-tool-selector");
-        if (e.getItem() == null || !e.getItem().getType().equals(Material.matchMaterial(defaultTool))) {
-            return;
-        }
-
         //handle stick interaction in worlds
-        if (e.getItem().getType().equals(Material.STICK)) {
+        if (e.getItem() != null && e.getItem().getType().equals(Material.STICK) &&
+                e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
             Claim claim = PlayerDataManager.getInstance().getClaimAt(e.getClickedBlock().getLocation());
             if (claim != null) {
                 PlayerData playerOwnerData = PlayerDataManager.getInstance().getPlayerDataByUUID(claim.getOwnerUUID());
-                e.getPlayer().sendMessage(ChatColor.AQUA + "This block was claimed by " + playerOwnerData.
+                e.getPlayer().sendMessage(ChatColor.AQUA + "This block is claimed by " + playerOwnerData.
                         getPlayerName());
             }
+            return;
+        }
+
+        String defaultTool = this.hardcoreClaimManager.getProperties().getProperty("default-tool-selector");
+        if (e.getItem() == null || !e.getItem().getType().equals(Material.matchMaterial(defaultTool))) {
+            return;
         }
 
         //handle claim creation with the tool's selector
@@ -143,8 +145,8 @@ public class PlayerEventHandler implements Listener {
                     catch (NumberFormatException ex) {
                         claimMinWidth = 5;
                     }
-                    message = String.format(results.message.getMessage(),results.claim.getWidth(),results.claim.getHeight(),
-                            claimMinWidth);
+                    message = String.format(results.message.getMessage(),claimMinWidth,results.claim.getWidth(),
+                            results.claim.getHeight());
                 }
                 e.getPlayer().sendMessage(message);
                 playerData.setLastToolLocation(null);

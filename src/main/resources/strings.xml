@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages>
+    <string name="cannot_place_blocks">You are not allowed to place blocks here (claim is owned by %s)</string> <!-- Message quand le joueur ne peut pas placer de blocs dans un claim -->
+    <string name="cannot_break_blocks">You are not allowed to break blocks here (claim is owned by %s)</string> <!-- Message quand le joueur casse un bloc dans un claim -->
+    <string name="players_successfully_trusted">Players successfully trusted!</string> <!-- Message quand une partie des joueurs que l'on veut trust on bien été trust -->
+    <string name="no_players_add">No players add!</string> <!-- Message quand les joueurs que l'on veut trust n'ont pas été trust -->
+    <string name="cannot_trust_in_other_claims">You cannot trust players in other claims!</string> <!-- Message quand on essaye de trust dans un claim qui nous appartient pas -->
+    <string name="not_in_registered_claim">You are not in a registered claim!</string> <!-- Message quand une commande est exécutée hors claim -->
+    <string name="not_registered_in_plugin">You are not registered in the plugin!</string> <!-- Message quand on n'est pas encore enregistré dans le plugin -->
+    <string name="not_player">Only players can execute this command in their claims!</string> <!-- Message quand la commande n'a pas été exécutée par un joueur -->
+    <string name="no_arguments">No arguments given!</string> <!-- Message quand aucun argument n'a été donné à une commande en nécessitant -->
+    <string name="connected"> is connected since: %d hour(s) %d minute(s) %d second(s)</string> <!-- Message pour indiquer depuis quand le joueur est connecté -->
+    <string name="not_connected"> is disconnected since: %d year(s) %d month(s) %d day(s) %d hour(s) %d minute(s) %d second(s)</string> <!-- Message pour indiquer depuis quand le joueur est déconnecté -->
+    <string name="player_not_exist">The player given does not exist!</string> <!-- Message quand le joueur donné en argument n'existe pas -->
+    <string name="too_many_arguments">Too many arguments given!</string> <!-- Message quand il y a trop d'arguments donnés à une commande -->
+    <string name="blocks_added">Successfully added %s blocks to %s!</string> <!-- Message pour indiquer que des blocs ont bien ajoutés au joueur -->
+    <string name="parameter_not_valid">The parameter %s is not valid!</string> <!-- Message quand l'argument donné à une commande est invalide -->
+    <string name="not_enough_arguments">Not enough arguments!</string> <!-- Message pour indiquer qu'il n'y a pas assez d'arguments pour une commande -->
+    <string name="not_allow">You are not allowed to perform this command!</string> <!-- Message quand non autorisé d'utiliser une commande -->
+    <string name="blocks_removed">Successfully removed %s blocks to %s !</string> <!-- Message pour indiquer que des blocs de claim ont bien été retirés -->
+    <string name="show_claim_blocks">The player %s has %d block of claim.</string> <!-- Message pour montrer le nombre de blocs de claim d'un joueur -->
+    <string name="show_tool">The tool uses to select claim is: %s</string> <!-- Message pour montrer l'outil de sélection actuellement utilisé pour claim -->
+    <string name="tool_change">Selector tool become %s for all players.</string> <!-- Message pour montrer le nouvel outil de sélection de claim -->
+    <string name="material_not_valid">Material not valid!</string> <!-- Message quand on renseigne un bloc qui n'existe pas -->
+    <string name="claim_by">This block is claimed by %s</string> <!-- Message pour indiquer le possesseur du claim -->
+    <string name="first_corner_defined">First corner defined, right-click on the other corner!</string> <!-- Message quand le premier coin du claim est défini -->
+    <string name="claim_cancel">Claim creation cancel!</string> <!-- Message quand le joueur annule la création du claim -->
+    <string name="bucket_place">Your not allowed to use buckets here (claim is owned by %s)</string> <!-- Message quand on tente de déverser un seau d'eau dans un claim -->
+    <string name="claim_added_admin">Claim successfully added! (admin claim)</string> <!-- Message pour confirmer qu'un claim admin a bien été créé -->
+    <string name="claim_added">Claim successfully added!</string> <!-- Message pour confirmer qu'un claim a bien été créé par un joueur -->
+    <string name="corner_different_worlds">The two corners are not in the same world!</string> <!-- Message pour indiquer que les deux coins du claim ne sont pas dans le même monde -->
+    <string name="claim_ridding">The claim is riding another claim!</string> <!-- Message pour prévenir le joueur que deux claims se chevauchent -->
+    <string name="claim_not_valid">The claim is not valid!</string> <!-- Message pour prévenir le joueur que le claim n'est pas valide -->
+    <string name="claim_too_small">The claim is too small!</string> <!-- Message pour prévenir le joueur que le claim est trop petit -->
+    <string name="claim_too_big">The claim is too big!</string> <!-- Message pour prévenir le joueur que le claim est trop grand -->
+    <string name="claim_too_shrink">The claim is too shrink, the minimum width and height is %d but the claim is %d block(s) width and %d block(s) height!</string> <!-- Message pour indiquer le claim est trop étroit -->
+    <string name="not_enough_blocks">You have not enough blocks (%d) to claim this region because the surface of this is: %d</string> <!-- Message pour indiquer que le joueur ne dispose pas d'assez de blocs de claim -->
+    <string name="show_claims">The player %s own :</string> <!-- Message pour afficher les claims posséder par un joueur -->
+</messages>

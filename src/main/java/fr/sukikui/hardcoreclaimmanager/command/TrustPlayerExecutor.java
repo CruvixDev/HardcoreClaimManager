@@ -50,8 +50,11 @@ public class TrustPlayerExecutor implements CommandExecutor {
                                                 playerToTrustData,claim);
                                     }
                                 });
+                                commandSender.sendMessage(ChatColor.GREEN + "Players successfully trusted!");
                             }
-                            commandSender.sendMessage(ChatColor.GREEN + "Players successfully trusted!");
+                            else {
+                                commandSender.sendMessage(ChatColor.RED + "No players add!");
+                            }
                             return true;
                         }
                         else {
@@ -65,7 +68,7 @@ public class TrustPlayerExecutor implements CommandExecutor {
                     }
                 }
                 else {
-                    commandSender.sendMessage(ChatColor.RED + "This player does not exists!");
+                    commandSender.sendMessage(ChatColor.RED + "You are not registered in the plugin!");
                     return false;
                 }
             }
