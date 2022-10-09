@@ -1,6 +1,7 @@
 package fr.sukikui.hardcoreclaimmanager.command;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.data.DatabaseManager;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
@@ -51,31 +52,31 @@ public class UnTrustPlayerExecutor implements CommandExecutor {
                                     }
                                 });
                             }
-                            commandSender.sendMessage(ChatColor.GREEN + "Players successfully removed!");
+                            commandSender.sendMessage(ChatColor.GREEN + Messages.getMessages("players_successfully_removed"));
                             return true;
                         }
                         else {
-                            commandSender.sendMessage(ChatColor.RED + "You cannot untrust players in other claims!");
+                            commandSender.sendMessage(ChatColor.RED + Messages.getMessages("cannot_untrust_in_other_claims"));
                             return false;
                         }
                     }
                     else {
-                        commandSender.sendMessage(ChatColor.RED + "You are not in a registered claim!");
+                        commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_in_registered_claim"));
                         return false;
                     }
                 }
                 else {
-                    commandSender.sendMessage(ChatColor.RED + "This player does not exists!");
+                    commandSender.sendMessage(ChatColor.RED + Messages.getMessages("player_not_exist"));
                     return false;
                 }
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "Only players can execute this command in their claims!");
+                commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_player"));
                 return false;
             }
         }
         else {
-            commandSender.sendMessage(ChatColor.RED + "No arguments given!");
+            commandSender.sendMessage(ChatColor.RED + Messages.getMessages("no_arguments"));
             return false;
         }
     }

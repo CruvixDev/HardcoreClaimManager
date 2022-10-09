@@ -1,6 +1,7 @@
 package fr.sukikui.hardcoreclaimmanager.command;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,17 +26,17 @@ public class SetBlockRateExecutor implements CommandExecutor {
                     return true;
                 }
                 catch (NumberFormatException e) {
-                    commandSender.sendMessage(ChatColor.RED + "The parameter " + strings[0] + " is not valid!");
+                    commandSender.sendMessage(ChatColor.RED + Messages.getMessages("player_not_exist"));
                     return false;
                 }
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "Not enough arguments or too many (one required)!");
+                commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_enough_arguments"));
                 return false;
             }
         }
         else {
-            commandSender.sendMessage(ChatColor.RED + "You are not allowed to perform this command!");
+            commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_allow"));
             return false;
         }
     }

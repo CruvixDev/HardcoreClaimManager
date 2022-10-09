@@ -1,6 +1,7 @@
 package fr.sukikui.hardcoreclaimmanager.command;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -23,22 +24,23 @@ public class ToolChangeExecutor implements CommandExecutor {
                 if (material != null) {
                     this.hardcoreClaimManager.getProperties().setProperty("default-tool-selector",material.toString());
                     this.hardcoreClaimManager.storeProperties();
-                    commandSender.sendMessage(ChatColor.GREEN + "Selector tool become " + material + " for all " +
-                            "players.");
+                    commandSender.sendMessage(ChatColor.GREEN + String.format(Messages.getMessages(
+                            "tool_change"),material));
                     return true;
                 }
                 else {
-                    commandSender.sendMessage(ChatColor.RED + "Material not valid!");
+                    commandSender.sendMessage(ChatColor.RED + Messages.getMessages("material_not_valid"));
                     return false;
                 }
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "The parameter " + strings[0] + " is not valid!");
+                commandSender.sendMessage(ChatColor.RED + Messages.getMessages(
+                        "parameter_not_valid"),strings[0]);
                 return false;
             }
         }
         else {
-            commandSender.sendMessage(ChatColor.RED + "You are not allowed to perform this command!");
+            commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_allow"));
             return false;
         }
     }

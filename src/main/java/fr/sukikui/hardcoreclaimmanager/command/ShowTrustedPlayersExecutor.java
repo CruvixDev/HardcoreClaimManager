@@ -1,5 +1,6 @@
 package fr.sukikui.hardcoreclaimmanager.command;
 
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
@@ -24,22 +25,22 @@ public class ShowTrustedPlayersExecutor implements CommandExecutor {
                         return true;
                     }
                     else {
-                        commandSender.sendMessage(ChatColor.RED + "It is not your claim!");
+                        commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_allow_in_other_claims"));
                         return false;
                     }
                 }
                 else {
-                    commandSender.sendMessage(ChatColor.RED + "You are not in a registered claim!");
+                    commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_in_registered_claim"));
                     return false;
                 }
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "Only players can execute this command in their claims!");
+                commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_player"));
                 return false;
             }
         }
         else {
-            commandSender.sendMessage(ChatColor.RED + "Arguments given!");
+            commandSender.sendMessage(ChatColor.RED + Messages.getMessages("too_many_arguments"));
             return false;
         }
     }

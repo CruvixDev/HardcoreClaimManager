@@ -1,5 +1,6 @@
 package fr.sukikui.hardcoreclaimmanager.command;
 
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.ChatColor;
@@ -15,29 +16,29 @@ public class ShowClaimBlocksExecutor implements CommandExecutor {
             String commandSenderName = commandSender.getName();
             PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(commandSenderName);
             if (playerData != null) {
-                commandSender.sendMessage(ChatColor.AQUA + "The player " + playerData.getPlayerName() + " has " +
-                        playerData.getClaimBlocks() + " block of claim.");
+                commandSender.sendMessage(ChatColor.AQUA + String.format(Messages.getMessages(
+                        "show_claim_blocks"),playerData.getPlayerName(),playerData.getClaimBlocks()));
                 return true;
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "Player not found!");
+                commandSender.sendMessage(ChatColor.RED + Messages.getMessages("player_not_exist"));
                 return false;
             }
         }
         else if (strings.length == 1 && commandSender.isOp()) {
             PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(strings[0]);
             if (playerData != null) {
-                commandSender.sendMessage(ChatColor.AQUA + "The player " + playerData.getPlayerName() + " has " +
-                        playerData.getClaimBlocks() + " block of claim.");
+                commandSender.sendMessage(ChatColor.AQUA + String.format(Messages.getMessages(
+                        "show_claim_blocks"),playerData.getPlayerName(),playerData.getClaimBlocks()));
                 return true;
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "Invalid player given!");
+                commandSender.sendMessage(ChatColor.RED + Messages.getMessages("player_not_exist"));
                 return false;
             }
         }
         else {
-            commandSender.sendMessage(ChatColor.RED + "Too many arguments!");
+            commandSender.sendMessage(ChatColor.RED + Messages.getMessages("too_many_arguments"));
             return false;
         }
     }

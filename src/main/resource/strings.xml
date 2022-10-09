@@ -3,8 +3,10 @@
     <string name="cannot_place_blocks">You are not allowed to place blocks here (claim is owned by %s)</string> <!-- Message quand le joueur ne peut pas placer de blocs dans un claim -->
     <string name="cannot_break_blocks">You are not allowed to break blocks here (claim is owned by %s)</string> <!-- Message quand le joueur casse un bloc dans un claim -->
     <string name="players_successfully_trusted">Players successfully trusted!</string> <!-- Message quand une partie des joueurs que l'on veut trust on bien été trust -->
+    <string name="players_successfully_removed">Players successfully removed!</string>
     <string name="no_players_add">No players add!</string> <!-- Message quand les joueurs que l'on veut trust n'ont pas été trust -->
     <string name="cannot_trust_in_other_claims">You cannot trust players in other claims!</string> <!-- Message quand on essaye de trust dans un claim qui nous appartient pas -->
+    <string name="cannot_untrust_in_other_claims">You cannot untrust players in other claims!</string>
     <string name="not_in_registered_claim">You are not in a registered claim!</string> <!-- Message quand une commande est exécutée hors claim -->
     <string name="not_registered_in_plugin">You are not registered in the plugin!</string> <!-- Message quand on n'est pas encore enregistré dans le plugin -->
     <string name="not_player">Only players can execute this command in their claims!</string> <!-- Message quand la commande n'a pas été exécutée par un joueur -->
@@ -17,6 +19,7 @@
     <string name="parameter_not_valid">The parameter %s is not valid!</string> <!-- Message quand l'argument donné à une commande est invalide -->
     <string name="not_enough_arguments">Not enough arguments!</string> <!-- Message pour indiquer qu'il n'y a pas assez d'arguments pour une commande -->
     <string name="not_allow">You are not allowed to perform this command!</string> <!-- Message quand non autorisé d'utiliser une commande -->
+    <string name="not_allow_in_other_claims">You are not allowed to perform this command in other claims!</string>
     <string name="blocks_removed">Successfully removed %s blocks to %s !</string> <!-- Message pour indiquer que des blocs de claim ont bien été retirés -->
     <string name="show_claim_blocks">The player %s has %d block of claim.</string> <!-- Message pour montrer le nombre de blocs de claim d'un joueur -->
     <string name="show_tool">The tool uses to select claim is: %s</string> <!-- Message pour montrer l'outil de sélection actuellement utilisé pour claim -->
@@ -28,6 +31,8 @@
     <string name="bucket_place">Your not allowed to use buckets here (claim is owned by %s)</string> <!-- Message quand on tente de déverser un seau d'eau dans un claim -->
     <string name="claim_added_admin">Claim successfully added! (admin claim)</string> <!-- Message pour confirmer qu'un claim admin a bien été créé -->
     <string name="claim_added">Claim successfully added!</string> <!-- Message pour confirmer qu'un claim a bien été créé par un joueur -->
+    <string name="claim_removed">Claim successfully removed!</string>
+    <string name="cannot_remove_claim">You cannot remove a claim that is not your!</string>
     <string name="corner_different_worlds">The two corners are not in the same world!</string> <!-- Message pour indiquer que les deux coins du claim ne sont pas dans le même monde -->
     <string name="claim_ridding">The claim is riding another claim!</string> <!-- Message pour prévenir le joueur que deux claims se chevauchent -->
     <string name="claim_not_valid">The claim is not valid!</string> <!-- Message pour prévenir le joueur que le claim n'est pas valide -->

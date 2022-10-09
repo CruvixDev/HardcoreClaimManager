@@ -1,5 +1,6 @@
 package fr.sukikui.hardcoreclaimmanager.command;
 
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.Bukkit;
@@ -25,12 +26,12 @@ public class SeenExecutor implements CommandExecutor {
                 return true;
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "The player given does not exist!");
+                commandSender.sendMessage(ChatColor.RED + Messages.getMessages("player_not_exist"));
                 return false;
             }
         }
         else {
-            commandSender.sendMessage(ChatColor.RED + "Too many arguments given!");
+            commandSender.sendMessage(ChatColor.RED + Messages.getMessages("too_many_arguments"));
             return false;
         }
     }
@@ -52,11 +53,10 @@ public class SeenExecutor implements CommandExecutor {
         long minutes = TimeUnit.MILLISECONDS.toMinutes(differenceInTime) % 60;
         long seconds = TimeUnit.MILLISECONDS.toSeconds(differenceInTime) % 60;
         if (Bukkit.getOnlinePlayers().contains(Bukkit.getPlayer(playerData.getPlayerName()))) {
-            return String.format(" is connected since: %d hour(s) %d minute(s) %d second(s)", hours, minutes, seconds);
+            return String.format(Messages.getMessages("connected"), hours, minutes, seconds);
         }
         else {
-            return String.format((" is disconnected since: %d year(s) %d month(s) %d day(s) %d hour(s) %d minute(s)" +
-                    " %d second(s)"),years,months,days,hours,minutes,seconds);
+            return String.format(Messages.getMessages("not_connected"),years,months,days,hours,minutes,seconds);
         }
     }
 }

@@ -1,6 +1,7 @@
 package fr.sukikui.hardcoreclaimmanager.command;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.data.DatabaseManager;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
@@ -50,35 +51,35 @@ public class TrustPlayerExecutor implements CommandExecutor {
                                                 playerToTrustData,claim);
                                     }
                                 });
-                                commandSender.sendMessage(ChatColor.GREEN + "Players successfully trusted!");
+                                commandSender.sendMessage(ChatColor.GREEN + Messages.getMessages("players_successfully_trusted"));
                             }
                             else {
-                                commandSender.sendMessage(ChatColor.RED + "No players add!");
+                                commandSender.sendMessage(ChatColor.RED + Messages.getMessages("no_players_add"));
                             }
                             return true;
                         }
                         else {
-                            commandSender.sendMessage(ChatColor.RED + "You cannot trust players in other claims!");
+                            commandSender.sendMessage(ChatColor.RED + Messages.getMessages("cannot_trust_in_other_claims"));
                             return false;
                         }
                     }
                     else {
-                        commandSender.sendMessage(ChatColor.RED + "You are not in a registered claim!");
+                        commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_in_registered_claim"));
                         return false;
                     }
                 }
                 else {
-                    commandSender.sendMessage(ChatColor.RED + "You are not registered in the plugin!");
+                    commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_registered_in_plugin"));
                     return false;
                 }
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "Only players can execute this command in their claims!");
+                commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_player"));
                 return false;
             }
         }
         else {
-            commandSender.sendMessage(ChatColor.RED + "No arguments given!");
+            commandSender.sendMessage(ChatColor.RED + Messages.getMessages("no_arguments"));
             return false;
         }
     }

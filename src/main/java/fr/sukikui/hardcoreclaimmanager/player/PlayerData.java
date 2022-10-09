@@ -1,6 +1,7 @@
 package fr.sukikui.hardcoreclaimmanager.player;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -171,7 +172,7 @@ public class PlayerData {
 
     @Override
     public String toString() {
-        String toString = String.format("The player %s own :\n",this.playerName);
+        String toString = String.format(Messages.getMessages("show_claims") + "\n",this.playerName);
         for (Claim claim : this.claims) {
             toString += claim.toString();
         }

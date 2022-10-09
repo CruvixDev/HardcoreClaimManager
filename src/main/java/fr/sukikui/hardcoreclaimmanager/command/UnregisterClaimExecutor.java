@@ -1,6 +1,7 @@
 package fr.sukikui.hardcoreclaimmanager.command;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.data.DatabaseManager;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
@@ -31,7 +32,7 @@ public class UnregisterClaimExecutor implements CommandExecutor {
                 if (playerData != null) {
                     if (playerData.isOwned(claim) || commandSender.isOp()) {
                         boolean isRemoved = PlayerDataManager.getInstance().removeClaim(claim,player.getUniqueId());
-                        commandSender.sendMessage(ChatColor.GREEN + "Claim successfully removed!");
+                        commandSender.sendMessage(ChatColor.GREEN + Messages.getMessages("claim_removed"));
                         if (isRemoved) {
                             BukkitScheduler scheduler = Bukkit.getScheduler();
                             scheduler.runTaskAsynchronously(hardcoreClaimManager,() -> {
@@ -40,20 +41,20 @@ public class UnregisterClaimExecutor implements CommandExecutor {
                         }
                     }
                     else {
-                        commandSender.sendMessage(ChatColor.RED + "You cannot unregister a claim that is not your!");
+                        commandSender.sendMessage(ChatColor.RED + Messages.getMessages("cannot_remove_claim"));
                     }
                 }
                 else {
-                    commandSender.sendMessage(ChatColor.RED + "This player does not exists!");
+                    commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_registered_in_plugin"));
                     return false;
                 }
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "No claim was found at this location!");
+                commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_registered_in_plugin"));
             }
         }
         else {
-            commandSender.sendMessage(ChatColor.RED + "Only players can execute this command in their claims!");
+            commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_player"));
             return false;
         }
         return false;

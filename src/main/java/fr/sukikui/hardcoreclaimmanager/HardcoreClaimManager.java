@@ -13,6 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 
 /**
@@ -30,6 +32,7 @@ public final class HardcoreClaimManager extends JavaPlugin {
         hardcoreClaimManager = this;
 
         this.loadProperties();
+        this.loadMessages();
         this.storeProperties();
         DatabaseManager.getInstance(this).createDatabase();
         DatabaseManager.getInstance(this).getAll();
@@ -105,6 +108,20 @@ public final class HardcoreClaimManager extends JavaPlugin {
             properties.load(inputStream);
             properties.setProperty("database-path",this.getDataFolder().getAbsolutePath());
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Load the strings.xml files into the plugin's data folder, to load all messages handled by the plugin.
+     */
+    private void loadMessages() {
+        try {
+            InputStream sourceStream = this.getClass().getResourceAsStream("/strings.xml");
+            File dest = new File(this.getDataFolder().getAbsolutePath() + "/strings.xml");
+            Files.copy(sourceStream,dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }

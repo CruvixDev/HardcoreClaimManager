@@ -1,5 +1,6 @@
 package fr.sukikui.hardcoreclaimmanager.command;
 
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.ChatColor;
@@ -17,27 +18,28 @@ public class AddClaimBlocksExecutor implements CommandExecutor {
                 if (playerData != null) {
                     try {
                         playerData.addClaimBlocks(Integer.parseInt(strings[1]));
-                        commandSender.sendMessage(ChatColor.GREEN + "Successfully added [" + strings[1] + "] " +
-                                "blocks to " + strings[0] + "!");
+                        commandSender.sendMessage(ChatColor.GREEN + String.format(Messages.getMessages(
+                                "blocks_added"),strings[1],strings[0]));
                         return true;
                     }
                     catch (NumberFormatException e) {
-                        commandSender.sendMessage(ChatColor.RED + "The parameter " + strings[1] + " is not valid!");
+                        commandSender.sendMessage(ChatColor.RED + String.format(Messages.getMessages(
+                                "parameter_not_valid"),strings[1]));
                         return false;
                     }
                 }
                 else {
-                    commandSender.sendMessage(ChatColor.RED + "The player " + strings[0] + " does not exists!");
+                    commandSender.sendMessage(ChatColor.RED + Messages.getMessages("player_not_exist"));
                     return false;
                 }
             }
             else {
-                commandSender.sendMessage(ChatColor.RED + "Not enough arguments or too many (two required)!");
+                commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_enough_arguments"));
                 return false;
             }
         }
         else {
-             commandSender.sendMessage(ChatColor.RED + "You are not allowed to perform this command!");
+             commandSender.sendMessage(ChatColor.RED + Messages.getMessages("not_allow"));
              return false;
         }
     }

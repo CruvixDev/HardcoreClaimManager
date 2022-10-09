@@ -1,5 +1,6 @@
 package fr.sukikui.hardcoreclaimmanager.listener;
 
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
@@ -49,8 +50,8 @@ public class ClaimEventHandler implements Listener {
             e.setCancelled(true);
             OfflinePlayer player = (Bukkit.getPlayer(claimConcerned.getOwnerUUID()) == null) ? Bukkit.getOfflinePlayer
                     (claimConcerned.getOwnerUUID()) : Bukkit.getPlayer(claimConcerned.getOwnerUUID());
-            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to place blocks here (claim is owned by " +
-                    player.getName() + ")");
+            e.getPlayer().sendMessage(ChatColor.RED + String.format(Messages.getMessages(
+                    "cannot_place_blocks"),player.getName()));
         }
     }
 
@@ -76,8 +77,8 @@ public class ClaimEventHandler implements Listener {
             e.setCancelled(true);
             OfflinePlayer player = (Bukkit.getPlayer(claimConcerned.getOwnerUUID()) == null) ? Bukkit.getOfflinePlayer
                     (claimConcerned.getOwnerUUID()) : Bukkit.getPlayer(claimConcerned.getOwnerUUID());
-            e.getPlayer().sendMessage(ChatColor.RED + "You are not allowed to break blocks here (claim is owned by " +
-                    player.getName() + ")");
+            e.getPlayer().sendMessage(ChatColor.RED + String.format(Messages.getMessages(
+                    "cannot_break_blocks"),player.getName()));
         }
     }
 

@@ -1,6 +1,7 @@
 package fr.sukikui.hardcoreclaimmanager.listener;
 
 import fr.sukikui.hardcoreclaimmanager.HardcoreClaimManager;
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.claim.ClaimBoundariesVisualisation;
 import fr.sukikui.hardcoreclaimmanager.claim.ClaimResults;
@@ -85,8 +86,8 @@ public class PlayerEventHandler implements Listener {
             Claim claim = PlayerDataManager.getInstance().getClaimAt(e.getClickedBlock().getLocation());
             if (claim != null) {
                 PlayerData playerOwnerData = PlayerDataManager.getInstance().getPlayerDataByUUID(claim.getOwnerUUID());
-                e.getPlayer().sendMessage(ChatColor.AQUA + "This block is claimed by " + playerOwnerData.
-                        getPlayerName());
+                e.getPlayer().sendMessage(ChatColor.AQUA + String.format(Messages.getMessages(
+                        "claim_by"),playerOwnerData.getPlayerName()));
             }
             return;
         }
@@ -102,12 +103,12 @@ public class PlayerEventHandler implements Listener {
             if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
                 if (playerData.getLastToolLocation() == null) {
                     playerData.setLastToolLocation(e.getClickedBlock().getLocation());
-                    e.getPlayer().sendMessage(ChatColor.YELLOW + "First corner defined, right click on the other corner!");
+                    e.getPlayer().sendMessage(ChatColor.YELLOW + Messages.getMessages("first_corner_defined"));
                     e.setCancelled(true);
                 }
                 else {
                     playerData.setLastToolLocation(null);
-                    e.getPlayer().sendMessage(ChatColor.YELLOW + "Claim creation cancel!");
+                    e.getPlayer().sendMessage(ChatColor.YELLOW + Messages.getMessages("claim_cancel"));
                     e.setCancelled(true);
                 }
             }
@@ -179,8 +180,8 @@ public class PlayerEventHandler implements Listener {
             if (playerData != null && !playerData.isOwned(claim) && !claim.isAllowed(playerData.getPlayerName())) {
                 e.setCancelled(true);
                 PlayerData claimOwnerData = PlayerDataManager.getInstance().getPlayerDataByUUID(claim.getOwnerUUID());
-                e.getPlayer().sendMessage(ChatColor.RED + "Your not allowed to use buckets here (claim is owned by "
-                        + claimOwnerData.getPlayerName() + ")");
+                e.getPlayer().sendMessage(ChatColor.RED + String.format(Messages.getMessages(
+                        "bucket_place"),claimOwnerData.getPlayerName()));
             }
         }
     }
