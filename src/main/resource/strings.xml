@@ -2,11 +2,11 @@
 <messages>
     <string name="cannot_place_blocks">You are not allowed to place blocks here (claim is owned by %s)</string> <!-- Message quand le joueur ne peut pas placer de blocs dans un claim -->
     <string name="cannot_break_blocks">You are not allowed to break blocks here (claim is owned by %s)</string> <!-- Message quand le joueur casse un bloc dans un claim -->
-    <string name="players_successfully_trusted">Players successfully trusted!</string> <!-- Message quand une partie des joueurs que l'on veut trust on bien été trust -->
+    <string name="players_successfully_trusted">Players successfully trusted!</string> <!-- Message quand une partie des joueurs que l'on veut trust ont bien été trust -->
     <string name="players_successfully_removed">Players successfully removed!</string>
     <string name="no_players_add">No players add!</string> <!-- Message quand les joueurs que l'on veut trust n'ont pas été trust -->
     <string name="cannot_trust_in_other_claims">You cannot trust players in other claims!</string> <!-- Message quand on essaye de trust dans un claim qui nous appartient pas -->
-    <string name="cannot_untrust_in_other_claims">You cannot untrust players in other claims!</string>
+    <string name="cannot_untrust_in_other_claims">You cannot un-trust players in other claims!</string>
     <string name="not_in_registered_claim">You are not in a registered claim!</string> <!-- Message quand une commande est exécutée hors claim -->
     <string name="not_registered_in_plugin">You are not registered in the plugin!</string> <!-- Message quand on n'est pas encore enregistré dans le plugin -->
     <string name="not_player">Only players can execute this command in their claims!</string> <!-- Message quand la commande n'a pas été exécutée par un joueur -->
@@ -38,7 +38,7 @@
     <string name="claim_not_valid">The claim is not valid!</string> <!-- Message pour prévenir le joueur que le claim n'est pas valide -->
     <string name="claim_too_small">The claim is too small!</string> <!-- Message pour prévenir le joueur que le claim est trop petit -->
     <string name="claim_too_big">The claim is too big!</string> <!-- Message pour prévenir le joueur que le claim est trop grand -->
-    <string name="claim_too_shrink">The claim is too shrink, the minimum width and height is %d but the claim is %d block(s) width and %d block(s) height!</string> <!-- Message pour indiquer le claim est trop étroit -->
+    <string name="claim_too_narrow">The claim is too narrow, the minimum width and height is %d but the claim is %d block(s) width and %d block(s) height!</string> <!-- Message pour indiquer le claim est trop étroit -->
     <string name="not_enough_blocks">You have not enough blocks (%d) to claim this region because the surface of this is: %d</string> <!-- Message pour indiquer que le joueur ne dispose pas d'assez de blocs de claim -->
     <string name="show_claims">The player %s own :</string> <!-- Message pour afficher les claims posséder par un joueur -->
 </messages>

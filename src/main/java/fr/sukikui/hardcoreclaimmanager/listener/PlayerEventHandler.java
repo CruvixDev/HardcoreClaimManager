@@ -21,6 +21,9 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * Class handling all events related to players
  */
@@ -137,7 +140,7 @@ public class PlayerEventHandler implements Listener {
                     message = String.format(results.message.getMessage(),playerData.getClaimBlocks(),
                             results.claimSurface);
                 }
-                if (results.message.equals(ClaimCreationMessages.ClaimTooShrink)) {
+                if (results.message.equals(ClaimCreationMessages.ClaimTooNarrow)) {
                     int claimMinWidth;
                     try {
                         claimMinWidth = Integer.parseInt(this.hardcoreClaimManager.getProperties().getProperty(
@@ -183,6 +186,23 @@ public class PlayerEventHandler implements Listener {
                 e.getPlayer().sendMessage(ChatColor.RED + String.format(Messages.getMessages(
                         "bucket_place"),claimOwnerData.getPlayerName()));
             }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerSendMessages(AsyncPlayerChatEvent e) {
+        String message = e.getMessage();
+
+        Pattern pattern = Pattern.compile("\\b(\\w+)\\W*$", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(message);
+        matcher.find();
+        String lastWord = matcher.group(1);
+        pattern = pattern.compile("q+u+o+i+|q+u+o+1+|q+u+0+1+|q+u+0+i+|q+w+a+",
+                Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+        matcher = pattern.matcher(lastWord);
+
+        if (matcher.matches()) {
+            e.getPlayer().sendTitle(ChatColor.GOLD + "FEUR","",10,70,20);
         }
     }
 }

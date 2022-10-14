@@ -13,7 +13,7 @@ public enum ClaimCreationMessages {
     ClaimNotValid(ChatColor.RED + Messages.getMessages("claim_not_valid")),
     ClaimTooSmall(ChatColor.RED + Messages.getMessages("claim_too_small")),
     ClaimTooBig(ChatColor.RED + Messages.getMessages("claim_too_big")),
-    ClaimTooShrink(ChatColor.RED + Messages.getMessages("claim_too_shrink")),
+    ClaimTooNarrow(ChatColor.RED + Messages.getMessages("claim_too_narrow")),
     ClaimAdminCreated(ChatColor.GREEN + Messages.getMessages("claim_added_admin")),
     ClaimCreated(ChatColor.GREEN + Messages.getMessages("claim_added")),
     NotEnoughBlock(ChatColor.RED + Messages.getMessages("not_enough_blocks"));

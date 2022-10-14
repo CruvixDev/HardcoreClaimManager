@@ -92,7 +92,7 @@ public class PlayerDataManager {
             return new ClaimResults(null,ClaimCreationMessages.ClaimTooBig,claim.getClaimSurface());
         }
         if (claim.getWidth() < claimMinWidth || claim.getHeight() < claimMinWidth) {
-            return new ClaimResults(claim, ClaimCreationMessages.ClaimTooShrink, claim.getClaimSurface());
+            return new ClaimResults(claim, ClaimCreationMessages.ClaimTooNarrow, claim.getClaimSurface());
         }
         if (!this.claims.contains(claim)) {
             if (source.equals(ClaimCreationSource.PLAYER)) {
