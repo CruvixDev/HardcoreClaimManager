@@ -65,13 +65,14 @@ public class ClaimEventHandler implements Listener {
             return;
         }
 
+        if (e.getBlock().getType() == Material.SCULK_SHRIEKER
+                && !SHRIEKER_TOOL.contains(e.getPlayer().getInventory().getItemInMainHand().getType())) {
+            e.setCancelled(true);
+            return;
+        }
+
         if (!playerData.isOwned(claimConcerned) && !claimConcerned.isAllowed(playerData.getPlayerUUID())) {
             if (AUTHORIZED_BLOCKS.contains(e.getBlock().getType())) {
-                if (e.getBlock().getType() == Material.SCULK_SHRIEKER
-                        && !SHRIEKER_TOOL.contains(e.getPlayer().getInventory().getItemInMainHand().getType())) {
-                    e.setCancelled(true);
-                    return;
-                }
                 return;
             }
             e.setCancelled(true);

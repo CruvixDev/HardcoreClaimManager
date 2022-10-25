@@ -191,18 +191,22 @@ public class PlayerEventHandler implements Listener {
 
     @EventHandler
     public void onPlayerSendMessages(AsyncPlayerChatEvent e) {
-        String message = e.getMessage();
+        try {
+            String message = e.getMessage();
+            Pattern pattern = Pattern.compile("\\b(\\w+)\\W*$",Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+            Matcher matcher = pattern.matcher(message);
+            matcher.find();
+            String lastWord = matcher.group(1);
+            pattern = pattern.compile("q+u+o+i+|q+u+o+1+|q+u+0+1+|q+u+0+i+|q+w+a+|k+u+a|k+w+a+|k+o+i+|k+u+o+i+",
+                    Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+            matcher = pattern.matcher(lastWord);
 
-        Pattern pattern = Pattern.compile("\\b(\\w+)\\W*$", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
-        Matcher matcher = pattern.matcher(message);
-        matcher.find();
-        String lastWord = matcher.group(1);
-        pattern = pattern.compile("q+u+o+i+|q+u+o+1+|q+u+0+1+|q+u+0+i+|q+w+a+",
-                Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
-        matcher = pattern.matcher(lastWord);
-
-        if (matcher.matches()) {
-            e.getPlayer().sendTitle(ChatColor.GOLD + "FEUR","",10,70,20);
+            if (matcher.matches()) {
+                e.getPlayer().sendTitle(ChatColor.GOLD + "FEUR","",10,70,20);
+            }
+        }
+        catch (IllegalStateException exception) {
+            return;
         }
     }
 }
