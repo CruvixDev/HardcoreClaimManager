@@ -41,4 +41,15 @@
     <string name="claim_too_narrow">The claim is too narrow, the minimum width and height is %d but the claim is %d block(s) width and %d block(s) height!</string> <!-- Message pour indiquer le claim est trop étroit -->
     <string name="not_enough_blocks">You have not enough blocks (%d) to claim this region because the surface of this is: %d</string> <!-- Message pour indiquer que le joueur ne dispose pas d'assez de blocs de claim -->
     <string name="show_claims">The player %s own :</string> <!-- Message pour afficher les claims posséder par un joueur -->
+    <string name="block_rate_set">Successfully set block rate to %d block(s)/hour!</string>
+    <string name="claim_to_string">[Claim at (%d,%d) and (%d,%d) in the world "%s"]</string>
+    <string name="world_unload">[Claim in unload world]</string>
+    <string name="player_held_tool">You have %d block(s) of claims!</string>
+    <string name="become_admin_plugin">%s become admin for this plugin!</string>
+    <string name="already_admin">%s is already an admin for this plugin!</string>
+    <string name="no_longer_admin">%s no longer admin for this plugin!</string>
+    <string name="not_admin">%s is not an admin!</string>
+    <string name="invalid_properties">Invalid property given!</string>
+    <string name="claim_blocks_reset">Successfully reset claim blocks of player %s!</string>
+    <string name="admins_list">List of admins for this plugin :</string>
 </messages>

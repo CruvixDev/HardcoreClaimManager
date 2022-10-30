@@ -20,9 +20,12 @@ public class SetBlockRateExecutor implements CommandExecutor {
         if (commandSender.isOp()) {
             if (strings.length == 1) {
                 try {
-                    Integer.parseInt(strings[0]);
+                    int blockRate = Integer.parseInt(strings[0]);
                     this.hardcoreClaimManager.getProperties().setProperty("block-rate-per-hour",strings[0]);
                     this.hardcoreClaimManager.storeProperties();
+                    commandSender.sendMessage(ChatColor.GREEN + String.format(Messages.getMessages(
+                            "block_rate_set"),blockRate));
+                    HardcoreClaimManager.getInstance().storeProperties();
                     return true;
                 }
                 catch (NumberFormatException e) {

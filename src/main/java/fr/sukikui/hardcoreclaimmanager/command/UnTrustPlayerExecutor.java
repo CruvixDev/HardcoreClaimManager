@@ -33,7 +33,7 @@ public class UnTrustPlayerExecutor implements CommandExecutor {
                 if (playerData != null) {
                     Claim claim = PlayerDataManager.getInstance().getClaimAt(player.getLocation());
                     if (claim != null) {
-                        if (playerData.isOwned(claim)) {
+                        if (playerData.isOwned(claim) || Bukkit.getPlayer(player.getUniqueId()).isOp()) {
                             ArrayList<String> untrustedPlayers = new ArrayList<>();
                             for (String playerToUnTrust : strings) {
                                 boolean isUntrusted = claim.removeTrustedPlayers(playerToUnTrust,player.getUniqueId());

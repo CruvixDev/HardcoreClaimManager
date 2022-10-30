@@ -4,6 +4,7 @@ import fr.sukikui.hardcoreclaimmanager.Messages;
 import fr.sukikui.hardcoreclaimmanager.claim.Claim;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -20,7 +21,8 @@ public class ShowTrustedPlayersExecutor implements CommandExecutor {
                 PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(player.getName());
                 Claim claim = PlayerDataManager.getInstance().getClaimAt(player.getLocation());
                 if (claim != null) {
-                    if (playerData != null && playerData.isOwned(claim)) {
+                    if (playerData != null && playerData.isOwned(claim) || Bukkit.getPlayer(player.getUniqueId()).
+                            isOp()) {
                         commandSender.sendMessage(ChatColor.GREEN + claim.getTrustedPlayers().toString());
                         return true;
                     }

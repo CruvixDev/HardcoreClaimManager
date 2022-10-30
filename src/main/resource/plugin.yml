@@ -6,24 +6,35 @@ authors: [Sukikui]
 description: Spigot plugin to claim and protect terrain of player on the hardcore server.
 softdepend: [Multiverse-Core]
 commands:
+  addAdmin:
+    description: "Use this command to add admin for this plugin (bypass claim blocks limit), only server operators can execute this"
+    usage: "/addAdmin <player>"
   addClaimBlocks:
     description: "Use this command to add claim blocks to a player, only server operators can execute this"
     usage: "/addClaimBlocks <player> <amount>"
   changeTool:
     description: "Use this command to change the tool to use for claim selection, only server operators can execute this"
     usage: "/changeTool <material>"
+  removeAdmin:
+    description: "Use this command to remove an admin for this plugin, only server operators can execute this"
+    usage: "/removeAdmin <player>"
   removeClaim:
     description: "Use this command to remove a claim, this command only works when a player is in a owned claim"
     usage: "/removeClaim"
   removeClaimBlocks:
     description: "Use this command to remove claim blocks to a player, only server operators can execute this"
     usage: "/removeClaimBlocks <player> <amount>"
+  resetClaimBlocks:
+    description: "Use this command to reset the number of claim blocks for a specified player, only server operator can execute this"
   seen:
     description: "Use this command to see the last join date of a player"
     usage: "/seen <valid player name>"
   setBlockRate:
     description: "Use this command to modify the number of blocks earn by players per hour, only server operators can execute this"
     usage: "/setBlockRate <amount>"
+  showAdmin:
+    description: "Use this command to show admins for this plugin"
+    usage: "/showAdmin"
   showClaim:
     description: "Use this command to show player's claim"
     usage: "/showClaim"

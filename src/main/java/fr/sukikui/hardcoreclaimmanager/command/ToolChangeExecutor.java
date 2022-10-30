@@ -26,6 +26,7 @@ public class ToolChangeExecutor implements CommandExecutor {
                     this.hardcoreClaimManager.storeProperties();
                     commandSender.sendMessage(ChatColor.GREEN + String.format(Messages.getMessages(
                             "tool_change"),material));
+                    HardcoreClaimManager.getInstance().storeProperties();
                     return true;
                 }
                 else {

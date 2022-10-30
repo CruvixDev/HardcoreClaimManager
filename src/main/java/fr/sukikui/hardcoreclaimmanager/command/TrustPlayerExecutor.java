@@ -33,7 +33,7 @@ public class TrustPlayerExecutor implements CommandExecutor {
                 if (playerData != null) {
                     Claim claim = PlayerDataManager.getInstance().getClaimAt(player.getLocation());
                     if (claim != null) {
-                        if (playerData.isOwned(claim)) {
+                        if (playerData.isOwned(claim) || player.isOp()) {
                             ArrayList<String> trustedPlayers = new ArrayList<>();
                             for (String playerToTrust : strings) {
                                 boolean isTrusted = claim.addTrustedPlayers(playerToTrust,player.getUniqueId());

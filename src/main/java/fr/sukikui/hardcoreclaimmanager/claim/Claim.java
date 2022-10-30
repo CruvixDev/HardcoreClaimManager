@@ -1,5 +1,6 @@
 package fr.sukikui.hardcoreclaimmanager.claim;
 
+import fr.sukikui.hardcoreclaimmanager.Messages;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerData;
 import fr.sukikui.hardcoreclaimmanager.player.PlayerDataManager;
 import org.bukkit.Bukkit;
@@ -55,14 +56,23 @@ public class Claim {
      * @param trustPlayer the UUID of the player which asking to trust a player
      */
     public boolean addTrustedPlayers(String playerToTrustName, UUID trustPlayer) {
-        if (!trustPlayer.equals(this.ownerUUID)) {
-            return false;
-        }
         PlayerData playerToTrustData = PlayerDataManager.getInstance().getPlayerDataByName(playerToTrustName);
-        if (playerToTrustData != null && !trustedPlayers.contains(playerToTrustName) &&
-                !trustPlayer.equals(playerToTrustData.getPlayerUUID())) {
-            this.trustedPlayers.add(playerToTrustName);
-            return true;
+        if (playerToTrustData != null && !trustedPlayers.contains(playerToTrustName)) {
+            if (Bukkit.getPlayer(trustPlayer) != null && Bukkit.getPlayer(trustPlayer).isOp()) {
+                if (!playerToTrustData.getPlayerUUID().equals(this.ownerUUID)) {
+                    this.trustedPlayers.add(playerToTrustName);
+                    return true;
+                }
+            }
+            else {
+                if (!trustPlayer.equals(this.ownerUUID)) {
+                    return false;
+                }
+                if (!trustPlayer.equals(playerToTrustData.getPlayerUUID())) {
+                    this.trustedPlayers.add(playerToTrustName);
+                    return true;
+                }
+            }
         }
         return false;
     }
@@ -73,8 +83,10 @@ public class Claim {
      * @param trustPlayer the UUID of the player asking to un-trust a player
      */
     public boolean removeTrustedPlayers(String playerName, UUID trustPlayer) {
-        if (!trustPlayer.equals(this.ownerUUID)) {
-            return false;
+        if (!Bukkit.getPlayer(trustPlayer).isOp()) {
+            if (!trustPlayer.equals(this.ownerUUID)) {
+                return false;
+            }
         }
         this.trustedPlayers.remove(playerName);
         return true;
@@ -212,7 +224,12 @@ public class Claim {
     }
 
     @Override public String toString() {
-        return String.format("[Claim at (%d,%d) and (%d,%d) in the world \"%s\"]\n",corner1.getBlockX(),corner1.
-                getBlockZ(),corner2.getBlockX(),corner2.getBlockZ(),corner1.getWorld().getName());
+        if (corner1.getWorld() != null) {
+            return String.format(Messages.getMessages("claim_to_string") + "\n",corner1.getBlockX(),corner1.
+                    getBlockZ(),corner2.getBlockX(),corner2.getBlockZ(),corner1.getWorld().getName());
+        }
+        else {
+            return Messages.getMessages("world_unload");
+        }
     }
 }

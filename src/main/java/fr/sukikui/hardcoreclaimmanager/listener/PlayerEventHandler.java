@@ -121,11 +121,13 @@ public class PlayerEventHandler implements Listener {
                 ClaimResults results;
                 boolean isAdmin = false;
 
-                if (Bukkit.getServer().getOperators().contains(e.getPlayer())) {
+                if (HardcoreClaimManager.getInstance().isAdmin(playerData) != null) {
                     isAdmin = true;
                 }
+
                 results = PlayerDataManager.getInstance().createClaim(corner1,corner2,e.getPlayer().getUniqueId(),
                         isAdmin,this.claimID + 1L, ClaimCreationSource.PLAYER);
+
                 if (results.claim != null) {
                     ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),
                             results.claim.getCorner1(),results.claim.getCorner2());
@@ -135,6 +137,7 @@ public class PlayerEventHandler implements Listener {
                         claimID = DatabaseManager.getInstance(hardcoreClaimManager).getLastID();
                     });
                 }
+
                 String message = results.message.getMessage();
                 if (results.message.equals(ClaimCreationMessages.NotEnoughBlock)) {
                     message = String.format(results.message.getMessage(),playerData.getClaimBlocks(),
@@ -167,6 +170,11 @@ public class PlayerEventHandler implements Listener {
         Material defaultTool = Material.matchMaterial(this.hardcoreClaimManager.getProperties().
                 getProperty("default-tool-selector"));
         if (e.getPlayer().getInventory().getItem(e.getNewSlot()).getType().equals(defaultTool)) {
+            PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
+            if (playerData != null) {
+                e.getPlayer().sendMessage(ChatColor.AQUA + String.format(Messages.getMessages(
+                        "player_held_tool"),playerData.getClaimBlocks()));
+            }
             Claim claim = PlayerDataManager.getInstance().getClaimAt(e.getPlayer().getLocation());
             if (claim != null) {
                 ClaimBoundariesVisualisation.getInstance().startVisualisationTask(e.getPlayer().getName(),

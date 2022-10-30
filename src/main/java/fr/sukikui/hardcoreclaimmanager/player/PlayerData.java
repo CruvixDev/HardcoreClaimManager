@@ -129,6 +129,10 @@ public class PlayerData {
         }
     }
 
+    public void setClaimBlocks(int claimBlocks) {
+        this.claimBlocks = claimBlocks;
+    }
+
     /**
      *
      * @param lastSaveBlocksGain the last time that the player has seen his blocks of claim amount updated
