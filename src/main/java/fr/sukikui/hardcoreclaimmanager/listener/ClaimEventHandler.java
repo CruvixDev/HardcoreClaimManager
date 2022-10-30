@@ -12,7 +12,6 @@ import org.bukkit.block.data.type.Dispenser;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
-import org.bukkit.event.player.PlayerBucketEmptyEvent;
 
 import java.util.Arrays;
 import java.util.List;

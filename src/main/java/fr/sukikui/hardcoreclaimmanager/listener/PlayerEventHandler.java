@@ -172,7 +172,7 @@ public class PlayerEventHandler implements Listener {
         if (e.getPlayer().getInventory().getItem(e.getNewSlot()).getType().equals(defaultTool)) {
             PlayerData playerData = PlayerDataManager.getInstance().getPlayerDataByName(e.getPlayer().getName());
             if (playerData != null) {
-                e.getPlayer().sendMessage(ChatColor.AQUA + String.format(Messages.getMessages(
+                e.getPlayer().sendMessage(ChatColor.YELLOW + String.format(Messages.getMessages(
                         "player_held_tool"),playerData.getClaimBlocks()));
             }
             Claim claim = PlayerDataManager.getInstance().getClaimAt(e.getPlayer().getLocation());

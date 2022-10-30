@@ -20,7 +20,7 @@ public class ShowAdminExecutor implements CommandExecutor {
             for (int i = 0; i < adminsArray.size(); i++) {
                 adminsList += ((JSONObject) adminsArray.get(i)).get("name") + "\n";
             }
-            commandSender.sendMessage(ChatColor.GREEN + adminsList);
+            commandSender.sendMessage(ChatColor.AQUA + adminsList);
             return true;
         }
         else {

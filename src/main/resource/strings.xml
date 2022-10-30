@@ -52,4 +52,5 @@
     <string name="invalid_properties">Invalid property given!</string>
     <string name="claim_blocks_reset">Successfully reset claim blocks of player %s!</string>
     <string name="admins_list">List of admins for this plugin :</string>
+    <string name="block_rate">Players earn %d block(s)/hour</string>
 </messages>

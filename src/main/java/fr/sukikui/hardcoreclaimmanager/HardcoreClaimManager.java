@@ -63,6 +63,7 @@ public final class HardcoreClaimManager extends JavaPlugin {
         this.getCommand("removeAdmin").setExecutor(new RemoveAdminExecutor());
         this.getCommand("resetClaimBlocks").setExecutor(new ResetClaimBlocks());
         this.getCommand("showAdmin").setExecutor(new ShowAdminExecutor());
+        this.getCommand("showBlockRate").setExecutor(new ShowBlockRateExecutor());
 
         this.getServer().getPluginManager().registerEvents(new PlayerEventHandler(this), this);
         this.getServer().getPluginManager().registerEvents(new ClaimEventHandler(), this);

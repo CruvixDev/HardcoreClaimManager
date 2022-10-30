@@ -35,6 +35,9 @@ commands:
   showAdmin:
     description: "Use this command to show admins for this plugin"
     usage: "/showAdmin"
+  showBlockRate:
+    description: "Use this command to show the claim blocks number earn by hour"
+    usage: "/showBlockRate"
   showClaim:
     description: "Use this command to show player's claim"
     usage: "/showClaim"
