@@ -270,15 +270,11 @@ public class PlayerDataManager {
      * @return true if the claim is riding another, false otherwise
      */
     public boolean isRiding(Claim claimToVerify) {
-        boolean isRiding = false;
         for (Claim claim : this.claims) {
-            if (Claim.isInSurface(claimToVerify.getCorner1(),claim.getCorner1(),claim.getCorner2()) ||
-            Claim.isInSurface(claimToVerify.getCorner2(),claim.getCorner1(),claim.getCorner2()) ||
-            Claim.isInSurface(claim.getCorner1(),claimToVerify.getCorner1(),claimToVerify.getCorner2()) ||
-            Claim.isInSurface(claim.getCorner2(),claimToVerify.getCorner1(),claimToVerify.getCorner2())){
-                isRiding = true;
+            if (Claim.isRiding(claimToVerify,claim)) {
+                return true;
             }
         }
-        return isRiding;
+        return false;
     }
 }

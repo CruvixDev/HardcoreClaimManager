@@ -9,9 +9,11 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Dispenser;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityExplodeEvent;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,9 +32,7 @@ public class ClaimEventHandler implements Listener {
     );
 
     private List<Material> AUTHORIZED_BLOCKS = Arrays.asList(
-            Material.SCULK_SHRIEKER,
-            Material.TNT,
-            Material.END_CRYSTAL
+            Material.SCULK_SHRIEKER
     );
 
     @EventHandler
@@ -109,14 +109,15 @@ public class ClaimEventHandler implements Listener {
         }
     }
 
-   /* @EventHandler
-    public void onBlockMelt(BlockFadeEvent e) {
-        Claim claim = PlayerDataManager.getInstance().getClaimAt(e.getBlock().getLocation());
-        if (claim != null) {
-            if (e.getBlock().getType().equals(Material.ICE) || e.getBlock().getType().equals(Material.SNOW)
-                    || e.getBlock().getType().equals(Material.SNOW_BLOCK)) {
-                e.setCancelled(true);
+    @EventHandler
+    public void onEntityExplode(EntityExplodeEvent e) {
+        if (e.getEntity().getType().equals(EntityType.PRIMED_TNT)) {
+            for (Block block : e.blockList()) {
+                if (PlayerDataManager.getInstance().getClaimAt(block.getLocation()) != null) {
+                    e.setCancelled(true);
+                    return;
+                }
             }
         }
-    }*/
+    }
 }

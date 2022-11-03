@@ -129,33 +129,88 @@ public class Claim {
 
         int x = point.getBlockX();
         int z = point.getBlockZ();
-        int xmax;
-        int xmin;
-        int zmax;
-        int zmin;
+        int xMax;
+        int xMin;
+        int zMax;
+        int zMin;
 
         if (point1.getBlockX() >= point2.getBlockX()){
-            xmax = point1.getBlockX();
-            xmin = point2.getBlockX();
+            xMax = point1.getBlockX();
+            xMin = point2.getBlockX();
         }
         else{
-            xmax = point2.getBlockX();
-            xmin = point1.getBlockX();
+            xMax = point2.getBlockX();
+            xMin = point1.getBlockX();
         }
 
         if (point1.getBlockZ() >= point2.getBlockZ()){
-            zmax = point1.getBlockZ();
-            zmin = point2.getBlockZ();
+            zMax = point1.getBlockZ();
+            zMin = point2.getBlockZ();
         }
         else{
-            zmax = point2.getBlockZ();
-            zmin = point1.getBlockZ();
+            zMax = point2.getBlockZ();
+            zMin = point1.getBlockZ();
         }
 
-        if ((xmin <= x && x <= xmax) && (zmin <= z && z <= zmax)){
+        if ((xMin <= x && x <= xMax) && (zMin <= z && z <= zMax)){
             isInSurface = true;
         }
         return isInSurface;
+    }
+
+    public static boolean isRiding(Claim claim1, Claim claim2) {
+        Claim littleClaim;
+        Claim bigClaim;
+        ArrayList<Location> points = new ArrayList<>();
+        int xMax;
+        int xMin;
+        int zMax;
+        int zMin;
+
+        if (claim1.getClaimSurface() <= claim2.getClaimSurface()) {
+            littleClaim = claim1;
+            bigClaim = claim2;
+        }
+        else {
+            littleClaim = claim2;
+            bigClaim = claim1;
+        }
+
+        Location point1 = littleClaim.getCorner1();
+        Location point2 = littleClaim.getCorner2();
+        Location point3 = new Location(point1.getWorld(),point2.getBlockX(),point1.getBlockY(),point1.getBlockZ());
+        Location point4 = new Location(point1.getWorld(),point1.getBlockX(),point1.getBlockY(),point2.getBlockZ());
+
+        points.add(point1);
+        points.add(point2);
+        points.add(point3);
+        points.add(point4);
+
+        if (bigClaim.getCorner1().getBlockX() >= bigClaim.getCorner2().getBlockX()){
+            xMax = bigClaim.getCorner1().getBlockX();
+            xMin = bigClaim.getCorner2().getBlockX();
+        }
+        else{
+            xMax = bigClaim.getCorner2().getBlockX();
+            xMin = bigClaim.getCorner1().getBlockX();
+        }
+
+        if (bigClaim.getCorner1().getBlockZ() >= bigClaim.getCorner2().getBlockZ()){
+            zMax = bigClaim.getCorner1().getBlockZ();
+            zMin = bigClaim.getCorner2().getBlockZ();
+        }
+        else{
+            zMax = bigClaim.getCorner2().getBlockZ();
+            zMin = bigClaim.getCorner1().getBlockZ();
+        }
+
+        for (Location point :points) {
+            if ((xMin <= point.getBlockX() && point.getBlockX() <= xMax) && (zMin <= point.getBlockZ() &&
+                    point.getBlockZ() <= zMax)){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
