@@ -19,6 +19,6 @@ jobs:
         protocol: 'http'
         apiKey: ${{ secrets.DEPENDENCYTRACK_APIKEY }}
         projectName: 'HardcoreClaimManager'
-        projectVersion: 'main'
+        # projectVersion: 'main'
         bomFilename: "bom.json"
         autoCreate: true
