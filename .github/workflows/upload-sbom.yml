@@ -12,6 +12,20 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Test connectivity to Dependency-Track server
+      shell: powershell
+      run: |
+        # Tester le ping
+        Test-Connection -ComputerName 172.19.69.41 -Count 4
+        
+        # Tester les ports
+        $tcpClient = New-Object System.Net.Sockets.TcpClient
+        $tcpClient.ConnectAsync("172.19.69.41", 443).Wait(5000)
+        if ($tcpClient.Connected) { Write-Host "Port 443 is open" } else { Write-Host "Port 443 is closed" }
+        
+        # Tester avec curl
+        curl -v http://172.19.69.41:8080 2>&1 | Select-Object -First 20
+
     - uses: DependencyTrack/gh-upload-sbom@v3
       with:
         serverHostname: '172.19.69.41'
