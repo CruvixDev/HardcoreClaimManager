@@ -1,0 +1,22 @@
+name: Upload SBOM to dependency track 
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: DependencyTrack/gh-upload-sbom@v3
+      with:
+        serverHostname: '172.19.69.41'
+        apiKey: ${{ secrets.DEPENDENCYTRACK_APIKEY }}
+        projectName: 'HardcoreClaimManager'
+        projectVersion: 'main'
+        bomFilename: "bom.json"
+        autoCreate: true
