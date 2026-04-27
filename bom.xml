@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<spdxVersion>SPDX-2.3</spdxVersion>
+<dataLicense>CC0-1.0</dataLicense>
+<SPDXID>SPDXRef-DOCUMENT</SPDXID>
+<name>com.github.CruvixDev/HardcoreClaimManager</name>
+<documentNamespace>https://spdx.org/spdxdocs/protobom/76d05e11-5fac-4f00-a04a-bf267b56f65e</documentNamespace>
+<creationInfo>
+    <creators>Tool: protobom-v0.0.0-20260420101536-ffffc1bf4105+dirty</creators>
+    <creators>Tool: GitHub.com-Dependency-Graph</creators>
+    <created>2026-04-27T18:07:57Z</created>
+</creationInfo>
+<packages>
+    <name>org.apache.maven.plugins:maven-compiler-plugin</name>
+    <SPDXID>SPDXRef-maven-org.apache.maven.plugins-maven-compiler-plugin-3.8.1-75c946</SPDXID>
+    <versionInfo>3.8.1</versionInfo>
+    <downloadLocation>NOASSERTION</downloadLocation>
+    <filesAnalyzed>false</filesAnalyzed>
+    <licenseConcluded>Apache-2.0</licenseConcluded>
+    <copyrightText>Copyright 2001-2019 The Apache Software Foundation</copyrightText>
+    <externalRefs>
+        <referenceCategory>PACKAGE-MANAGER</referenceCategory>
+        <referenceType>purl</referenceType>
+        <referenceLocator>pkg:maven/org.apache.maven.plugins/maven-compiler-plugin@3.8.1</referenceLocator>
+    </externalRefs>
+</packages>
+<packages>
+    <name>org.jetbrains:annotations</name>
+    <SPDXID>SPDXRef-maven-org.jetbrains-annotations-23.0.0-75c946</SPDXID>
+    <versionInfo>23.0.0</versionInfo>
+    <downloadLocation>NOASSERTION</downloadLocation>
+    <filesAnalyzed>false</filesAnalyzed>
+    <licenseConcluded>Apache-2.0</licenseConcluded>
+    <externalRefs>
+        <referenceCategory>PACKAGE-MANAGER</referenceCategory>
+        <referenceType>purl</referenceType>
+        <referenceLocator>pkg:maven/org.jetbrains/annotations@23.0.0</referenceLocator>
+    </externalRefs>
+</packages>
+<packages>
+    <name>org.apache.clerezza.ext:org.json.simple</name>
+    <SPDXID>SPDXRef-maven-org.apache.clerezza.ext-org.json.simple-0.4-75c946</SPDXID>
+    <versionInfo>0.4</versionInfo>
+    <downloadLocation>NOASSERTION</downloadLocation>
+    <filesAnalyzed>false</filesAnalyzed>
+    <licenseConcluded>Apache-2.0</licenseConcluded>
+    <externalRefs>
+        <referenceCategory>PACKAGE-MANAGER</referenceCategory>
+        <referenceType>purl</referenceType>
+        <referenceLocator>pkg:maven/org.apache.clerezza.ext/org.json.simple@0.4</referenceLocator>
+    </externalRefs>
+</packages>
+<packages>
+    <name>org.spigotmc:spigot-api</name>
+    <SPDXID>SPDXRef-maven-org.spigotmc-spigot-api-1.19-R0.1-SNAPSHOT-75c946</SPDXID>
+    <versionInfo>1.19-R0.1-SNAPSHOT</versionInfo>
+    <downloadLocation>NOASSERTION</downloadLocation>
+    <filesAnalyzed>false</filesAnalyzed>
+    <externalRefs>
+        <referenceCategory>PACKAGE-MANAGER</referenceCategory>
+        <referenceType>purl</referenceType>
+        <referenceLocator>pkg:maven/org.spigotmc/spigot-api@1.19-R0.1-SNAPSHOT</referenceLocator>
+    </externalRefs>
+</packages>
+<packages>
+    <name>com.github.CruvixDev/HardcoreClaimManager</name>
+    <SPDXID>SPDXRef-github-CruvixDev-HardcoreClaimManager-main-2c6b00</SPDXID>
+    <versionInfo>main</versionInfo>
+    <downloadLocation>git+https://github.com/CruvixDev/HardcoreClaimManager</downloadLocation>
+    <filesAnalyzed>false</filesAnalyzed>
+    <externalRefs>
+        <referenceCategory>PACKAGE-MANAGER</referenceCategory>
+        <referenceType>purl</referenceType>
+        <referenceLocator>pkg:github/CruvixDev/HardcoreClaimManager@main</referenceLocator>
+    </externalRefs>
+</packages>
+<relationships>
+    <spdxElementId>SPDXRef-github-CruvixDev-HardcoreClaimManager-main-2c6b00</spdxElementId>
+    <relatedSpdxElement>SPDXRef-maven-org.spigotmc-spigot-api-1.19-R0.1-SNAPSHOT-75c946</relatedSpdxElement>
+    <relationshipType>DEPENDS_ON</relationshipType>
+</relationships>
+<relationships>
+    <spdxElementId>SPDXRef-github-CruvixDev-HardcoreClaimManager-main-2c6b00</spdxElementId>
+    <relatedSpdxElement>SPDXRef-maven-org.apache.maven.plugins-maven-compiler-plugin-3.8.1-75c946</relatedSpdxElement>
+    <relationshipType>DEPENDS_ON</relationshipType>
+</relationships>
+<relationships>
+    <spdxElementId>SPDXRef-github-CruvixDev-HardcoreClaimManager-main-2c6b00</spdxElementId>
+    <relatedSpdxElement>SPDXRef-maven-org.jetbrains-annotations-23.0.0-75c946</relatedSpdxElement>
+    <relationshipType>DEPENDS_ON</relationshipType>
+</relationships>
+<relationships>
+    <spdxElementId>SPDXRef-github-CruvixDev-HardcoreClaimManager-main-2c6b00</spdxElementId>
+    <relatedSpdxElement>SPDXRef-maven-org.apache.clerezza.ext-org.json.simple-0.4-75c946</relatedSpdxElement>
+    <relationshipType>DEPENDS_ON</relationshipType>
+</relationships>
+<relationships>
+    <spdxElementId>SPDXRef-DOCUMENT</spdxElementId>
+    <relatedSpdxElement>SPDXRef-github-CruvixDev-HardcoreClaimManager-main-2c6b00</relatedSpdxElement>
+    <relationshipType>DESCRIBES</relationshipType>
+</relationships>

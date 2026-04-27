@@ -20,5 +20,5 @@ jobs:
         apiKey: ${{ secrets.DEPENDENCYTRACK_APIKEY }}
         projectName: 'HardcoreClaimManager'
         projectVersion: 'v1.0.0'
-        bomFilename: "bom.json"
+        bomFilename: "bom.xml"
         autoCreate: true
