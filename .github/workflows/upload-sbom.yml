@@ -15,7 +15,7 @@ jobs:
     - uses: DependencyTrack/gh-upload-sbom@v3
       with:
         serverHostname: '172.19.69.41'
-        port: '8080'
+        port: '8081'
         protocol: 'http'
         apiKey: ${{ secrets.DEPENDENCYTRACK_APIKEY }}
         projectName: 'HardcoreClaimManager'
